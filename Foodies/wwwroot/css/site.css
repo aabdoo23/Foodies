@@ -20,3 +20,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+:root {
+    --primary-color: #048a81;
+    --black: #1e1e24;
+    --secondary-color: #931f1d;
+    --teirtary-color: #2ebfa5;
+    --white: #e7ecef;
+}
