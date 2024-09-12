@@ -1,0 +1,61 @@
+@using Foodies.ViewModels.Components
+@model ButtonViewModel
+
+
+<div class="category-card" onclick="window.location.href='@Model.Url'">
+    <div class="category-card-img">
+        <i class="fas fa-@Model.Icon faIcon"></i>
+        <p class="category-card-text-title">@Model.Text</p>
+    </div>
+</div>
+
+<style>
+    /*food category card*/
+    .faIcon {
+        font-size: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5px;
+        color: var(--white);
+
+
+    }
+
+    .category-card {
+        width: 70px;
+        height: 80px;
+        padding: .5em;
+        margin-right: 10px;
+        background: var(--primary-color);
+        position: relative;
+        overflow: visible;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        border-radius: 15px;
+        transition: .3s ease;
+        cursor: pointer;
+
+    }
+
+    .category-card-img {
+    @*background-color:#ffcaa6;*@height: 60%;
+        width: 100%;
+        border-radius: .5rem;
+    }
+
+    /*Text*/
+    .category-card-text-title {
+        font-weight: 700;
+        font-size: 0.8em;
+        text-align: center;
+        margin-top: 0.2em;
+        color: var(--white);
+    }
+
+    /*Hover*/
+    .category-card:hover {
+        transform: translateY(-10%);
+        box-shadow: var(--teirtary-color) 0px 13px 47px -5px, var(--secondary-color) 0px 8px 16px -8px;
+    }
+</style>
+
