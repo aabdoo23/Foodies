@@ -22,6 +22,22 @@ namespace Foodies.Controllers
         {
             return View();
         }
+        public IActionResult UserSignUp()
+        {
+            return View();
+        }
+        public IActionResult AdminSignUp()
+        {
+            return View();
+        }
+        public IActionResult LogIn()
+        {
+            return View();
+        }
+        public IActionResult start()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

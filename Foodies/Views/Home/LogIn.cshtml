@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Foodies</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div>
+            <img src="foodies.png" alt="Foodies Logo" class="logo">
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">About us</a>
+        </div>
+    </div>
+
+    <!-- Login Content -->
+    <div class="content">
+        <div class="login-form">
+            <h1>Login</h1>
+            <p>Enter your credentials to access your account</p>
+
+            <form method="post" action="">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <div class="redirect-signup">
+                <p>Don't have an account? <a href="@Url.Action("UserSignUp", "Home")">Sign up here</a></p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
+
+
+
+<style>
+    /* Basic Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #fafffe;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        flex-direction: column;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+        background-color: whitesmoke;
+        padding: 10px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+        .navbar a {
+            color: black;
+            text-decoration: none;
+            margin: 0 40px;
+            font-size: 16px;
+        }
+
+            .navbar a:hover {
+                color: #D35269;
+            }
+
+    /* Centering the content */
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        padding-top: 150px;
+        padding-bottom: 150px;
+        width: 100%;
+    }
+
+    .login-form {
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+    }
+
+        .login-form h1 {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            color: #D35269;
+            margin-bottom: 20px;
+        }
+
+        .login-form p {
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+            color: black;
+            font-size: 16px;
+        }
+
+        .login-form form {
+            display: flex;
+            flex-direction: column;
+        }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+    .login-form button {
+        background-color: #048a81;
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 14px;
+    }
+
+        .login-form button:hover {
+            background-color: #2EBFA5;
+            color: #b0374d;
+        }
+
+    .redirect-signup {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+        .redirect-signup a {
+            color: #D35269;
+            text-decoration: none;
+        }
+
+            .redirect-signup a:hover {
+                text-decoration: underline;
+            }
+
+    .logo {
+        width: 90px;
+        height: auto;
+    }
+
+</style>
+
+
