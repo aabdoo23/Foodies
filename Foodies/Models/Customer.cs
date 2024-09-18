@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Foodies.Models
 {
+
     public class Customer
     {
         public int CustomerId { get; set; }
@@ -24,4 +25,5 @@ namespace Foodies.Models
         public virtual List<Rating>? ratedresturants { get; set; }
 
     }
+
 }

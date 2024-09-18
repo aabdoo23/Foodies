@@ -14,4 +14,5 @@ namespace Foodies.Models
         [Column(TypeName = "time")]
         public TimeSpan ClosingHour { get; set; }
     }
+
 }

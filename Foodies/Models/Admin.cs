@@ -2,6 +2,7 @@
 
 namespace Foodies.Models
 {
+
     public class Admin
     {
         public int AdminId { get; set; }
@@ -13,4 +14,5 @@ namespace Foodies.Models
         public virtual Restaurant Restaurant { get; set; }
         public int RestaurantId { get; set; }
     }
+
 }

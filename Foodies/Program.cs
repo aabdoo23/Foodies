@@ -31,13 +31,10 @@ namespace Foodies
 
             app.MapControllerRoute(
                 name: "default",
-<<<<<<< Updated upstream
+
                 pattern: "{controller=Main}/{action=Index}/{id?}");
 
-=======
-                pattern: "{controller=Cart}/{action=index}/{id?}");
-            
->>>>>>> Stashed changes
+
             app.Run();
         }
     }

@@ -24,4 +24,5 @@ namespace Foodies.Models
         //T(x=>x.rate).
 
     }
+
 }

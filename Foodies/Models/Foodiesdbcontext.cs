@@ -17,35 +17,14 @@ namespace Foodies.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.;Database = bong;" +
+                optionsBuilder.UseSqlServer("Server=.;Database = b;" +
                     "Integrated Security=True;Encrypt=False");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Order>()
-            //.Property(b => b.OrderId)
-            //.IsRequired();
-            //modelBuilder.Entity<MenuItem>()
-            //.Property(b => b.MenuItemId)
-            //.IsRequired();
-
-            //modelBuilder.Entity<MenuItem>()
-            //.HasMany(mi => mi.Orders)
-            //.WithMany(o => o.Items)
-            //.UsingEntity(j => j.ToTable("MenuItemOrder"));
-
-            //modelBuilder.Entity<Order>()
-            //.HasMany(o => o.Items)
-            //.WithMany(mi => mi.Orders)
-            //.OnDelete(DeleteBehavior.Restrict); 
-
-            // One-to-many relationship Unidirectional
-            //modelBuilder.Entity<Order>()
-            //.HasOne(c => c.Order)
-            //.WithMany()
-
+            
              //One-to-one relationship
              modelBuilder.Entity<Order>()
              .HasOne(o => o.Payment)
@@ -80,3 +59,4 @@ namespace Foodies.Models
         public virtual DbSet<Customer> Customers { get; set; }
     }
 }
+
