@@ -1,3 +1,5 @@
+using Foodies.Models;
+
 namespace Foodies
 {
     public class Program
@@ -5,6 +7,7 @@ namespace Foodies
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -28,8 +31,13 @@ namespace Foodies
 
             app.MapControllerRoute(
                 name: "default",
+<<<<<<< Updated upstream
                 pattern: "{controller=Main}/{action=Index}/{id?}");
 
+=======
+                pattern: "{controller=Cart}/{action=index}/{id?}");
+            
+>>>>>>> Stashed changes
             app.Run();
         }
     }
