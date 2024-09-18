@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Foodies.Models
 {
@@ -12,5 +12,4 @@ namespace Foodies.Models
         public DateTime PaymentDate { get; set; }
         public virtual Order Order { get; set; }
     }
-
 }

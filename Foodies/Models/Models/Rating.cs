@@ -11,7 +11,6 @@ namespace Foodies.Models
         public decimal? rate { get; set; }
 
     }
-
 }
 //id 
 //idcustomr ,kl==

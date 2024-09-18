@@ -1,20 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Foodies.Models
 {
     public class MenuItem
     {
-
-        [Key]
         public int MenuItemId { get; set; }
         public string Name { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
 
+        [Required]
         public Restaurant Resturant { get; set; }
-        public virtual ICollection<Order>? Orders { get; set; }
 
     }
-
 }
