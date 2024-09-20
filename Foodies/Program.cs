@@ -1,5 +1,3 @@
-using Foodies.Models;
-
 namespace Foodies
 {
     public class Program
@@ -11,6 +9,10 @@ namespace Foodies
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Register the FoodiesDbContext.
+            builder.Services.AddDbContext<FoodiesDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
@@ -31,9 +33,7 @@ namespace Foodies
 
             app.MapControllerRoute(
                 name: "default",
-
-                pattern: "{controller=Home}/{action=start}/{id?}");
-
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

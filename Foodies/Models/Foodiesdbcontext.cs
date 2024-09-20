@@ -1,35 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Numerics;
-using System.Reflection.Metadata;
-
-namespace Foodies.Models
+﻿namespace Foodies.Models
 {
-    public class Foodiesdbcontext : DbContext
+    public class FoodiesDbContext : DbContext
     {
-        public Foodiesdbcontext() { }
-
-        public Foodiesdbcontext(DbContextOptions<Foodiesdbcontext> options)
-            : base(options)
+        public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
         {
-        }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=.;Database = b;" +
-                    "Integrated Security=True;Encrypt=False");
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
-             //One-to-one relationship
-             modelBuilder.Entity<Order>()
-             .HasOne(o => o.Payment)
-            .WithOne(p => p.Order)
-            .HasForeignKey<Order>(o => o.PaymentId);
+
+            //One-to-one relationship
+            modelBuilder.Entity<Order>()
+            .HasOne(o => o.Payment)
+           .WithOne(p => p.Order)
+           .HasForeignKey<Order>(o => o.PaymentId);
 
 
             //many to many 

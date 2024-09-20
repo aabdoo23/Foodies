@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Foodies.Migrations
 {
-    [DbContext(typeof(Foodiesdbcontext))]
-    [Migration("20240916222151_nrnr")]
-    partial class nrnr
+    [DbContext(typeof(FoodiesDbContext))]
+    [Migration("20240920123615_IntialCreate")]
+    partial class IntialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,6 +96,29 @@ namespace Foodies.Migrations
                     b.ToTable("Branchs");
                 });
 
+            modelBuilder.Entity("Foodies.Models.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("Chats");
+                });
+
             modelBuilder.Entity("Foodies.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
@@ -167,6 +190,35 @@ namespace Foodies.Migrations
                     b.HasIndex("ResturantRestaurantId");
 
                     b.ToTable("MenuItems");
+                });
+
+            modelBuilder.Entity("Foodies.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TimeStamp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isCustomerSender")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Foodies.Models.Order", b =>
@@ -269,9 +321,6 @@ namespace Foodies.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Hotline")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -287,8 +336,6 @@ namespace Foodies.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RestaurantId");
-
-                    b.HasIndex("CustomerId");
 
                     b.ToTable("Restaurants");
                 });
@@ -330,6 +377,25 @@ namespace Foodies.Migrations
                     b.Navigation("Restaurant");
                 });
 
+            modelBuilder.Entity("Foodies.Models.Chat", b =>
+                {
+                    b.HasOne("Foodies.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Foodies.Models.Restaurant", "Restaurant")
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Restaurant");
+                });
+
             modelBuilder.Entity("Foodies.Models.MenuItem", b =>
                 {
                     b.HasOne("Foodies.Models.Restaurant", "Resturant")
@@ -339,6 +405,13 @@ namespace Foodies.Migrations
                         .IsRequired();
 
                     b.Navigation("Resturant");
+                });
+
+            modelBuilder.Entity("Foodies.Models.Message", b =>
+                {
+                    b.HasOne("Foodies.Models.Chat", null)
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId");
                 });
 
             modelBuilder.Entity("Foodies.Models.Order", b =>
@@ -371,7 +444,7 @@ namespace Foodies.Migrations
             modelBuilder.Entity("Foodies.Models.Rating", b =>
                 {
                     b.HasOne("Foodies.Models.Customer", "Customer")
-                        .WithMany("ratedresturants")
+                        .WithMany("RatedResturants")
                         .HasForeignKey("CustomerId");
 
                     b.HasOne("Foodies.Models.Restaurant", "Restaurant")
@@ -381,13 +454,6 @@ namespace Foodies.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Restaurant");
-                });
-
-            modelBuilder.Entity("Foodies.Models.Restaurant", b =>
-                {
-                    b.HasOne("Foodies.Models.Customer", null)
-                        .WithMany("FavouriteRestaurants")
-                        .HasForeignKey("CustomerId");
                 });
 
             modelBuilder.Entity("MenuItemOrder", b =>
@@ -405,13 +471,16 @@ namespace Foodies.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Foodies.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
             modelBuilder.Entity("Foodies.Models.Customer", b =>
                 {
-                    b.Navigation("FavouriteRestaurants");
-
                     b.Navigation("Orders");
 
-                    b.Navigation("ratedresturants");
+                    b.Navigation("RatedResturants");
                 });
 
             modelBuilder.Entity("Foodies.Models.Payment", b =>

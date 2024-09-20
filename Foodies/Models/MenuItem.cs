@@ -1,18 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-
-namespace Foodies.Models
+﻿namespace Foodies.Models
 {
     public class MenuItem
     {
-
-        [Key]
         public int MenuItemId { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Price { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
-        public Restaurant Resturant { get; set; }
+        public Restaurant Resturant { get; set; } = default!;
         public virtual ICollection<Order>? Orders { get; set; }
 
     }

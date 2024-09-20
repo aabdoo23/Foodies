@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Foodies.Migrations
 {
-    [DbContext(typeof(Foodiesdbcontext))]
-    partial class FoodiesdbcontextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(FoodiesDbContext))]
+    partial class FoodiesDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -207,6 +207,9 @@ namespace Foodies.Migrations
                     b.Property<string>("TimeStamp")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isCustomerSender")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -438,7 +441,7 @@ namespace Foodies.Migrations
             modelBuilder.Entity("Foodies.Models.Rating", b =>
                 {
                     b.HasOne("Foodies.Models.Customer", "Customer")
-                        .WithMany("ratedresturants")
+                        .WithMany("RatedResturants")
                         .HasForeignKey("CustomerId");
 
                     b.HasOne("Foodies.Models.Restaurant", "Restaurant")
@@ -474,7 +477,7 @@ namespace Foodies.Migrations
                 {
                     b.Navigation("Orders");
 
-                    b.Navigation("ratedresturants");
+                    b.Navigation("RatedResturants");
                 });
 
             modelBuilder.Entity("Foodies.Models.Payment", b =>

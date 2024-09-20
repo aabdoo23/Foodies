@@ -1,17 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Foodies.Models
+﻿namespace Foodies.Models
 {
 
     public class Admin
     {
         public int AdminId { get; set; }
-        public string AdminFirstName { get; set; }
-        public string AdminLastName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public virtual Restaurant Restaurant { get; set; }
+        public string AdminFirstName { get; set; } = string.Empty;
+        public string AdminLastName { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public virtual Restaurant Restaurant { get; set; } = default!;
         public int RestaurantId { get; set; }
     }
 

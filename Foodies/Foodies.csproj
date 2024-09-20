@@ -32,4 +32,7 @@
   <ItemGroup>
     <None Include="wwwroot\foodies.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\images\order_history\" />
+  </ItemGroup>
 </Project>

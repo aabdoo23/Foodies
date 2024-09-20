@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Foodies.Migrations
 {
     /// <inheritdoc />
-    public partial class models : Migration
+    public partial class IntialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,20 +28,6 @@ namespace Foodies.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.CustomerId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,17 +55,11 @@ namespace Foodies.Migrations
                     Hotline = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MinPrice = table.Column<int>(type: "int", nullable: false),
                     MaxPrice = table.Column<int>(type: "int", nullable: false),
-                    CusineType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: true)
+                    CusineType = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Restaurants", x => x.RestaurantId);
-                    table.ForeignKey(
-                        name: "FK_Restaurants_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerId");
                 });
 
             migrationBuilder.CreateTable(
@@ -124,6 +103,32 @@ namespace Foodies.Migrations
                     table.PrimaryKey("PK_Branchs", x => x.BranchId);
                     table.ForeignKey(
                         name: "FK_Branchs_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "RestaurantId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Chats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RestaurantId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Chats_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Chats_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
                         principalColumn: "RestaurantId",
@@ -214,6 +219,27 @@ namespace Foodies.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isCustomerSender = table.Column<bool>(type: "bit", nullable: false),
+                    ChatId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MenuItemOrder",
                 columns: table => new
                 {
@@ -249,6 +275,16 @@ namespace Foodies.Migrations
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Chats_CustomerId",
+                table: "Chats",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chats_RestaurantId",
+                table: "Chats",
+                column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MenuItemOrder_OrdersOrderId",
                 table: "MenuItemOrder",
                 column: "OrdersOrderId");
@@ -257,6 +293,11 @@ namespace Foodies.Migrations
                 name: "IX_MenuItems_ResturantRestaurantId",
                 table: "MenuItems",
                 column: "ResturantRestaurantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ChatId",
+                table: "Messages",
+                column: "ChatId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerId",
@@ -283,11 +324,6 @@ namespace Foodies.Migrations
                 name: "IX_Ratings_RestaurantId",
                 table: "Ratings",
                 column: "RestaurantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Restaurants_CustomerId",
-                table: "Restaurants",
-                column: "CustomerId");
         }
 
         /// <inheritdoc />
@@ -315,13 +351,16 @@ namespace Foodies.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "Chats");
+
+            migrationBuilder.DropTable(
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "Restaurants");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Restaurants");
         }
     }
 }
