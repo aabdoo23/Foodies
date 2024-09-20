@@ -1,0 +1,140 @@
+﻿<!-- Start.cshtml -->
+@{
+    ViewBag.Title = "Start";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/styles.css"> <!-- Adjust path as needed -->
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div>
+            <img src="foodies.png" alt="Foodies Logo" class="logo">
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">About us</a>
+        </div>
+    </div>
+
+    <!-- Start Page Content -->
+    <div class="start-content">
+        <h1>Welcome to Foodies</h1>
+        <p>Please choose your role:</p>
+        <div class="role-selection">
+            <div class="role-option">
+                <a href="@Url.Action("UserSignUp", "Home")">User</a><br>
+            </div>
+
+            <div class="role-option">
+                <a href="@Url.Action("SignUp", "Home")">Restaurant Owner</a><br>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #fafffe;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        flex-direction: column;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+        background-color: whitesmoke;
+        padding: 10px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+        .navbar a {
+            color: black;
+            text-decoration: none;
+            margin: 0 40px;
+            font-size: 16px;
+        }
+
+            .navbar a:hover {
+                color: #D35269;
+            }
+    /* Add these styles to your existing CSS file or create a new one */
+    .start-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .role-selection {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .role-option {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .role-option h2 {
+            color: #D35269;
+            margin-bottom: 10px;
+        }
+
+        .role-option a {
+            display: block;
+            margin: 10px 0;
+            font-size: 18px;
+/*            color: #048a81;*/
+            text-decoration: none;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            color: #D35269;
+/*            margin-bottom: 20px;*/
+        }
+
+            .role-option a:hover {
+                text-decoration: underline;
+            }
+    .logo {
+        width: 90px;
+        height: auto;
+    }
+
+
+
+</style>
+

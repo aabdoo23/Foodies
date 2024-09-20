@@ -1,0 +1,258 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Foodies</title>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div>
+            <img src="foodies.png" alt="Foodies Logo" class="logo">
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">About us</a>
+        </div>
+    </div>
+
+    <!-- Sign Up Content -->
+    <div class="content">
+        <div class="signup-form">
+            <h1>Sign Up</h1>
+            <p>Register to manage your restaurant and connect with customers.</p>
+
+            <form method="post" action="">
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="AdminFirstName">First Name</label>
+                        <input type="text" id="AdminFirstName" name="AdminFirstName" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="AdminLastName">Last Name</label>
+                        <input type="text" id="AdminLastName" name="AdminLastName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="AdminEmail">Email</label>
+                        <input type="email" id="AdminEmail" name="AdminEmail" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="AdminNumber">Phone Number</label>
+                        <input type="tel" id="AdminNumber" name="AdminNumber" required pattern="[0-9]{11}" placeholder="Enter 11-digit number">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="restaurant-id">Restaurant ID</label>
+                        <input type="number" id="restaurant-id" name="restaurant-id" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="restaurant-name">Restaurant Name</label>
+                        <input type="text" id="restaurant-name" name="restaurant-name" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="hotline">Hotline</label>
+                        <input type="tel" id="hotline" name="hotline" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="min-price">Minimum Price</label>
+                        <input type="number" id="min-price" name="min-price" value="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="max-price">Maximum Price</label>
+                        <input type="number" id="max-price" name="max-price" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cusine-type">Cuisine Type</label>
+                        <input type="text" id="cusine-type" name="cusine-type" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="AdminPassword">Password</label>
+                        <input type="password" id="AdminPassword" name="Adminpassword" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="AdminConfirm-password">Confirm Password</label>
+                        <input type="password" id="AdminConfirm-password" name="AdminConfirm-password" required>
+                    </div>
+                  </div>
+
+                        <button type="submit" class="btn">Create Account</button>
+</form>
+            <div class="redirect-login">
+                <p>Already have an account? <a href="LogIn.cshtml">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<style>
+    /* Basic Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #fafffe;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        flex-direction: column;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+        background-color: whitesmoke;
+        padding: 10px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+        .navbar a {
+            color: black;
+            text-decoration: none;
+            margin: 0 40px;
+            font-size: 16px;
+        }
+
+            .navbar a:hover {
+                color: #D35269;
+            }
+
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        padding-top: 150px;
+        padding-bottom: 300px;
+        width: 100%;
+    }
+
+    .signup-form {
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 800px; 
+        width: 100%;
+    }
+
+        .signup-form h1 {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            color: #D35269;
+            margin-bottom: 20px;
+        }
+
+        .signup-form p {
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+            color: black;
+            font-size: 16px;
+        }
+
+        .signup-form form {
+            display: flex;
+            flex-direction: column;
+        }
+
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px; 
+        margin-bottom: 15px;
+    }
+
+    .input-group {
+        flex: 1; 
+        display: flex;
+        flex-direction: column;
+    }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+    .signup-form button {
+        background-color: #048a81;
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 14px;
+    }
+
+        .signup-form button:hover {
+            background-color: #2EBFA5;
+            color: #b0374d;
+        }
+
+    .redirect-login {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+        .redirect-login a {
+            color: #D35269;
+            text-decoration: none;
+        }
+
+            .redirect-login a:hover {
+                text-decoration: underline;
+            }
+
+    .logo {
+        width: 90px;
+        height: auto;
+    }
+
+
+</style>
+
