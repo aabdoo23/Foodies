@@ -32,7 +32,7 @@ namespace Foodies
             app.MapControllerRoute(
                 name: "default",
 
-                pattern: "{controller=Main}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=start}/{id?}");
 
 
             app.Run();

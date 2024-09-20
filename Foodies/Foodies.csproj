@@ -25,7 +25,7 @@
     <Content Remove="wwwroot\foodies.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Update="Views\Home\LogIn.cshtml">
+    <Content Update="Views\Authentication\LogIn.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
