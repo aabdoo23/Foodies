@@ -13,5 +13,3 @@ namespace Foodies.Models
     }
 
 }
-//id 
-//idcustomr ,kl==
