@@ -5,14 +5,14 @@ namespace Foodies.Controllers
 {
     public class Master : Controller
     {
-		Foodiesdbcontext context = new Foodiesdbcontext();
-		public IActionResult view()
+        Foodiesdbcontext context = new Foodiesdbcontext();
+        public IActionResult view()
         {
             return View();
         }
         public IActionResult Ressolginsignup()
         {
-            return View();  
+            return View();
         }
         public IActionResult Cusolginsignup()
         {
@@ -24,37 +24,37 @@ namespace Foodies.Controllers
         }
         public IActionResult SaveNewcutomer(Customer cus)
         {
-			var existingCustomer = context.Customers.FirstOrDefault(x => x.CustomerEmail == cus.CustomerEmail);
-            if (existingCustomer == null) 
-			{
-				Customer customer = new Customer();
-                    customer.CustomerFirstName = cus.CustomerFirstName;
-                    customer.CustomerLastName = cus.CustomerLastName;
-                    customer.PhoneNumber = cus.PhoneNumber;
-                    customer.Password = cus.Password;
-                    customer.City = cus.City;
-                    customer.Street = cus.Street;
-                    customer.Building = cus.Building;
-                    customer.CustomerEmail = cus.CustomerEmail;
-                    context.Customers.Add(customer);
-                    context.SaveChanges();
-              
+            var existingCustomer = context.Customers.FirstOrDefault(x => x.CustomerEmail == cus.CustomerEmail);
+            if (existingCustomer == null)
+            {
+                Customer customer = new Customer();
+                customer.CustomerFirstName = cus.CustomerFirstName;
+                customer.CustomerLastName = cus.CustomerLastName;
+                customer.PhoneNumber = cus.PhoneNumber;
+                customer.Password = cus.Password;
+                customer.City = cus.City;
+                customer.Street = cus.Street;
+                customer.Building = cus.Building;
+                customer.CustomerEmail = cus.CustomerEmail;
+                context.Customers.Add(customer);
+                context.SaveChanges();
+
                 ViewBag.NotificationMessage = "Customer registered successfully!";
                 ViewBag.NotificationType = "success";
                 return RedirectToAction("Cusolginsignup");
-                }
+            }
             else
             {
                 ViewBag.NotificationMessage = "The email is already registered.";
                 ViewBag.NotificationType = "danger";
                 return View("UserSignUp", cus);
             }
-		}
-		public IActionResult AdminSignUp()
+        }
+        public IActionResult AdminSignUp()
         {
             return View();
         }
-        public IActionResult SaveAdminAndResturant(Restaurant res,Admin adm)
+        public IActionResult SaveAdminAndResturant(Restaurant res, Admin adm)
         {
             var resturannam = context.Restaurants.FirstOrDefault(x => x.RestaurantName == res.RestaurantName);
             var Admininsystim = context.Admins.FirstOrDefault(x => x.Email == adm.Email);
@@ -81,12 +81,12 @@ namespace Foodies.Controllers
                 context.SaveChanges();
                 return View("Ressolginsignup");
             }
-            else if(resturannam != null && Admininsystim != null)
+            else if (resturannam != null && Admininsystim != null)
             {
                 ViewBag.NotificationMessage = "The Resturant Name and Email already in the system";
                 ViewBag.NotificationType = "danger";
             }
-            else if(resturannam != null)
+            else if (resturannam != null)
             {
                 ViewBag.NotificationMessage = "The Resturant Name already in the system";
                 ViewBag.NotificationType = "danger";
@@ -97,18 +97,19 @@ namespace Foodies.Controllers
                 ViewBag.NotificationMessage = "The Email already in the system";
                 ViewBag.NotificationType = "danger";
             }
-            
+
             return View("AdminSignUp");
         }
         public IActionResult CustomerLogIn()
         {
             return View();
         }
-        public IActionResult ConfirmCustomerLogIn(string email,string pass)
+        public IActionResult ConfirmCustomerLogIn(string email, string pass)
         {
-            var existingCustomer = context.Customers.FirstOrDefault(x => x.CustomerEmail == email&& x.Password==pass);
-            if (existingCustomer != null) {
-                return RedirectToAction("index","CustomerView");
+            var existingCustomer = context.Customers.FirstOrDefault(x => x.CustomerEmail == email && x.Password == pass);
+            if (existingCustomer != null)
+            {
+                return RedirectToAction("index", "CustomerView");
             }
             else
             {

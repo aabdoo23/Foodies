@@ -13,6 +13,9 @@ namespace Foodies.Models
         public string Password { get; set; }
         public virtual Restaurant Restaurant { get; set; }
         public int RestaurantId { get; set; }
+
+        public virtual List<BranchManager>? BranchManagers { get; set; }
+
     }
 
 }
