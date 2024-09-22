@@ -20,6 +20,7 @@ namespace Foodies.Models
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
+
         {
             
              //One-to-one relationship
