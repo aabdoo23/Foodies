@@ -15,12 +15,13 @@ namespace Foodies.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-			optionsBuilder.UseSqlServer("Server=.;Database=tes;User Id=Admin;Password=Admin_123;Integrated Security=True;Encrypt=False");
-
+            if (!optionsBuilder.IsConfigured)
+            {
+				optionsBuilder.UseSqlServer("Server=.;Database=te44;User Id=Admin;Password=Admin_123;Integrated Security=True;Encrypt=False");
+			}
 		}
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             
              //One-to-one relationship
