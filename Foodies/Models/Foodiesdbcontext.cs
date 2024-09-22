@@ -17,7 +17,8 @@ namespace Foodies.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-				optionsBuilder.UseSqlServer("Server=.;Database=te44;User Id=Admin;Password=Admin_123;Integrated Security=True;Encrypt=False");
+				optionsBuilder.UseSqlServer("Server=.;Database=NewDatabase" +
+                    ";User Id=;Password=;Integrated Security=True;Encrypt=False");
 			}
 		}
 
@@ -30,6 +31,11 @@ namespace Foodies.Models
             .WithOne(p => p.Order)
             .HasForeignKey<Order>(o => o.PaymentId);
 
+            //One-to-one relationship
+            modelBuilder.Entity<BranchManager>()
+            .HasOne(o => o.Branch)
+           .WithOne(p => p.BranchManager)
+           .HasForeignKey<BranchManager>(o => o.BranchId);
 
             //many to many 
             modelBuilder.Entity<Order>().HasAlternateKey(o => o.OrderId);

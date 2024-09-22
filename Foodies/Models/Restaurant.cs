@@ -16,7 +16,6 @@ namespace Foodies.Models
         public virtual List<Rating>? Rateofcustomer { get; set; }
         public virtual List<MenuItem>? MenuItems { get; set; }
         //200 - 1400
-        public virtual List<Order>? Orderes { get; set; }
         public virtual List<Branch>? Branches { get; set; }
         public virtual Admin AdminOfRestaurant { get; set; }
         #region New

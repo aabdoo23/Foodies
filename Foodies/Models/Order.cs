@@ -24,6 +24,8 @@ namespace Foodies.Models
         public int PaymentId { get; set; } // Foreign key added
         public virtual ICollection<MenuItem> Items { get; set; }
 
+        public virtual Branch Branch { get; set; }
+
 
     }
 
