@@ -1,6 +1,11 @@
-﻿<nav class="navbar navbar-expand-lg">
+﻿
+@model List<Restaurant>
+
+
+<nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <div class="navbar-header">
+        
             <a class="navbar-brand" href="#">
                 <i class="fa-solid fa-utensils"></i>
                 <b>Foodies</b>
@@ -30,7 +35,7 @@
                 </label>
             </div>
 
-            @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "Cart", Icon = "shopping-cart", Url = "www.google.com" })
+            @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "Cart", Icon = "shopping-cart", Url = "https://a7medsr.github.io/cart-/" })
             @await Component.InvokeAsync("ButtonViewComponent", new { Text = "1412 Points", Icon = "medal", Url = "www.google.com" })
             @await Component.InvokeAsync("ButtonViewComponent", new { Text = "Welcome, User", Icon = "user", Url = "" })
         </div>
@@ -52,8 +57,8 @@
         @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Pasta", Icon = "utensils", Url = "" })
         @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Chinese", Icon = "dragon", Url = "" })
         @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Indian", Icon = "pepper-hot", Url = "" })
-
-
+        
+        
 
     </div>
 
@@ -66,10 +71,11 @@
             </div>
         </div>
 
-        <div class="home-section-items">
-            @for (int i = 0; i < 10; i++)
+        <div clasws="home-section-items" >
+              
+            @foreach(var i in Model)
             {
-                @await Component.InvokeAsync("FoodCardViewComponent", new { Title = "Burger", SubTitle = "burger", Description = "burger", Price = "50", Rating = "4", ImageUrl = "https://via.placeholder.com/300", Url = "" })
+                @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.RestaurantName, Hotline = i.Hotline, CusineType = i.CusineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = "https://th.bing.com/th/id/OIP._xqATV2x664IX4Ps-AsBQQHaFj?rs=1&pid=ImgDetMain", Url = $"/CustomerView/Minew/{i.RestaurantId}" })
             }
         </div>
     </div>
@@ -78,7 +84,7 @@
 
 
 <style>
-
+    
 
     .navbar-brand {
         font-size: 1.5em;
@@ -167,7 +173,7 @@
         width: 1rem;
         height: 1rem;
     }
-
+    
 
     /* From Uiverse.io by Yaya12085 */
     .radio-inputs {
