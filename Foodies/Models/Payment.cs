@@ -4,7 +4,7 @@ namespace Foodies.Models
 {
     public class Payment
     {
-        public int PaymentId { get; set; }
+        public int Id { get; set; }
         public string PaymentMethod { get; set; }
         [Column(TypeName = "money")]
         public decimal Amount { get; set; }

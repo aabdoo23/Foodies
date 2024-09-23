@@ -24,19 +24,19 @@ namespace Foodies.Controllers
         }
         public IActionResult SaveNewcutomer(Customer cus)
         {
-            var existingCustomer = context.Customers.FirstOrDefault(x => x.CustomerEmail == cus.CustomerEmail);
+            var existingCustomer = context.Customer.FirstOrDefault(x => x.Email == cus.Email);
             if (existingCustomer == null)
             {
                 Customer customer = new Customer();
-                customer.CustomerFirstName = cus.CustomerFirstName;
-                customer.CustomerLastName = cus.CustomerLastName;
+                customer.FirstName = cus.FirstName;
+                customer.LastName = cus.LastName;
                 customer.PhoneNumber = cus.PhoneNumber;
                 customer.Password = cus.Password;
                 customer.City = cus.City;
                 customer.Street = cus.Street;
                 customer.Building = cus.Building;
-                customer.CustomerEmail = cus.CustomerEmail;
-                context.Customers.Add(customer);
+                customer.Email = cus.Email;
+                context.Customer.Add(customer);
                 context.SaveChanges();
 
                 ViewBag.NotificationMessage = "Customer registered successfully!";
@@ -56,28 +56,28 @@ namespace Foodies.Controllers
         }
         public IActionResult SaveAdminAndResturant(Restaurant res, Admin adm)
         {
-            var resturannam = context.Restaurants.FirstOrDefault(x => x.RestaurantName == res.RestaurantName);
-            var Admininsystim = context.Admins.FirstOrDefault(x => x.Email == adm.Email);
+            var resturannam = context.Restaurant.FirstOrDefault(x => x.Name == res.Name);
+            var Admininsystim = context.Admin.FirstOrDefault(x => x.Email == adm.Email);
             if (resturannam == null && Admininsystim == null)
             {
                 Restaurant restaurant = new Restaurant();
                 Admin newadmin = new Admin();
-                restaurant.RestaurantName = res.RestaurantName;
+                restaurant.Name = res.Name;
                 restaurant.Hotline = res.Hotline;
                 restaurant.MinPrice = res.MinPrice;
                 restaurant.MaxPrice = res.MaxPrice;
-                restaurant.CusineType = res.CusineType;
-                restaurant.Restorantphoto = res.Restorantphoto;
-                context.Restaurants.Add(restaurant);
+                restaurant.CuisineType = res.CuisineType;
+                restaurant.Photo = res.Photo;
+                context.Restaurant.Add(restaurant);
                 context.SaveChanges();
-                newadmin.AdminFirstName = adm.AdminFirstName;
-                newadmin.AdminLastName = adm.AdminLastName;
+                newadmin.FirstName = adm.FirstName;
+                newadmin.LastName = adm.LastName;
                 newadmin.PhoneNumber = adm.PhoneNumber;
                 newadmin.Email = adm.Email;
                 newadmin.Password = adm.Password;
-                var rresid = context.Restaurants.Where(x => x.RestaurantName == res.RestaurantName).Select(x => x.RestaurantId).FirstOrDefault();
+                var rresid = context.Restaurant.Where(x => x.Name == res.Name).Select(x => x.Id).FirstOrDefault();
                 newadmin.RestaurantId = rresid;
-                context.Admins.Add(newadmin);
+                context.Admin.Add(newadmin);
                 context.SaveChanges();
                 return View("Ressolginsignup");
             }
@@ -106,7 +106,7 @@ namespace Foodies.Controllers
         }
         public IActionResult ConfirmCustomerLogIn(string email, string pass)
         {
-            var existingCustomer = context.Customers.FirstOrDefault(x => x.CustomerEmail == email && x.Password == pass);
+            var existingCustomer = context.Customer.FirstOrDefault(x => x.Email == email && x.Password == pass);
             if (existingCustomer != null)
             {
                 return RedirectToAction("index", "CustomerView");
@@ -126,7 +126,7 @@ namespace Foodies.Controllers
         }
         public IActionResult REsturantonerLogIn(string email, string pass)
         {
-            var existingCustomer = context.Admins.FirstOrDefault(x => x.Email == email && x.Password == pass);
+            var existingCustomer = context.Admin.FirstOrDefault(x => x.Email == email && x.Password == pass);
             if (existingCustomer != null)
             {
                 return RedirectToAction("index", "CustomerView");

@@ -1,4 +1,5 @@
 using Foodies.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Foodies
 {
@@ -11,7 +12,9 @@ namespace Foodies
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddDbContext<Foodiesdbcontext>(options => {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection"));
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

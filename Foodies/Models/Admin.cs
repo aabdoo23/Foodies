@@ -6,8 +6,8 @@ namespace Foodies.Models
     public class Admin
     {
         public int AdminId { get; set; }
-        public string AdminFirstName { get; set; }
-        public string AdminLastName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string PhoneNumber { get; set; } 
         public string Email { get; set; }
         public string? img { get; set; }

@@ -7,10 +7,10 @@ namespace Foodies.Models
 
     public class Customer
     {
-        public int CustomerId { get; set; }
-        public string CustomerFirstName { get; set; }
-        public string CustomerLastName { get; set; }
-        public string CustomerEmail { get; set; }
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
         public String PhoneNumber { get; set; } 
 
 		public string Password { get; set; }
@@ -25,7 +25,7 @@ namespace Foodies.Models
         public virtual List<Restaurant>? FavouriteRestaurants { get; set; }
         public virtual List<Order>? Orders { get; set; }
         //The ratin
-        public virtual List<Rating>? ratedresturants { get; set; }
+        public virtual List<Rating>? Ratings { get; set; }
 
     }
 

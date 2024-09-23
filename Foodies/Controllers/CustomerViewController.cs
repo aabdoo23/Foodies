@@ -21,13 +21,13 @@ namespace Foodies.Controllers
 		Foodiesdbcontext context=new Foodiesdbcontext();
 		public IActionResult index()
 		{
-		var mnui=context.Restaurants.ToList();
+		var mnui=context.Restaurant.ToList();
 		  return View(mnui);
 		}
 		public IActionResult Minew(int id) {
 
-			var rest = context.Restaurants.Where( x => x.RestaurantId == id).SingleOrDefault();
-            ViewData["data"]= context.MenuItems.Where(x => x.Resturant.RestaurantId == id).ToList();
+			var rest = context.Restaurant.Where( x => x.Id == id).SingleOrDefault();
+            ViewData["data"]= context.MenuItem.Where(x => x.Resturant.Id == id).ToList();
            // var result=context.MenuItems.Where(x=>x.Resturant.RestaurantId==id).ToList();
             return View(rest);
 
