@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Foodies</title>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div>
+            <img src="foodies.png" alt="Foodies Logo" class="logo">
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">About us</a>
+        </div>
+    </div>
+
+    <div class="content">
+        @if (ViewBag.NotificationMessage != null)
+        {
+                <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
+                @ViewBag.NotificationMessage
+                </div>
+        }
+
+        <div class="signup-form" >
+            <h1>Sign Up</h1>
+            <p>Create an account to order your favorite food</p>
+
+            <form method="get" asp-action="SaveNewcutomer" asp-controller="Master">
+                <div class="input-group">
+                    <label for="UserFirstName">First Name</label>
+                    <input type="text" name="CustomerFirstName"  required/>
+                </div>
+
+                <div class="input-group">
+                    <label for="UserLastName">Last Name</label>
+                    <input type="text" name="CustomerLastName" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="UserEmail">Email</label>
+                    <input type="email" name="CustomerEmail" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="UserNumber">Phone Number</label>
+                    <input type="tel" name="PhoneNumber" required pattern="[0-9]{11}" placeholder="Enter 11-digit number">
+                </div>
+
+                <div class="input-group">
+                    <label for="UserPassword">Password</label>
+                    <input type="text"  name="Password" required>
+                </div>
+
+                 <!--<div class="input-group">
+                 <label for="UserConfirm-password">Confirm Password</label>
+                    <input type="password" id="UserConfirm-password" name="UserConfirm-password" required>
+                </div> Navbar -->   
+                 <div class="input-group">
+                    <label for="UserCity">City</label>
+                    <input type="text"  name="City" required>
+                </div>
+                <div class="input-group">
+                    <label for="UserCity">Street</label>
+                    <input type="text"  name="Street">
+                </div>
+                <div class="input-group">
+                    <label for="UserCity">Building</label>
+                    <input type="text"  name="Building" >
+                </div>
+
+                <button type="submit" class="btn">Create Account</button>
+            </form>
+            <div class="redirect-login">
+                <p>Already have an account? <a href="@Url.Action("CustomerLogIn", "Master")">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+<style>
+/* Basic Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fafffe;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height:auto;
+    flex-direction: column;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: whitesmoke;
+    padding: 10px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar a {
+    color: black;
+    text-decoration: none;
+    margin: 0 40px;
+    font-size: 16px;
+    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
+}
+
+.navbar a:hover {
+    color: #D35269;
+}
+
+
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        padding-top: 150px;
+        padding-bottom: 150px;
+        width: 100%;
+    }
+    .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.signup-form {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.signup-form h1 {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #D35269;
+    margin-bottom: 20px;
+}
+
+.signup-form p {
+    margin-bottom: 30px;
+    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
+    color: black;
+    font-size: 16px;
+}
+
+.signup-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.input-group input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.signup-form button {
+    background-color: #048a81;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 14px;
+    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
+    font-weight: bold;
+}
+
+.signup-form button:hover {
+    background-color: #2EBFA5;
+    color: #b0374d;
+    font-weight: bold;
+}
+
+.redirect-login {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.redirect-login a {
+    color: #D35269;
+    text-decoration: none;
+}
+
+.redirect-login a:hover {
+    text-decoration: underline;
+}
+
+.logo {
+    width: 90px;
+    height: auto;
+}
+
+</style>
+<script>
+    setTimeout(function () {
+        var alert = document.querySelector('.alert');
+        if (alert) {
+            alert.style.display = 'none';
+        }
+    }, 5000); 
+</script>

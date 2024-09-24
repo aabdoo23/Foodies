@@ -2,8 +2,9 @@ namespace Foodies.Models
 {
     public class Order
     {
-        public int OrderId { get; set; }
-        public string OrderState { get; set; } = string.Empty;
+        [Key]
+        public int Id { get; set; }
+        public string State { get; set; }
         [Column(TypeName = "money")]
         public decimal TotalPrice { get; set; }
         [Column(TypeName = "DATETIME")]
@@ -15,6 +16,8 @@ namespace Foodies.Models
 
         public int PaymentId { get; set; } // Foreign key added
         public virtual ICollection<MenuItem> Items { get; set; }
+
+        public virtual Branch Branch { get; set; }
 
 
     }

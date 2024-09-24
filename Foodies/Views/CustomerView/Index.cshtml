@@ -1,6 +1,11 @@
-﻿<nav class="navbar navbar-expand-lg">
+﻿
+@model List<Restaurant>
+
+
+<nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <div class="navbar-header">
+        
             <a class="navbar-brand" href="#">
                 <i class="fa-solid fa-utensils"></i>
                 <b>Foodies</b>
@@ -30,16 +35,14 @@
                 </label>
             </div>
 
-            @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "Cart", Icon = "shopping-cart", Url = "www.google.com" })
+            @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "Cart", Icon = "shopping-cart", Url = "https://a7medsr.github.io/cart-/" })
             @await Component.InvokeAsync("ButtonViewComponent", new { Text = "1412 Points", Icon = "medal", Url = "www.google.com" })
             @await Component.InvokeAsync("ButtonViewComponent", new { Text = "Welcome, User", Icon = "user", Url = "" })
         </div>
     </div>
 </nav>
 
-
 <body>
-    @* components of food categories *@
     <div class="category-bar d-flex justify-content-start">
         @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Burger", Icon = "burger", Url = "" })
         @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Pizza", Icon = "pizza-slice", Url = "" })
@@ -68,10 +71,11 @@
             </div>
         </div>
 
-        <div class="home-section-items">
-            @foreach (var i in Model)
+        <div clasws="home-section-items" >
+              
+            @foreach(var i in Model)
             {
-                @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.RestaurantName, Hotline = i.Hotline, CusineType = i.CusineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = "https://th.bing.com/th/id/OIP._xqATV2x664IX4Ps-AsBQQHaFj?rs=1&pid=ImgDetMain", Url = $"/CustomerView/Minew/{i.RestaurantId}" })
+                @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.Name, Hotline = i.Hotline, CuisineType = i.CuisineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = "https://th.bing.com/th/id/OIP._xqATV2x664IX4Ps-AsBQQHaFj?rs=1&pid=ImgDetMain", Url = $"/CustomerView/Minew/{i.Id}" })
             }
         </div>
     </div>

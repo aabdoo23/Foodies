@@ -4,16 +4,19 @@ using Foodies.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace Foodies.Migrations
 {
-    [DbContext(typeof(FoodiesDbContext))]
-    partial class FoodiesDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Foodiesdbcontext))]
+    [Migration("20240922232841_finalmooot")]
+    partial class finalmooot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -523,7 +526,6 @@ namespace Foodies.Migrations
             modelBuilder.Entity("Foodies.Models.Rating", b =>
                 {
                     b.HasOne("Foodies.Models.Customer", "Customer")
-
                         .WithMany("Ratings")
                         .HasForeignKey("CustomerId");
 
@@ -572,7 +574,6 @@ namespace Foodies.Migrations
             modelBuilder.Entity("Foodies.Models.Customer", b =>
                 {
                     b.Navigation("Orders");
-
 
                     b.Navigation("Ratings");
                 });

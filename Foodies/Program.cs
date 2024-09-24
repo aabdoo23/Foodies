@@ -1,3 +1,7 @@
+
+using Foodies.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace Foodies
 {
     public class Program
@@ -10,10 +14,9 @@ namespace Foodies
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            // Register the FoodiesDbContext.
-            builder.Services.AddDbContext<FoodiesDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+            builder.Services.AddDbContext<Foodiesdbcontext>(options => {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection"));
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -33,7 +36,10 @@ namespace Foodies
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+                pattern: "{controller=Master}/{action=view}/{id?}");
+
 
             app.Run();
         }

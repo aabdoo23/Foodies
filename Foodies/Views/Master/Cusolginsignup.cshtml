@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Sign Up</title>
+</head>
+<body>
+
+        <div class="content">
+        <h1>Welcome to Foodies</h1>
+        <p>Please log in or sign up to continue</p>
+        <div class="button-container">
+        <a href="/Master/CustomerLogIn" class="btn btn-secondary">Login</a>
+        <a href="/Master/UserSignUp" class="btn btn-secondary">Sign Up</a>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<style>
+/* Basic Styles */
+* {
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fafffe;
+}
+
+.navbar {
+    background-color: whitesmoke;
+    padding: 10px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar a {
+    color: black;
+    text-decoration: none;
+    margin: 0 40px;
+    font-size: 16px;
+}
+
+.navbar a:hover {
+    color: #D35269;
+}
+
+.content {
+    padding-top: 30px;
+    text-align: left;
+    margin: 200px 70px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.content p {
+    color: black;
+}
+
+.content h1 {
+    color: #D35269;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #048a81;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    margin-right: 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 14px;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #2EBFA5;
+    color: #b0374d;
+}
+
+.logo {
+    width: 90px;
+    height: auto;
+}
+
+/* Media Queries */
+    media screen and (max-width: 768px) {
+    .content {
+        margin: 100px 20px;
+        font-size: 24px;
+    }
+
+    .navbar a {
+        margin: 0 20px;
+    }
+}
+</style>

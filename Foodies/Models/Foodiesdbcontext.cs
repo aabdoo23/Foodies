@@ -5,23 +5,29 @@
         public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
         {
 
-        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+		}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+             //One-to-one relationship
+             modelBuilder.Entity<Order>()
+             .HasOne(o => o.Payment)
+            .WithOne(p => p.Order)
+            .HasForeignKey<Order>(o => o.PaymentId);
 
             //One-to-one relationship
-            modelBuilder.Entity<Order>()
-            .HasOne(o => o.Payment)
-           .WithOne(p => p.Order)
-           .HasForeignKey<Order>(o => o.PaymentId);
-
+            modelBuilder.Entity<BranchManager>()
+            .HasOne(o => o.Branch)
+           .WithOne(p => p.BranchManager)
+           .HasForeignKey<BranchManager>(o => o.BranchId);
 
             //many to many 
-            modelBuilder.Entity<Order>().HasAlternateKey(o => o.OrderId);
+            modelBuilder.Entity<Order>().HasAlternateKey(o => o.Id);
 
-            modelBuilder.Entity<MenuItem>().HasAlternateKey(m => m.MenuItemId);
-
+            modelBuilder.Entity<MenuItem>().HasAlternateKey(m => m.Id);
 
 
             //modelBuilder.Entity<Order>()
@@ -32,16 +38,17 @@
             base.OnModelCreating(modelBuilder);
         }
 
-        public virtual DbSet<Admin> Admins { get; set; }
-        public virtual DbSet<Message> Messages { get; set; }
-        public virtual DbSet<Branch> Branchs { get; set; }
-        public virtual DbSet<Rating> Ratings { get; set; }
-        public virtual DbSet<Chat> Chats { get; set; }
-        public virtual DbSet<MenuItem> MenuItems { get; set; }
-        public virtual DbSet<Restaurant> Restaurants { get; set; }
-        public virtual DbSet<Payment> Payments { get; set; }
-        public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Admin> Admin { get; set; }
+        public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<Branch> Branch { get; set; }
+        public virtual DbSet<Rating> Rating { get; set; }
+        public virtual DbSet<Chat> Chat { get; set; }
+        public virtual DbSet<MenuItem> MenuItem { get; set; }
+        public virtual DbSet<Restaurant> Restaurant { get; set; }
+        public virtual DbSet<Payment> Payment { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<Customer> Customer { get; set; }
+        public virtual DbSet<BranchManager> BranchManager { get; set; }
     }
 }
 

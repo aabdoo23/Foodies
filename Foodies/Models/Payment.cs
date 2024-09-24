@@ -2,8 +2,9 @@ namespace Foodies.Models
 {
     public class Payment
     {
-        public int PaymentId { get; set; }
-        public string PaymentMethod { get; set; } = string.Empty;
+
+        public int Id { get; set; }
+        public string PaymentMethod { get; set; }
         [Column(TypeName = "money")]
         public decimal Amount { get; set; }
         [Column(TypeName = "DATETIME")]
