@@ -5,7 +5,7 @@ namespace Foodies.Controllers
 {
     public class Master : Controller
     {
-        FoodiesDbContext context;
+        FoodiesDbContext context = new FoodiesDbContext();
         public IActionResult view()
         {
             return View();

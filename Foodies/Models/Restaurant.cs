@@ -8,7 +8,6 @@ namespace Foodies.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        [Column(TypeName = "VARBINARY(MAX)")]
         public string? Photo {  get; set; }    
         public string Hotline { get; set; }
         public int MinPrice { get; set; } = 0;

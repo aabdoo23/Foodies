@@ -19,7 +19,7 @@ namespace Foodies.Controllers
 {
 	public class CustomerViewController : Controller
 	{
-        FoodiesDbContext context;
+        FoodiesDbContext context = new FoodiesDbContext();
 		public IActionResult index()
 		{
 		var mnui=context.Restaurant.ToList();
