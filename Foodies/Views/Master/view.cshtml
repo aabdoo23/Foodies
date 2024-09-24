@@ -3,34 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    @* stylesheet *@
+     <link rel="stylesheet" href="css/Main.css" asp-append-version="true"> 
+
+
     <title>White Navbar with Shadow</title>
 </head>
 <body>
-
-    <!-- Navbar -->
-    <div class="navbar">
-        <div>
-            <img src="logo.jpg" alt="Foodies Logo" class="logo">
-        </div>
-        <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Services</a>
-            <a href="#">About us</a>
-        </div>
-    </div>
 
     <!-- Content to demonstrate fixed navbar -->
     <div class="content">
         <h1>Foodies</h1>
         <p>A Creative way to choose your Food</p>
         <div>
-         <a href="/Master/Cusolginsignup" class="btn btn-secondary">Customer</a>
-         <a href="/Master/Ressolginsignup" class="btn btn-secondary">Restaurant Owner</a>
+         @* <a href="/Master/Cusolginsignup" class="btn btn-secondary">Customer</a> *@
+         @* <a href="/Master/Ressolginsignup" class="btn">Restaurant Owner</a>
+         <button >Customer</button> *@
+         <a href="/Master/Cusolginsignup"><button class="btn" >Customer</button></a>
+         <a href="/Master/Ressolginsignup"><button class="btn btn-secondary">Owner</button></a>
+
+        
         </div>
     </div>
 
     <div class="logo">
-        <img src="food.png" alt="Foodies Logo" class="food">
+        <img src="/images/food.png" alt="Foodies Logo" class="food">
     </div>
 
 </body>
@@ -48,90 +46,7 @@ body {
     background-color: #fafffe;
 }
 
-.navbar {
-    background-color: whitesmoke;
-    padding: 10px 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
 }
-
-.navbar a {
-    color: black;
-    text-decoration: none;
-    margin: 0 40px;
-    font-size: 16px;
-    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
-}
-
-.navbar a:hover {
-    color: #D35269;
-}
-
-.content {
-    padding-top: 30px;
-    text-align: left;
-    font-family: inter;
-
-    margin: 250px 70px;
-    font-size: 40px;
-    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
-    font-weight: bold;
-}
-
-.content p{
-    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
-    color: black;
-}
-
-.content h1{
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: #D35269;
-}
-.button-container {
-    display: flex;
-    justify-content: flex-start;
-    margin: 20px 120px;
-}
-
-.btn {
-    background-color: #048a81;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    margin-right: 20px;
-    margin-top: 20px;
-    cursor: pointer;
-    border-radius: 14px;
-    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
-    font-weight: bold;
-}
-
-.btn:hover {
-    background-color: #2EBFA5; /* Darker shade of blue for hover */
-    color: #b0374d;
-    font-weight: bold;
-}
-.food {
-    position: absolute;
-    top: 190px;
-    right: 60px;
-    width: 600px;
-    height: auto;
-}
-
-.logo {
-    right: 20px;
-    width: 90px;
-    height: auto;
-}
-
 /* Media Queries */
 
 </style>a

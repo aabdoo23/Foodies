@@ -31,5 +31,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\foodies.png" />
+    <None Include="wwwroot\images\food.png" />
+    <None Include="wwwroot\images\foodies logo.png" />
+    <None Include="wwwroot\images\foodies.png" />
   </ItemGroup>
 </Project>

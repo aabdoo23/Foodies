@@ -1,0 +1,55 @@
+﻿.content {
+    padding-top: 30px;
+    text-align: left;
+    font-family: inter;
+    margin: 250px 70px;
+    font-size: 40px;
+    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
+    font-weight: bold;
+}
+
+    .content p {
+        font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
+        color: black;
+    }
+
+    .content h1 {
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        color: #D35269;
+    }
+
+.button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: 20px 120px;
+}
+
+.btn {
+    background-color: #048a81;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    margin-right: 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 14px;
+    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
+    font-weight: bold;
+}
+
+    .btn:hover {
+        background-color: #2EBFA5; /* Darker shade of blue for hover */
+        color: #b0374d;
+        font-weight: bold;
+    }
+
+
+    /*photo on a side */
+.food {
+    position: absolute;
+    top: 190px;
+    right: 60px;
+    width: 600px;
+    height: auto;
+}

@@ -4,14 +4,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Foodies</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/Foodies.styles.css" asp-append-version="true" />
+ 
+
+    <link rel="stylesheet" href="css/site.css" asp-append-version="true" />  
+    @* navbar stylesheet *@
+    <link rel="stylesheet" href="css/Navbar.css" />
+        @* <link rel="stylesheet" href="css/Main.css" asp-append-version="true" /> *@
+
+
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
     <header>
+        <!-- Navbar -->
+    <div class="navbar">
+        <div>
+            <img src="/images/foodies.png" alt="Foodies Logo" class="logo">
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">About us</a>
+        </div>
+    </div>
 @*         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Foodies</a>
@@ -31,6 +50,8 @@
                 </div>
             </div>
         </nav>
+
+
  *@    </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
