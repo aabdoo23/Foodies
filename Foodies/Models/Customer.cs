@@ -1,12 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
-
-namespace Foodies.Models
+﻿namespace Foodies.Models
 {
 
     public class Customer
     {
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -25,6 +22,7 @@ namespace Foodies.Models
         public virtual List<Restaurant>? FavouriteRestaurants { get; set; }
         public virtual List<Order>? Orders { get; set; }
         //The ratin
+
         public virtual List<Rating>? Ratings { get; set; }
 
     }

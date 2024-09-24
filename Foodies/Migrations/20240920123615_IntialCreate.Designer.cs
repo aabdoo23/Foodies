@@ -4,6 +4,7 @@ using Foodies.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Migrations
 {
     [DbContext(typeof(FoodiesDbContext))]
-    partial class FoodiesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240920123615_IntialCreate")]
+    partial class IntialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,15 +33,15 @@ namespace Foodies.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdminId"));
 
+                    b.Property<string>("AdminFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdminLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -53,15 +56,12 @@ namespace Foodies.Migrations
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
-                    b.Property<string>("img")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("AdminId");
 
                     b.HasIndex("RestaurantId")
                         .IsUnique();
 
-                    b.ToTable("Admin");
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("Foodies.Models.Branch", b =>
@@ -93,39 +93,7 @@ namespace Foodies.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Branch");
-                });
-
-            modelBuilder.Entity("Foodies.Models.BranchManager", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminId");
-
-                    b.HasIndex("BranchId")
-                        .IsUnique();
-
-                    b.ToTable("BranchManager");
+                    b.ToTable("Branchs");
                 });
 
             modelBuilder.Entity("Foodies.Models.Chat", b =>
@@ -148,33 +116,34 @@ namespace Foodies.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Chat");
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("Foodies.Models.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
 
                     b.Property<string>("Building")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("CustomerEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("CustomerFirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("CustomerLastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -182,35 +151,25 @@ namespace Foodies.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
                     b.Property<string>("Street")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("img")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("CustomerId");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Customer");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Foodies.Models.MenuItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("MenuItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MenuItemId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -223,17 +182,14 @@ namespace Foodies.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("ResturantId")
+                    b.Property<int>("ResturantRestaurantId")
                         .HasColumnType("int");
 
-                    b.Property<string>("img")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("MenuItemId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("ResturantRestaurantId");
 
-                    b.HasIndex("ResturantId");
-
-                    b.ToTable("MenuItem");
+                    b.ToTable("MenuItems");
                 });
 
             modelBuilder.Entity("Foodies.Models.Message", b =>
@@ -262,19 +218,16 @@ namespace Foodies.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Foodies.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
@@ -282,22 +235,20 @@ namespace Foodies.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("DATETIME");
 
+                    b.Property<string>("OrderState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PaymentId")
                         .HasColumnType("int");
 
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("money");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("BranchId");
+                    b.HasKey("OrderId");
 
                     b.HasIndex("CustomerId");
 
@@ -306,16 +257,16 @@ namespace Foodies.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Foodies.Models.Payment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("PaymentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("money");
@@ -327,46 +278,46 @@ namespace Foodies.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("PaymentId");
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Foodies.Models.Rating", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RatingId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingId"));
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Rate")
-                        .HasColumnType("decimal(5, 2)");
-
                     b.Property<int?>("RestaurantId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<decimal?>("rate")
+                        .HasColumnType("decimal(5, 2)");
+
+                    b.HasKey("RatingId");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("Foodies.Models.Restaurant", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RestaurantId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RestaurantId"));
 
-                    b.Property<string>("CuisineType")
+                    b.Property<string>("CusineType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -380,29 +331,26 @@ namespace Foodies.Migrations
                     b.Property<int>("MinPrice")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("RestaurantName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("VARBINARY(MAX)");
+                    b.HasKey("RestaurantId");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Restaurant");
+                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("MenuItemOrder", b =>
                 {
-                    b.Property<int>("ItemsId")
+                    b.Property<int>("ItemsMenuItemId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrdersId")
+                    b.Property<int>("OrdersOrderId")
                         .HasColumnType("int");
 
-                    b.HasKey("ItemsId", "OrdersId");
+                    b.HasKey("ItemsMenuItemId", "OrdersOrderId");
 
-                    b.HasIndex("OrdersId");
+                    b.HasIndex("OrdersOrderId");
 
                     b.ToTable("MenuItemOrder");
                 });
@@ -410,7 +358,7 @@ namespace Foodies.Migrations
             modelBuilder.Entity("Foodies.Models.Admin", b =>
                 {
                     b.HasOne("Foodies.Models.Restaurant", "Restaurant")
-                        .WithOne("RestaurantAdmin")
+                        .WithOne("AdminOfRestaurant")
                         .HasForeignKey("Foodies.Models.Admin", "RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -427,25 +375,6 @@ namespace Foodies.Migrations
                         .IsRequired();
 
                     b.Navigation("Restaurant");
-                });
-
-            modelBuilder.Entity("Foodies.Models.BranchManager", b =>
-                {
-                    b.HasOne("Foodies.Models.Admin", "Admin")
-                        .WithMany("BranchManagers")
-                        .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Foodies.Models.Branch", "Branch")
-                        .WithOne("BranchManager")
-                        .HasForeignKey("Foodies.Models.BranchManager", "BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Admin");
-
-                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("Foodies.Models.Chat", b =>
@@ -471,7 +400,7 @@ namespace Foodies.Migrations
                 {
                     b.HasOne("Foodies.Models.Restaurant", "Resturant")
                         .WithMany("MenuItems")
-                        .HasForeignKey("ResturantId")
+                        .HasForeignKey("ResturantRestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -487,12 +416,6 @@ namespace Foodies.Migrations
 
             modelBuilder.Entity("Foodies.Models.Order", b =>
                 {
-                    b.HasOne("Foodies.Models.Branch", "Branch")
-                        .WithMany("Orders")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Foodies.Models.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
@@ -506,12 +429,10 @@ namespace Foodies.Migrations
                         .IsRequired();
 
                     b.HasOne("Foodies.Models.Restaurant", "Restaurant")
-                        .WithMany()
+                        .WithMany("Orderes")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Branch");
 
                     b.Navigation("Customer");
 
@@ -523,12 +444,11 @@ namespace Foodies.Migrations
             modelBuilder.Entity("Foodies.Models.Rating", b =>
                 {
                     b.HasOne("Foodies.Models.Customer", "Customer")
-
-                        .WithMany("Ratings")
+                        .WithMany("RatedResturants")
                         .HasForeignKey("CustomerId");
 
                     b.HasOne("Foodies.Models.Restaurant", "Restaurant")
-                        .WithMany("Ratings")
+                        .WithMany("Rateofcustomer")
                         .HasForeignKey("RestaurantId");
 
                     b.Navigation("Customer");
@@ -540,28 +460,15 @@ namespace Foodies.Migrations
                 {
                     b.HasOne("Foodies.Models.MenuItem", null)
                         .WithMany()
-                        .HasForeignKey("ItemsId")
+                        .HasForeignKey("ItemsMenuItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Foodies.Models.Order", null)
                         .WithMany()
-                        .HasForeignKey("OrdersId")
+                        .HasForeignKey("OrdersOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Foodies.Models.Admin", b =>
-                {
-                    b.Navigation("BranchManagers");
-                });
-
-            modelBuilder.Entity("Foodies.Models.Branch", b =>
-                {
-                    b.Navigation("BranchManager")
-                        .IsRequired();
-
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Foodies.Models.Chat", b =>
@@ -573,8 +480,7 @@ namespace Foodies.Migrations
                 {
                     b.Navigation("Orders");
 
-
-                    b.Navigation("Ratings");
+                    b.Navigation("RatedResturants");
                 });
 
             modelBuilder.Entity("Foodies.Models.Payment", b =>
@@ -585,14 +491,16 @@ namespace Foodies.Migrations
 
             modelBuilder.Entity("Foodies.Models.Restaurant", b =>
                 {
+                    b.Navigation("AdminOfRestaurant")
+                        .IsRequired();
+
                     b.Navigation("Branches");
 
                     b.Navigation("MenuItems");
 
-                    b.Navigation("Ratings");
+                    b.Navigation("Orderes");
 
-                    b.Navigation("RestaurantAdmin")
-                        .IsRequired();
+                    b.Navigation("Rateofcustomer");
                 });
 #pragma warning restore 612, 618
         }
