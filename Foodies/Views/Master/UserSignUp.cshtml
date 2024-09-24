@@ -1,75 +1,58 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="css/Main.css">
+        @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />   *@
 
     <title>Sign Up - Foodies</title>
 </head>
 <body>
 
-    
-
+   
+    <!-- Sign Up Content -->
     <div class="content">
-        @if (ViewBag.NotificationMessage != null)
-        {
-                <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
-                @ViewBag.NotificationMessage
-                </div>
-        }
-
-        <div class="signup-form" >
+        <div class="signup-form">
             <h1>Sign Up</h1>
             <p>Create an account to order your favorite food</p>
 
-            <form method="get" asp-action="SaveNewcutomer" asp-controller="Master">
+            <form method="post" action="">
+
                 <div class="input-group">
                     <label for="UserFirstName">First Name</label>
-                    <input type="text" name="CustomerFirstName"  required/>
+                    <input type="text" id="UserFirstName" name="UserFirstName" required>
                 </div>
 
                 <div class="input-group">
                     <label for="UserLastName">Last Name</label>
-                    <input type="text" name="CustomerLastName" required>
+                    <input type="text" id="UserLastName" name="UserLastName" required>
                 </div>
 
                 <div class="input-group">
                     <label for="UserEmail">Email</label>
-                    <input type="email" name="CustomerEmail" required>
+                    <input type="email" id="UserEmail" name="UserEmail" required>
                 </div>
 
                 <div class="input-group">
                     <label for="UserNumber">Phone Number</label>
-                    <input type="tel" name="PhoneNumber" required pattern="[0-9]{11}" placeholder="Enter 11-digit number">
+                    <input type="tel" id="UserNumber" name="UserNumber" required pattern="[0-9]{11}" placeholder="Enter 11-digit number">
                 </div>
 
                 <div class="input-group">
                     <label for="UserPassword">Password</label>
-                    <input type="text"  name="Password" required>
+                    <input type="password" id="UserPassword" name="Userpassword" required>
                 </div>
 
-                 <!--<div class="input-group">
-                 <label for="UserConfirm-password">Confirm Password</label>
+                <div class="input-group">
+                    <label for="UserConfirm-password">Confirm Password</label>
                     <input type="password" id="UserConfirm-password" name="UserConfirm-password" required>
-                </div> Navbar -->   
-                 <div class="input-group">
-                    <label for="UserCity">City</label>
-                    <input type="text"  name="City" required>
-                </div>
-                <div class="input-group">
-                    <label for="UserCity">Street</label>
-                    <input type="text"  name="Street">
-                </div>
-                <div class="input-group">
-                    <label for="UserCity">Building</label>
-                    <input type="text"  name="Building" >
                 </div>
 
                 <button type="submit" class="btn">Create Account</button>
             </form>
             <div class="redirect-login">
-                <p>Already have an account? <a href="@Url.Action("CustomerLogIn", "Master")">Login here</a></p>
+                <p>Already have an account? <a href="@Url.Action("LogIn", "Home")">Login here</a></p>
             </div>
         </div>
     </div>
@@ -80,33 +63,26 @@
 
 
 <style>
+/* Basic Styles */
 
 
-    
-.alert {
-padding: 15px;
-margin-bottom: 20px;
-border: 1px solid transparent;
-border-radius: 4px;
-width: 100%;
-max-width: 400px;
-text-align: center;
-}
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
 
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
+
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        /* text-align: center; */
+        padding-top: 30px;
+        padding-bottom: 150px;
+        width: 100%;
+    }
 
 .signup-form {
+    margin-top: 40px;
     background-color: white;
-    padding: 40px;
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
@@ -117,6 +93,7 @@ text-align: center;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     color: #D35269;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .signup-form p {
@@ -180,18 +157,3 @@ text-align: center;
 .redirect-login a:hover {
     text-decoration: underline;
 }
-
-.logo {
-    width: 90px;
-    height: auto;
-}
-
-</style>
-<script>
-    setTimeout(function () {
-        var alert = document.querySelector('.alert');
-        if (alert) {
-            alert.style.display = 'none';
-        }
-    }, 5000); 
-</script>

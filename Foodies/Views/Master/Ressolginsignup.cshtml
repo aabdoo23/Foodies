@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/Main.css" asp-append-version="true"/>
 
-    @* stylesheet *@
-     <link rel="stylesheet" href="css/Main.css" asp-append-version="true"> 
-
-
-    <title>White Navbar with Shadow</title>
+    <title>Login & Sign Up</title>
 </head>
 <body>
 
@@ -17,8 +14,7 @@
         <p>Please log in or sign up to continue</p>
         <div class="button-container">
         <a href="/Master/AdminSignUp"><button class="btn" >Sign Up</button></a>
-         <a href="/Master/ResturantLogIn"><button class="btn btn-secondary">Login</button></a>
-
+        <a href="/Master/ResturantLogIn"><button class="btn btn-secondary">Login</button></a>
 
         </div>
     </div>
@@ -32,14 +28,8 @@
     margin: 0;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #fafffe;
-}
-
-/* /* Media Queries */
-/*     media screen and (max-width: 768px) {
+/* Media Queries */
+    media screen and (max-width: 768px) {
     .content {
         margin: 100px 20px;
         font-size: 24px;
@@ -48,5 +38,5 @@ body {
     .navbar a {
         margin: 0 20px;
     }
-} */ */
+}
 </style>
