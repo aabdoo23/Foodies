@@ -1,17 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Numerics;
-using System.Reflection.Metadata;
-
-namespace Foodies.Models
+﻿namespace Foodies.Models
 {
-    public class Foodiesdbcontext : DbContext
+    public class FoodiesDbContext : DbContext
     {
-        public Foodiesdbcontext() { }
-
-        public Foodiesdbcontext(DbContextOptions<Foodiesdbcontext> options)
-            : base(options)
+        public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
         {
-        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

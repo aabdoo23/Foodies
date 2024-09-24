@@ -35,5 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\Image\" />
+    <Folder Include="wwwroot\assets\images\order_history\" />
   </ItemGroup>
 </Project>

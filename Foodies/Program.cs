@@ -1,3 +1,4 @@
+
 using Foodies.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ namespace Foodies
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
             builder.Services.AddDbContext<Foodiesdbcontext>(options => {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection"));
             });
@@ -34,6 +36,7 @@ namespace Foodies
 
             app.MapControllerRoute(
                 name: "default",
+
 
                 pattern: "{controller=Master}/{action=view}/{id?}");
 

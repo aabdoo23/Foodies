@@ -1,3 +1,4 @@
+
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +18,7 @@ namespace Foodies.Models
         public virtual List<MenuItem>? MenuItems { get; set; }
         //200 - 1400
         public virtual List<Branch>? Branches { get; set; }
+
         public virtual Admin RestaurantAdmin { get; set; }
         #region New
         /* [Column(TypeName = "time")]

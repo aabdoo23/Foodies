@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Foodies.Models
+﻿namespace Foodies.Models
 {
 
     public class Admin
     {
         public int AdminId { get; set; }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; } 
