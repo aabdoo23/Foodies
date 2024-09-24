@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\foodies.png" />
+    <Content Remove="wwwroot\Image\" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Views\Authentication\LogIn.cshtml">
@@ -31,5 +32,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\foodies.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\Image\" />
   </ItemGroup>
 </Project>
