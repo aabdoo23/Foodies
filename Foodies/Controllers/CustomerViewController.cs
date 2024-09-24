@@ -14,11 +14,12 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections;
 using System.Diagnostics.Metrics;
 using System.Runtime.InteropServices;
+using Foodies.Models;
 namespace Foodies.Controllers
 {
 	public class CustomerViewController : Controller
 	{
-		Foodiesdbcontext context=new Foodiesdbcontext();
+        FoodiesDbContext context;
 		public IActionResult index()
 		{
 		var mnui=context.Restaurant.ToList();

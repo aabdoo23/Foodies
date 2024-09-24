@@ -3,7 +3,7 @@
     public class FoodiesDbContext : DbContext
     {
         public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
-        {
+        { }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

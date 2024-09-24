@@ -14,7 +14,7 @@ namespace Foodies
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<Foodiesdbcontext>(options => {
+            builder.Services.AddDbContext<FoodiesDbContext>(options => {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection"));
             });
             var app = builder.Build();
@@ -38,7 +38,7 @@ namespace Foodies
                 name: "default",
 
 
-                pattern: "{controller=Master}/{action=view}/{id?}");
+                pattern: "{controller=Menu}/{action=Index}/{id?}");
 
 
             app.Run();
