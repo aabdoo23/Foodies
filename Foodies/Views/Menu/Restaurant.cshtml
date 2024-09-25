@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Restaurant>
+
+<head>
+    <title>Restaurants</title>
+</head>
+<body>
+    <header class="header">
+        <h1>Restaurants</h1>
+    </header>
+    <div class="container">
+        <div class="restaurant-list">
+            @foreach (var restaurant in Model)
+            {
+                <div class="card restaurant-item">
+                    <div class="card-img">
+                        <img src="@restaurant.Photo" alt="@restaurant.Name Logo" class="img-fluid">
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">@restaurant.Name</h2>
+                        <p class="card-text">Hotline: @restaurant.Hotline</p>
+                        <p class="card-text">Cuisine Type: @restaurant.CuisineType</p>
+                        <p class="card-text">Price Range: @restaurant.MinPrice LE - @restaurant.MaxPrice LE</p>
+                        <a asp-controller="Menu" asp-action="Index" asp-route-restaurantId="@restaurant.Id" class="btn btn-primary view-menu-btn">View Menu</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</body>

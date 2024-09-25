@@ -1,11 +1,16 @@
-﻿using Foodies.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Foodies.Controllers
 {
-    public class Master : Controller
+    public class MasterController : Controller
     {
-        FoodiesDbContext context = new FoodiesDbContext();
+        private readonly FoodiesDbContext context;
+
+        public MasterController(FoodiesDbContext context)
+        {
+            this.context = context;
+        }
+
         public IActionResult view()
         {
             return View();
@@ -109,8 +114,8 @@ namespace Foodies.Controllers
             var existingCustomer = context.Customer.FirstOrDefault(x => x.Email == email && x.Password == pass);
             if (existingCustomer != null)
             {
-              
-                return RedirectToAction("index", "CustomerView",existingCustomer);
+
+                return RedirectToAction("index", "CustomerView", existingCustomer);
             }
             else
             {
