@@ -109,7 +109,8 @@ namespace Foodies.Controllers
             var existingCustomer = context.Customer.FirstOrDefault(x => x.Email == email && x.Password == pass);
             if (existingCustomer != null)
             {
-                return RedirectToAction("index", "CustomerView");
+              
+                return RedirectToAction("index", "CustomerView",existingCustomer);
             }
             else
             {

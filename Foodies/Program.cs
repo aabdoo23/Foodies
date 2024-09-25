@@ -38,7 +38,7 @@ namespace Foodies
                 name: "default",
 
 
-                pattern: "{controller=Menu}/{action=Index}/{id?}");
+                pattern: "{controller=master}/{action=view}/{id?}");
 
 
             app.Run();

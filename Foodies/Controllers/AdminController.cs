@@ -2,9 +2,9 @@
 
 namespace Foodies.Controllers
 {
-    public class CartController : Controller
+    public class AdminController : Controller
     {
-        public IActionResult Index()
+        public IActionResult View()
         {
             return View();
         }

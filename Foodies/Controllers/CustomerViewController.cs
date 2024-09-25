@@ -20,10 +20,13 @@ namespace Foodies.Controllers
 	public class CustomerViewController : Controller
 	{
         FoodiesDbContext context = new FoodiesDbContext();
-		public IActionResult index()
+		
+		public IActionResult index(Customer Cus)
 		{
-		var mnui=context.Restaurant.ToList();
-		  return View(mnui);
+		var mnui=ViewData["Reslist"]=context.Restaurant.ToList();
+            //	Console.WriteLine(
+            Console.WriteLine(Cus);
+            return View(Cus);
 		}
 		public IActionResult Minew(int id) {
 

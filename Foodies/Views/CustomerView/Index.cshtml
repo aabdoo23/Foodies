@@ -1,6 +1,5 @@
 ﻿
-@model List<Restaurant>
-
+@model Customer
 
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -36,8 +35,8 @@
             </div>
 
             @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "Cart", Icon = "shopping-cart", Url = "https://a7medsr.github.io/cart-/" })
-            @await Component.InvokeAsync("ButtonViewComponent", new { Text = "1412 Points", Icon = "medal", Url = "www.google.com" })
-            @await Component.InvokeAsync("ButtonViewComponent", new { Text = "Welcome, User", Icon = "user", Url = "" })
+            @await Component.InvokeAsync("ButtonViewComponent", new { Text = Model.Points.ToString(), Icon = "medal", Url = "www.google.com" })
+            @await Component.InvokeAsync("ButtonViewComponent", new { Text = Model.FirstName, Icon = "user", Url = "" })
         </div>
     </div>
 </nav>
@@ -73,7 +72,7 @@
 
         <div clasws="home-section-items" >
               
-            @foreach(var i in Model)
+            @foreach(var i in ViewBag.Reslist)
             {
                 @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.Name, Hotline = i.Hotline, CuisineType = i.CuisineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = "https://th.bing.com/th/id/OIP._xqATV2x664IX4Ps-AsBQQHaFj?rs=1&pid=ImgDetMain", Url = $"/CustomerView/Minew/{i.Id}" })
             }
