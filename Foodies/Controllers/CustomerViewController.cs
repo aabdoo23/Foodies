@@ -14,15 +14,19 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections;
 using System.Diagnostics.Metrics;
 using System.Runtime.InteropServices;
+using Foodies.Models;
 namespace Foodies.Controllers
 {
 	public class CustomerViewController : Controller
 	{
-		Foodiesdbcontext context=new Foodiesdbcontext();
-		public IActionResult index()
+        FoodiesDbContext context = new FoodiesDbContext();
+		
+		public IActionResult index(Customer Cus)
 		{
-		var mnui=context.Restaurant.ToList();
-		  return View(mnui);
+		var mnui=ViewData["Reslist"]=context.Restaurant.ToList();
+            //	Console.WriteLine(
+            Console.WriteLine(Cus);
+            return View(Cus);
 		}
 		public IActionResult Minew(int id) {
 

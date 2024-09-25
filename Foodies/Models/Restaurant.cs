@@ -1,3 +1,4 @@
+
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,7 +8,6 @@ namespace Foodies.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        [Column(TypeName = "VARBINARY(MAX)")]
         public string? Photo {  get; set; }    
         public string Hotline { get; set; }
         public int MinPrice { get; set; } = 0;
@@ -17,6 +17,7 @@ namespace Foodies.Models
         public virtual List<MenuItem>? MenuItems { get; set; }
         //200 - 1400
         public virtual List<Branch>? Branches { get; set; }
+
         public virtual Admin RestaurantAdmin { get; set; }
         #region New
         /* [Column(TypeName = "time")]

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Foodies.Models
+﻿namespace Foodies.Models
 {
     public class Rating
     {

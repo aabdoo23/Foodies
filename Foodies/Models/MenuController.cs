@@ -2,7 +2,7 @@
 
 namespace Foodies.Controllers
 {
-    public class CartController : Controller
+    public class MenuController : Controller
     {
         public IActionResult Index()
         {

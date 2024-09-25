@@ -1,21 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Numerics;
-using System.Reflection.Metadata;
+﻿using Microsoft.Extensions.Options;
 
 namespace Foodies.Models
 {
-    public class Foodiesdbcontext : DbContext
+    public class FoodiesDbContext : DbContext
     {
-        public Foodiesdbcontext() { }
-
-        public Foodiesdbcontext(DbContextOptions<Foodiesdbcontext> options)
-            : base(options)
+        public FoodiesDbContext()
+        { }
+        public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
         {
-        }
+            
+    }
+        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-		}
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=db8263.public.databaseasp.net; Database=db8263; User Id=db8263; Password=p_7CQx?45Mi=; Encrypt=True; TrustServerCertificate=True; MultipleActiveResultSets=True;");
+        }
+    }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
