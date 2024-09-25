@@ -36,7 +36,7 @@
 
             @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "Cart", Icon = "shopping-cart", Url = "https://a7medsr.github.io/cart-/" })
             @await Component.InvokeAsync("ButtonViewComponent", new { Text = Model.Points.ToString(), Icon = "medal", Url = "www.google.com" })
-            @await Component.InvokeAsync("ButtonViewComponent", new { Text = Model.FirstName, Icon = "user", Url = "" })
+            @await Component.InvokeAsync("ButtonViewComponent", new { Text = Model.FirstName, Icon = "user", Url = $"/Home/User/{Model.Id}" })
         </div>
     </div>
 </nav>
