@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />   *@
+             @* <link rel="stylesheet" href="~/css/Main.css" asp-append-version="true">   *@
 
     <title>Sign Up - Foodies</title>
 </head>
@@ -52,7 +53,7 @@
                 <button type="submit" class="btn">Create Account</button>
             </form>
             <div class="redirect-login">
-                <p>Already have an account? <a href="@Url.Action("LogIn", "Home")">Login here</a></p>
+                <p>Already have an account? <a href="/Master/CustomerLogin"><button class="text-button">Login here</button></a>
             </div>
         </div>
     </div>
@@ -70,9 +71,11 @@
 
     .content {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         flex-direction: column;
+        display: flex;
+        height: 100vh; /* Full viewport height */
         /* text-align: center; */
         padding-top: 30px;
         padding-bottom: 150px;
@@ -80,7 +83,7 @@
     }
 
 .signup-form {
-    margin-top: 40px;
+    margin-top: 50px;
     background-color: white;
     padding: 30px;
     border-radius: 10px;
@@ -126,7 +129,7 @@
     width: 100%;
 }
 
-.signup-form button {
+.signup-form .btn {
     background-color: #048a81;
     color: white;
     border: none;
@@ -138,10 +141,14 @@
     font-weight: bold;
 }
 
-.signup-form button:hover {
+.signup-form .btn:hover {
     background-color: #2EBFA5;
     color: #b0374d;
     font-weight: bold;
+
+
+    .text-button:hover;
+    text-decoration: none;
 }
 
 .redirect-login {
@@ -149,11 +156,11 @@
     font-size: 14px;
 }
 
-.redirect-login a {
+.redirect-login button {
     color: #D35269;
     text-decoration: none;
 }
 
-.redirect-login a:hover {
+.redirect-login button:hover {
     text-decoration: underline;
 }

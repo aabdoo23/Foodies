@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
 }
 
 /*body {
@@ -15,19 +16,25 @@
     height: auto;
     flex-direction: column;
 }*/
-
+html, body {
+    font-family: Arial, sans-serif;
+    background-color: #048a81;
+    background-image: url('/images/FoodiesBanner5.png'); /* Replace with the actual path to your image */
+    background-size: cover; /* Ensures the image covers the whole page */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
 
 .navbar {
-    background-color: white;
-    padding: 10px 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    width: 100%;
+    position: fixed; /* Make it stick to the top */
     top: 0;
-    z-index: 1000;
+    width: 100%;
+    padding: 15px 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1),rgba(255, 255, 255, 1), rgba(255, 255, 255, 1), 
+    rgba(128, 245, 224, 1));
+    /* Gradient from dark green to light green */
+    /*backdrop-filter: blur(10px);*/ /* Adds a nice glass effect */
+    /* border-bottom: 1px solid rgb?a(255, 255, 255, 0.3); Subtle border for separation */
 }
 
 .navbar a {
