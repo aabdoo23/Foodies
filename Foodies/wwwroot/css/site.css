@@ -1,3 +1,11 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
+}
+
+
 html {
   font-size: 14px;
 }
@@ -18,8 +26,12 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+    /*margin-bottom: 60px;*/
+    font-family: Arial, sans-serif;
+    background-color: #fafffe;
 }
+
 
 :root {
     --primary-color: #048a81;
@@ -28,3 +40,5 @@ body {
     --teirtary-color: #2ebfa5;
     --white: #e7ecef;
 }
+
+
