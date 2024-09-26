@@ -1,14 +1,10 @@
-
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Foodies.Models
 {
     public class Restaurant
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string? Photo {  get; set; }    
+        public string? Photo { get; set; }
         public string Hotline { get; set; }
         public int MinPrice { get; set; } = 0;
         public int MaxPrice { get; set; } = 0;

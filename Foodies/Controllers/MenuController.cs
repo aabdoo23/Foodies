@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Foodies.Controllers
 {
-    #region menu
-    /*
+
+
     public class MenuController : Controller
     {
         private readonly FoodiesDbContext _context;
@@ -23,7 +23,9 @@ namespace Foodies.Controllers
             }
 
             var menuItems = await _context.MenuItem
-                .Where(m => m.Resturant.Id == restaurantId)
+
+                .Where(m => m.Resturant.Id == restaurantId && (category == null || m.Category == category))
+
                 .ToListAsync();
 
             var categories = menuItems
@@ -43,12 +45,25 @@ namespace Foodies.Controllers
         }
 
 
+        // Should be in RestaurantController
+
         public async Task<IActionResult> Restaurant()
         {
             var restaurants = await _context.Restaurant.ToListAsync();
             return View(restaurants);
         }
+
+        public async Task<IActionResult> LoadMenuItems(int restaurantId, string? category = null)
+        {
+            var menuItems = await _context.MenuItem
+                .Where(m => m.Resturant.Id == restaurantId && (category == null || m.Category == category))
+                .ToListAsync();
+
+            return PartialView("_MenuItems", menuItems);
+        }
     }
-    */
-    #endregion
+}
+
+    }
+
 }
