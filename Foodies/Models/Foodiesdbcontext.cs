@@ -5,7 +5,7 @@
         public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
         {
         }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //One-to-one relationship

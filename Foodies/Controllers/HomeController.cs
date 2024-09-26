@@ -1,17 +1,20 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Foodies.Controllers
 {
     public class HomeController : Controller
     {
-        FoodiesDbContext context = new FoodiesDbContext();
+        private readonly FoodiesDbContext context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(FoodiesDbContext context, ILogger<HomeController> logger)
         {
+            this.context = context;
             _logger = logger;
         }
+
         
         public IActionResult CustomerView()
         {
