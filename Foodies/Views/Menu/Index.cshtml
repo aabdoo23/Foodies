@@ -3,6 +3,7 @@
 <head>
     <title>Restaurant Menu</title>
     <link rel="stylesheet" href="~/css/Menu.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -15,26 +16,11 @@
                 <span>(0)</span>
             </div>
         </div>
+        <a asp-controller="Menu" asp-action="Restaurant" class="back-btn">Back to Restaurants</a>
     </header>
 
     <div class="container">
-        <div class="sidebar">
-            <div class="logo">
-                <img src="~/assets/images/menu/foodies_logo.png" alt="Foodies Logo" style="height: 50px; margin-bottom: 20px;">
-            </div>
-            <h2>Menu</h2>
-            <div class="categories">
-                @foreach (var category in Model.Categories)
-                {
-                    <a href="@Url.Action("Index", new { restaurantId = Model.Restaurant.Id, category = category })" class="@(category == Model.SelectedCategory ? "active" : "")">@category</a>
-                }
-            </div>
-        </div>
-
         <div class="main-content">
-            <div class="return-button">
-                <a asp-controller="Menu" asp-action="Restaurant" asp-route-restaurantId="@Model.Restaurant.Id" class="return-link btn btn-primary">Return to Restaurant</a>
-            </div>
             <div class="restaurant-info">
                 <img src="@Model.Restaurant.Photo" alt="Restaurant Logo">
                 <div class="restaurant-details">
@@ -42,36 +28,41 @@
                     <p>Open 24 Hours | Delivery time: 40 minutes | Delivered by: Foodies</p>
                 </div>
                 <div class="restaurant-rating">
-                    <p>Rating: 4.5
+                    <p>Rating: 4.5</p>
                 </div>
             </div>
 
-            <div class="menu">
-                @foreach (var item in Model.MenuItems)
+            <div class="category-filters">
+                @foreach (var category in Model.Categories)
                 {
-                    <div class="menu-item">
-                        <img src="@item.img" alt="@item.Name">
-                        <div class="menu-details">
-                            <h4>@item.Name</h4>
-                            <p>Price: @item.Price LE</p>
-                        </div>
-                        <div class="add-to-cart">
-                            <button class="cart-icon"
-                                    style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-                        </div>
-                    </div>
+                    <button class="category-btn @(category == Model.SelectedCategory ? "active" : "")" data-category="@category">@category</button>
                 }
             </div>
 
-            @* <!-- Pagination -->
-            <div class="pagination">
-            <a href="#">Previous</a>
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">Next</a>
-            </div> *@
-        
+            <div id="menu-container">
+                @await Html.PartialAsync("_MenuItems", Model.MenuItems)
             </div>
         </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('.category-btn').click(function (e) {
+                e.preventDefault();
+                var category = $(this).data('category');
+                var restaurantId = '@Model.Restaurant.Id';
+
+                $('.category-btn').removeClass('active');
+                $(this).addClass('active');
+
+                $.ajax({
+                    url: '@Url.Action("LoadMenuItems", "Menu")',
+                    data: { restaurantId: restaurantId, category: category },
+                    success: function (data) {
+                        $('#menu-container').html(data);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
