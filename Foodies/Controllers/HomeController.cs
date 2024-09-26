@@ -31,6 +31,19 @@ namespace Foodies.Controllers
             ViewBag.menu =context.MenuItem.Where(x => x.Resturant.Id== adm.RestaurantId).ToList();
             return View(adm);
         }
+        public IActionResult AddMenuItem(MenuItem Menu)
+        {
+
+            MenuItem mnu= new MenuItem();   
+            mnu.Category = Menu.Category;
+            mnu.Name = Menu.Name;
+            mnu.Description = Menu.Description;
+            mnu.Resturant = Menu.Resturant;
+            context.Add(mnu);  
+            context.SaveChanges();  
+            return RedirectToAction("AdminProfile");
+
+        }
         public IActionResult User(int id)
         {
             var Cus=context.Customer.SingleOrDefault(x => x.Id == id);
