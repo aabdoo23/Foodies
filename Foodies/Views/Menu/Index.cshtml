@@ -1,243 +1,9 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@model MenuViewModel
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Menu</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #FFFFFF;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-            width: 100vw;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Sidebar Design */
-        .sidebar {
-            width: 250px;
-            background-color: #1E1E24;
-            color: white;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: white;
-            display: block;
-            margin: 10px 0;
-            font-size: 18px;
-            padding: 10px;
-        }
-
-        .sidebar a.active {
-            background-color: #2EBFA5;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-top: 60px;
-        }
-
-        .header {
-            background-color: #1E1E24;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 10px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 250px;
-            right: 0;
-            z-index: 10;
-        }
-
-        .header .user-info {
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            color: #FFFFFF;
-        }
-
-        .header .user-info img {
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .header .user-info img:hover {
-            transform: rotate(360deg);
-        }
-
-        .header .user-info .cart {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-        }
-
-        .header .user-info .cart img {
-            height: 24px;
-            margin-right: 5px;
-        }
-
-        /* Restaurant Info */
-        .restaurant-info {
-            background-color: #2EBFA5;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #D35269;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-
-        .restaurant-info img {
-            width: 120px;
-            border-radius: 10px;
-        }
-
-        .restaurant-details {
-            text-align: left;
-            flex-grow: 1;
-            margin-left: 20px;
-        }
-
-        .restaurant-details h1 {
-            margin: 0;
-            font-size: 24px;
-            color: white;
-        }
-
-        .restaurant-details p {
-            margin: 5px 0;
-            color: white;
-            font-size: 14px;
-        }
-
-        .restaurant-rating {
-            font-size: 18px;
-            color: white;
-            background-color: #048A81;
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        /* Menu Cards */
-        .menu {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .menu-item {
-            border: 2px solid #048A81;
-            border-radius: 10px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        .menu-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .menu-item img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-        }
-
-        .menu-details {
-            margin-left: 15px;
-            flex-grow: 1;
-        }
-
-        .menu-details h4 {
-            margin: 0;
-            font-size: 18px;
-        }
-
-        .menu-details p {
-            margin: 5px 0;
-            color: #048A81;
-        }
-
-        .add-to-cart {
-            display: flex;
-            align-items: center;
-        }
-
-        .cart-btn {
-            background-color: #2EBFA5;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .cart-icon {
-            background: none;
-            background-size: contain;
-            background-repeat: no-repeat;
-            width: 24px;
-            height: 24px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .sidebar h2 {
-            margin-top: 0;
-            margin-bottom: 30px;
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .pagination a {
-            color: black;
-            padding: 8px 16px;
-            text-decoration: none;
-            background-color: #f1f1f1;
-            margin: 0 5px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .pagination a:hover {
-            background-color: #D35269;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/Menu.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -250,28 +16,15 @@
                 <span>(0)</span>
             </div>
         </div>
+        <a asp-controller="Menu" asp-action="Restaurant" class="back-btn">Back to Restaurants</a>
     </header>
 
     <div class="container">
-        <div class="sidebar">
-            <div class="logo">
-                <img src="/assets/images/menu/foodies_logo.png" alt="Foodies Logo"
-                     style="height: 50px; margin-bottom: 20px;">
-            </div>
-            <h2>Menu</h2>
-            <a href="#">Appetizers</a>
-            <a href="#">Beef Sandwiches</a>
-            <a href="#" class="active">Chicken Sandwiches</a>
-            <a href="#">Premium Sandwiches</a>
-            <a href="#">Drinks</a>
-            <a href="#">Desserts</a>
-        </div>
-
         <div class="main-content">
             <div class="restaurant-info">
-                <img src="/assets/images/menu/logo.png" alt="Restaurant Logo">
+                <img src="@Model.Restaurant.Photo" alt="Restaurant Logo">
                 <div class="restaurant-details">
-                    <h1>HARRTATTACK BURGER</h1>
+                    <h1>@Model.Restaurant.Name</h1>
                     <p>Open 24 Hours | Delivery time: 40 minutes | Delivered by: Foodies</p>
                 </div>
                 <div class="restaurant-rating">
@@ -279,78 +32,37 @@
                 </div>
             </div>
 
-            <div class="menu">
-                <!-- menu items -->
-                <div class="menu-item">
-                    <img src="/assets/images/menu/chicken_sandwich.png" alt="Chicken Sandwich">
-                    <div class="menu-details">
-                        <h4>Single Chicken Sandwich</h4>
-                        <p>Price: 100 LE</p>
-                    </div>
-                    <div class="add-to-cart">
-                        <button class="cart-icon"
-                                style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="/assets/images/menu/chicken_sandwich.png" alt="Chicken Sandwich">
-                    <div class="menu-details">
-                        <h4>Single Chicken Sandwich</h4>
-                        <p>Price: 100 LE</p>
-                    </div>
-                    <div class="add-to-cart">
-                        <button class="cart-icon"
-                                style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <img src="/assets/images/menu/chicken_sandwich.png" alt="Chicken Sandwich">
-                    <div class="menu-details">
-                        <h4>Single Chicken Sandwich</h4>
-                        <p>Price: 100 LE</p>
-                    </div>
-                    <div class="add-to-cart">
-                        <button class="cart-icon"
-                                style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <img src="/assets/images/menu/chicken_sandwich.png" alt="Chicken Sandwich">
-                    <div class="menu-details">
-                        <h4>Single Chicken Sandwich</h4>
-                        <p>Price: 100 LE</p>
-                    </div>
-                    <div class="add-to-cart">
-                        <button class="cart-icon"
-                                style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <img src="/assets/images/menu/chicken_sandwich.png" alt="Chicken Sandwich">
-                    <div class="menu-details">
-                        <h4>Single Chicken Sandwich</h4>
-                        <p>Price: 100 LE</p>
-                    </div>
-                    <div class="add-to-cart">
-                        <button class="cart-icon"
-                                style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-                    </div>
-                </div>
+            <div class="category-filters">
+                @foreach (var category in Model.Categories)
+                {
+                    <button class="category-btn @(category == Model.SelectedCategory ? "active" : "")" data-category="@category">@category</button>
+                }
             </div>
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <a href="#">Previous</a>
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">Next</a>
+            <div id="menu-container">
+                @await Html.PartialAsync("_MenuItems", Model.MenuItems)
             </div>
-
         </div>
     </div>
 
-</body>
+    <script>
+        $(document).ready(function () {
+            $('.category-btn').click(function (e) {
+                e.preventDefault();
+                var category = $(this).data('category');
+                var restaurantId = '@Model.Restaurant.Id';
 
-</html>
+                $('.category-btn').removeClass('active');
+                $(this).addClass('active');
+
+                $.ajax({
+                    url: '@Url.Action("LoadMenuItems", "Menu")',
+                    data: { restaurantId: restaurantId, category: category },
+                    success: function (data) {
+                        $('#menu-container').html(data);
+                    }
+                });
+            });
+        });
+    </script>
+</body>

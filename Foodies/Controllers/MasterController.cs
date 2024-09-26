@@ -1,11 +1,20 @@
+
 ﻿using Foodies.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.Intrinsics.Arm;
+
 
 namespace Foodies.Controllers
 {
-    public class Master : Controller
+    public class MasterController : Controller
     {
-        FoodiesDbContext context = new FoodiesDbContext();
+        private readonly FoodiesDbContext context;
+
+        public MasterController(FoodiesDbContext context)
+        {
+            this.context = context;
+        }
+
         public IActionResult view()
         {
             return View();
@@ -79,7 +88,7 @@ namespace Foodies.Controllers
                 newadmin.RestaurantId = rresid;
                 context.Admin.Add(newadmin);
                 context.SaveChanges();
-                return View("Ressolginsignup");
+                return RedirectToAction("ResturantLogIn", "Master");
             }
             else if (resturannam != null && Admininsystim != null)
             {
@@ -109,8 +118,8 @@ namespace Foodies.Controllers
             var existingCustomer = context.Customer.FirstOrDefault(x => x.Email == email && x.Password == pass);
             if (existingCustomer != null)
             {
-              
-                return RedirectToAction("index", "CustomerView",existingCustomer);
+
+                return RedirectToAction("index", "CustomerView", existingCustomer);
             }
             else
             {
@@ -127,18 +136,18 @@ namespace Foodies.Controllers
         }
         public IActionResult REsturantonerLogIn(string email, string pass)
         {
-            var existingCustomer = context.Admin.FirstOrDefault(x => x.Email == email && x.Password == pass);
-            if (existingCustomer != null)
+            var existingAdmin = context.Admin.Include(x=>x.Restaurant).FirstOrDefault(x => x.Email == email && x.Password == pass);
+            if (existingAdmin != null)
             {
-                return RedirectToAction("index", "CustomerView");
+
+                return RedirectToAction("AdminProfile", "Home", existingAdmin);
             }
             else
             {
                 ViewBag.NotificationMessage = "wrong email or password";
                 ViewBag.NotificationType = "danger";
-                return View("CustomerLogIn");
+                return View("ResturantLogIn");
             }
-
 
         }
 

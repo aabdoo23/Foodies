@@ -1,0 +1,17 @@
+﻿@model IEnumerable<MenuItem>
+
+<div class="menu">
+    @foreach (var item in Model)
+    {
+        <div class="menu-item">
+            <img src="@item.img" alt="@item.Name" loading="lazy">
+            <div class="menu-details">
+                <h4>@item.Name</h4>
+                <p>Price: @item.Price LE</p>
+            </div>
+            <div class="add-to-cart">
+                <button class="cart-icon" style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
+            </div>
+        </div>
+    }
+</div>
