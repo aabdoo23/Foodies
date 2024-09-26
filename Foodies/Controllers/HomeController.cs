@@ -23,9 +23,11 @@ namespace Foodies.Controllers
         {
             return View();
         }
-        public IActionResult Admin()
+        public async Task<IActionResult> AdminProfile(Admin adm)
         {
-            return View();
+            ViewBag.Rest =await context.Restaurant.Include(x=>x.MenuItems).SingleOrDefaultAsync(x => x.Id == adm.RestaurantId);
+            ViewBag.menu =context.MenuItem.Where(x => x.Resturant.Id== adm.RestaurantId).ToList();
+            return View(adm);
         }
         public IActionResult User(int id)
         {
