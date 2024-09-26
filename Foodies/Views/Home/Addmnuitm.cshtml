@@ -1,0 +1,21 @@
+﻿@model Restaurant
+ <br /> <br /> <br /> <br /> <br />
+<form asp-action="SaveEditinmnu" method="post">
+    <input type="hidden" name="restaurantId" value="@Model.Id" />
+    <div>
+        <label for="Name">Enter Name</label>
+        <input type="text" name="Name" class="form-control" required />
+
+        <label for="Price">Enter Price</label>
+        <input type="number" name="Price" class="form-control" required />
+
+        <label for="Category">Enter Category</label>
+        <input type="text" name="Category" class="form-control" required />
+
+        <label for="Description">Enter Description</label>
+        <input type="text" name="Description" class="form-control" required />
+    </div>
+
+    <br />
+    <input type="submit" value="Add" class="btn btn-secondary" />
+</form>
