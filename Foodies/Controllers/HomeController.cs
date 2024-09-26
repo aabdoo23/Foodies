@@ -27,15 +27,23 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> AdminProfile(Admin adm)
         {
-            var restaurant = await context.Restaurant.Include(x=>x.MenuItems)
-                .SingleOrDefaultAsync(x => x.Id == adm.RestaurantId);
-            ViewBag.Rest = restaurant;  // Assign restaurant to ViewBag.Rest
-         
-
+            ViewBag.Rest =await context.Restaurant.Include(x=>x.MenuItems).SingleOrDefaultAsync(x => x.Id == adm.RestaurantId);
             ViewBag.menu =context.MenuItem.Where(x => x.Resturant.Id== adm.RestaurantId).ToList();
             return View(adm);
         }
-        
+        public IActionResult AddMenuItem(MenuItem Menu)
+        {
+
+            MenuItem mnu= new MenuItem();   
+            mnu.Category = Menu.Category;
+            mnu.Name = Menu.Name;
+            mnu.Description = Menu.Description;
+            mnu.Resturant = Menu.Resturant;
+            context.Add(mnu);  
+            context.SaveChanges();  
+            return RedirectToAction("AdminProfile");
+
+        }
         public IActionResult User(int id)
         {
             var Cus=context.Customer.SingleOrDefault(x => x.Id == id);
@@ -63,19 +71,8 @@ namespace Foodies.Controllers
           //  ViewBag.NotificationType = "danger";
           //  return RedirectToAction("User",Cus);
         }
-        public IActionResult AddMenuItem(MenuItem Menu)
-        {
-            MenuItem mnu = new MenuItem();
-            mnu.Category = Menu.Category;
-            mnu.Name = Menu.Name;
-            mnu.Description = Menu.Description;
-            mnu.Resturant = Menu.Resturant;
-            context.MenuItem.Add(Menu);
-            context.SaveChanges();
-            return RedirectToAction("AdminProfile");
 
-        }
-        public IActionResult CusAddress(Customer Cus)
+       public IActionResult CusAddress(Customer Cus)
         {
             var Edit = context.Customer.SingleOrDefault(x => x.Id == Cus.Id);
             Edit.City = Cus.City;
@@ -90,7 +87,5 @@ namespace Foodies.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        
     }
 }

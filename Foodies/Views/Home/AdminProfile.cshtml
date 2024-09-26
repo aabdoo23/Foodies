@@ -1,7 +1,4 @@
 ﻿@model Admin
-@{
-    var restaurant = ViewBag.Restaurant as Restaurant;
-}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -112,8 +109,7 @@
                <div class="mb-3">
                  <label for="name" class="form-label">Name</label>
              </form>
-            <input type="text" class="form-control" name="Name" value="@ViewBag.Rest.Name " required />       
-
+            <input type="text" class="form-control" name="Email" value="@ViewBag.Rest.Name " required />       
             </div>
                </div>
                <div class="mb-3">
@@ -217,12 +213,12 @@
 </div>
  <div class="menu">
                 <!-- menu items -->
-                <form asp-action="AddMenuItem" method="post">
+                <form asp-action="AddMenuItem">
                     <input asp-for="Name" class="form-control" name="Name"  required />   
-                     <input asp-for="Price" class="form-control" name="Price" value = 68  required />  
+                     <input asp-for="Price" class="form-control" name="Price"  required />  
                        <input asp-for="Category" class="form-control" name="Category"  required /> 
                          <input asp-for="img" class="form-control" name="img"/> 
-                         <input asp-for="Resturant" class="form-control" value="@ViewBag.Rest.Id" /> 
+                         <input asp-for="Resturant" class="form-control" name="@ViewBag.Rest.Id" /> 
                            <input asp-for="Description" class="form-control" name="Description"  /> 
                  <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
 
