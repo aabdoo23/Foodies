@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+
+﻿using Foodies.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Runtime.Intrinsics.Arm;
+
 
 namespace Foodies.Controllers
 {
@@ -84,7 +88,7 @@ namespace Foodies.Controllers
                 newadmin.RestaurantId = rresid;
                 context.Admin.Add(newadmin);
                 context.SaveChanges();
-                return View("Ressolginsignup");
+                return RedirectToAction("ResturantLogIn", "Master");
             }
             else if (resturannam != null && Admininsystim != null)
             {
@@ -132,16 +136,17 @@ namespace Foodies.Controllers
         }
         public IActionResult REsturantonerLogIn(string email, string pass)
         {
-            var existingCustomer = context.Admin.FirstOrDefault(x => x.Email == email && x.Password == pass);
-            if (existingCustomer != null)
+            var existingAdmin = context.Admin.Include(x=>x.Restaurant).FirstOrDefault(x => x.Email == email && x.Password == pass);
+            if (existingAdmin != null)
             {
-                return RedirectToAction("index", "CustomerView");
+
+                return RedirectToAction("AdminProfile", "Home", existingAdmin);
             }
             else
             {
                 ViewBag.NotificationMessage = "wrong email or password";
                 ViewBag.NotificationType = "danger";
-                return View("CustomerLogIn");
+                return View("ResturantLogIn");
             }
 
 

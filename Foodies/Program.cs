@@ -1,3 +1,8 @@
+
+using Foodies.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+
 namespace Foodies
 {
     public class Program
@@ -17,16 +22,24 @@ namespace Foodies
 
             var app = builder.Build();
 
+            app.UseHttpsRedirection();
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            }
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
+                
+            });
+
+            //app.UseStaticFiles();
 
             app.UseRouting();
 
