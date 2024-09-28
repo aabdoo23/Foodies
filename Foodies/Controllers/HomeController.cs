@@ -43,8 +43,7 @@ namespace Foodies.Controllers
           
             return View(restu); // Pass the restaurant to the view
         }
-
-        public IActionResult SaveEditinmnu(MenuItem Menu, int restaurantId) {
+        public IActionResult SaveAddmnu(MenuItem Menu, int restaurantId) {
             MenuItem mnu = new MenuItem();
             mnu.Name = mnu.Name;
             mnu.Category = Menu.Category;
@@ -56,9 +55,32 @@ namespace Foodies.Controllers
             context.SaveChanges();
             var adm = context.Admin.SingleOrDefault(x => x.RestaurantId == Rest.Id);
             return RedirectToAction("AdminProfile", adm);
-
         }
-        
+        public IActionResult Editemnuitm(int id) {
+            var item= context.MenuItem.SingleOrDefault(x => x.Id == id);
+            return View(item);
+        }
+        public IActionResult SaveEdit(MenuItem Menu)
+        {
+            var mnu = context.MenuItem.Include(x => x.Resturant).SingleOrDefault(x => x.Id == Menu.Id);
+            mnu.Name = Menu.Name;
+            mnu.Price = Menu.Price;
+            mnu.Category = Menu.Category;
+            mnu.Name = Menu.Name;
+            mnu.Description = Menu.Description;
+            context.Update(mnu);
+            context.SaveChanges();
+            var adm = context.Admin.SingleOrDefault(x => x.RestaurantId == mnu.Resturant.Id);
+            return RedirectToAction("AdminProfile",adm);
+        }
+        public IActionResult Deletitem(int id)
+        {
+            var item = context.MenuItem.Include(x => x.Resturant).SingleOrDefault(x => x.Id == id);
+            context.Remove(item);
+            context.SaveChanges();
+            var adm = context.Admin.SingleOrDefault(x => x.RestaurantId == item.Resturant.Id);
+            return RedirectToAction("AdminProfile", adm);
+        }
         public IActionResult User(int id)
         {
             var Cus=context.Customer.SingleOrDefault(x => x.Id == id);
