@@ -34,6 +34,8 @@ namespace Foodies.Controllers
                 .SingleOrDefaultAsync(x => x.Id == adm.RestaurantId);
             ViewBag.Rest = restaurant;  // Assign restaurant to ViewBag.Rest
 
+            ViewBag.Branch= context.Branch.Where(x=>x.Restaurant== restaurant).ToList();
+
 
             ViewBag.menu = context.MenuItem.Where(x => x.Resturant.Id == adm.RestaurantId).ToList();
             return View(adm);
@@ -162,8 +164,6 @@ namespace Foodies.Controllers
             ViewBag.RestId = id;
             return View(admin);
         }
-
-
         public IActionResult SaveBranch(Branch brnch, BranchManager BrMngr, int restaurantId, int adminId)
         {
             Branch newBranch = new Branch

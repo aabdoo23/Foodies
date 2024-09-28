@@ -133,6 +133,12 @@
             <form action="/Home/AddBranch/@Model.RestaurantId" method="get">
           <button type="submit"  class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #3e1ba6;">Add Branches</button>
                 </form>
+                @foreach (var i in @ViewBag.Branch)
+                {
+                                    
+                     <h4>@i.BranchArea</h4>
+                                       
+                }
            `,
            'menu': `<div id="menu-container">
                     <div id="sidebar">
