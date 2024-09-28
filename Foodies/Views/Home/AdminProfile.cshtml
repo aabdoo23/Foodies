@@ -128,17 +128,55 @@
                  <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
                </div>
              </form>
-               `,
+           `,
            'branches': `
-            <form action="/Home/AddBranch/@Model.RestaurantId" method="get">
-          <button type="submit"  class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #3e1ba6;">Add Branches</button>
-                </form>
-                @foreach (var i in @ViewBag.Branch)
-                {
-                                    
-                     <h4>@i.BranchArea</h4>
-                                       
-                }
+             <h3>Your Branches</h3>
+             <form>
+               <div class="mb-3">
+                 <label for="branchNo" class="form-label">Branches No.</label>
+                 <input type="text" class="form-control" id="branchNo" placeholder="" />
+               </div>
+               <div class="mb-3">
+                 <label for="city" class="form-label">City</label>
+                 <input type="text" class="form-control" id="city" placeholder="" />
+               </div>
+               <div class="mb-3">
+                 <label for="country" class="form-label">Country</label>
+                 <input type="text" class="form-control" id="country" placeholder="" />
+               </div>
+               <div class="mb-3">
+                 <label for="location" class="form-label">Location Link</label>
+                 <input type="text" class="form-control" id="location" placeholder="" />
+               </div>
+               <!--working hours div-->
+               <h5>Working Hours</h5>
+               <div id="working-hours">
+                 <div class="clock-container">
+                   <h6>Opening Time</h6>
+                   <div class="clock">
+                    <span id="opening-time">08:00</span>
+                    <div class="controls">
+                      <button onclick="adjustTime('opening', 1)">+</button>
+                      <button onclick="adjustTime('opening', -1)">-</button>
+                    </div>
+                   </div>
+                 </div>
+                 <div class="clock-container">
+                   <h6>Closing Time</h6>
+                   <div class="clock">
+                   <span id="closing-time">17:00</span>
+                   <div class="controls">
+                    <button onclick="adjustTime('closing', 1)">+</button>
+                    <button onclick="adjustTime('closing', -1)">-</button>
+                   </div>
+                 </div>
+                 </div>
+                </div>
+
+               <div class="mb-3">
+                 <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
+               </div>
+             </form>
            `,
            'menu': `<div id="menu-container">
                     <div id="sidebar">
@@ -155,7 +193,7 @@
                     </div>
                     <div id="content-area">
                       <div class="restaurant-container">
-  @*  <div class="restaurant-header">
+    <div class="restaurant-header">
         <h2>Heart Attack</h2>
         <div class="rating">
             <i class="fa-solid fa-star"></i>
@@ -176,11 +214,11 @@
             <p>Foodies</p>
         </div>
     </div>
-</div>*@
- <div class="menu" class="restaurant-header">
+</div>
+ <div class="menu">
                
              <form action="/Home/Addmnuitm/@Model.RestaurantId" method="get">
-                 <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Add menu item</button>
+                 <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
                 </form>
             @foreach (var i in @ViewBag.menu)
                 {
@@ -190,8 +228,6 @@
                                     <h4>@i.Name</h4>
                                     <p>Price: @i.Price LE</p>
                                     <p>Description: @i.Description</p>
-                                              <td><a href="/Home/Editemnuitm/@i.Id" class="btn btn-secondary">Edite</a></td>
-                                              <td><a href="/Home/Deletitem/@i.Id" class="btn btn-secondary">Delete</a></td>
                                 </div>
                                 <div class="add-to-cart">
                                     <button class="cart-icon"
