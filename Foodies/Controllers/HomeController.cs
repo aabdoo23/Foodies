@@ -166,7 +166,6 @@ namespace Foodies.Controllers
 
         public IActionResult SaveBranch(Branch brnch, BranchManager BrMngr, int restaurantId, int adminId)
         {
-            // Create new Branch object
             Branch newBranch = new Branch
             {
                 Restaurant = context.Restaurant.Find(restaurantId),
@@ -175,25 +174,19 @@ namespace Foodies.Controllers
                 OpeningHour = brnch.OpeningHour,
                 ClosingHour = brnch.ClosingHour
             };
-
-            // Save the new Branch first to generate its ID
             context.Branch.Add(newBranch);
             context.SaveChanges();
-
-            // Create new BranchManager object and assign the BranchId
             BranchManager newBranchMngr = new BranchManager
             {
                 Username = BrMngr.Username,
                 Password = BrMngr.Password,
-                Admin = context.Admin.Find(adminId), // Fetch Admin object by adminId
-                BranchId = newBranch.BranchId // Set the BranchId of the newly created Branch
+                Admin = context.Admin.Find(adminId),
+                BranchId = newBranch.BranchId 
             };
-
-            // Save the new BranchManager
             context.BranchManager.Add(newBranchMngr);
             context.SaveChanges();
-
-            return RedirectToAction("AddBranch", new { id = restaurantId });
+            var adm=context.Admin.SingleOrDefault(x=>x.AdminId==adminId);
+            return RedirectToAction("AdminProfile", adm);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
