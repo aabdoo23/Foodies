@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<MenuItem>
+<link rel="stylesheet" href="~/css/Menu.css">
 
 <div class="menu">
     @foreach (var item in Model)
@@ -10,8 +11,102 @@
                 <p>Price: @item.Price LE</p>
             </div>
             <div class="add-to-cart">
-                <button class="cart-icon" style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-            </div>
+              @* <a asp-controller="Cart" 
+                asp-action="art" asp-route-itemId="@item.Id">
+                    <button class="fa fa-shopping-cart" onclick="addToCart(@item.Id)" ></button></a> *@ 
+                    <a href="#" id="sendData" data-id=@item.Id data-name="exampleName">
+                      <button class="fa fa-shopping-cart" onclick="addToCart(@item.Id)"></button>
+                      </a>
+
+
+                </div>
         </div>
     }
 </div>
+<style>
+    #plus{
+        color:green;
+    }
+        
+</style>
+<script>
+    var itemIds=[];
+    function addToCart(itemId) {
+            var button = document.getElementById("plus-" + itemId);
+
+            // if (button.classList.contains("fa-shopping-cart")) {
+            //     button.classList.remove("fa-shopping-cart");
+            //     button.classList.add("fa-check");
+            //     itemIds.push(itemId);
+            //     // document.cookie = "MyCookie=cook; path=Cart/cart;";
+            // }
+            // else {
+            //     button.classList.remove("fa-check");
+            //     button.classList.add("fa-shopping-cart");
+            //     itemIds = itemIds.filter(itemIds => itemIds !== itemId);
+            // }
+            console.log(itemId);
+            $(document).ready(function(){
+            $('#sendData').click(function(e){
+                e.preventDefault(); // Prevents the default action of the link
+                var dataValue = $(this).attr('data-value'); // Get the data from the attribute
+
+                // Send the data using AJAX
+                $.ajax({
+                    url: '/Cart/art',  // The URL for the controller
+                    method: 'POST',
+                    data: { itemId: dataValue },
+                    success: function(response){
+                        console.log('Data sent successfully');
+                        // You can update the page content here if needed without refreshing
+                    },
+                    error: function(){
+                        console.log('Error sending data');
+                    }
+                });
+            });
+        });
+        //     $.ajax({
+        //     url: '/Cart/art', // URL to the controller's action method
+        //     type: 'GET', // Type of request
+        //     data: { itemId: itemId }, // Send the first itemId in the query string
+        //     success: function(response) {
+        //         alert('ID sent successfully!');
+        //     },
+        //     error: function(err) {
+        //         console.error('Error sending ID', err);
+        //     }
+        // });
+        }
+
+
+    
+// function addToCart(itemId) {
+//     // Get existing cookie (if any) and append the new item ID
+//     let cartItemIds = getCookie("cartItemIds");
+
+//     cartItemIds = cartItemIds ? cartItemIds.split(',') : [];
+
+//     if (!cartItemIds.includes(itemId)) {
+//         cartItemIds.push(itemId); // Add new ID to the list
+//     }
+
+//     // Store updated list of IDs as a comma-separated string in the cookie
+//     document.cookie = "cartItemIds=" + cartItemIds.join(',') + "; path=/";
+
+//     // Optionally, redirect to the cart page
+//     window.location.href = 'cart';
+// }
+
+// // Function to get a cookie by name
+// function getCookie(name) {
+//     let cookieArr = document.cookie.split(";");
+//     for (let i = 0; i < cookieArr.length; i++) {
+//         let cookiePair = cookieArr[i].split("=");
+//         if (name == cookiePair[0].trim()) {
+//             return decodeURIComponent(cookiePair[1]);
+//         }
+//     }
+//     return null;
+// }
+</script>
