@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<MenuItem>
-<link rel="stylesheet" href="~/css/Menu.css">
+@* <link rel="stylesheet" href="~/css/Menu.css"> *@
 
 <div class="menu">
     @foreach (var item in Model)
@@ -14,9 +14,9 @@
               @* <a asp-controller="Cart" 
                 asp-action="art" asp-route-itemId="@item.Id">
                     <button class="fa fa-shopping-cart" onclick="addToCart(@item.Id)" ></button></a> *@ 
-                    <a href="#" id="sendData" data-id=@item.Id data-name="exampleName">
+                    
                       <button class="fa fa-shopping-cart" onclick="addToCart(@item.Id)"></button>
-                      </a>
+                      
 
 
                 </div>
@@ -32,7 +32,7 @@
 <script>
     var itemIds=[];
     function addToCart(itemId) {
-            var button = document.getElementById("plus-" + itemId);
+            // var button = document.getElementById("plus-" + itemId);
 
             // if (button.classList.contains("fa-shopping-cart")) {
             //     button.classList.remove("fa-shopping-cart");
@@ -43,40 +43,20 @@
             // else {
             //     button.classList.remove("fa-check");
             //     button.classList.add("fa-shopping-cart");
-            //     itemIds = itemIds.filter(itemIds => itemIds !== itemId);
+            //     // itemIds = itemIds.filter(itemIds => itemIds !== itemId);
             // }
-            console.log(itemId);
-            $(document).ready(function(){
-            $('#sendData').click(function(e){
-                e.preventDefault(); // Prevents the default action of the link
-                var dataValue = $(this).attr('data-value'); // Get the data from the attribute
-
-                // Send the data using AJAX
-                $.ajax({
-                    url: '/Cart/art',  // The URL for the controller
-                    method: 'POST',
-                    data: { itemId: dataValue },
-                    success: function(response){
-                        console.log('Data sent successfully');
-                        // You can update the page content here if needed without refreshing
-                    },
-                    error: function(){
-                        console.log('Error sending data');
-                    }
-                });
-            });
+            
+            $.ajax({
+            url: '/Cart/addCart', // URL to the controller's action method
+            type: 'GET', // Type of request
+            data: { itemId: itemId }, // Send the first itemId in the query string
+            success: function(response) {
+                alert('added to cart');
+            },
+            error: function(err) {
+                console.error('Error adding to cart', err);
+            }
         });
-        //     $.ajax({
-        //     url: '/Cart/art', // URL to the controller's action method
-        //     type: 'GET', // Type of request
-        //     data: { itemId: itemId }, // Send the first itemId in the query string
-        //     success: function(response) {
-        //         alert('ID sent successfully!');
-        //     },
-        //     error: function(err) {
-        //         console.error('Error sending ID', err);
-        //     }
-        // });
         }
 
 

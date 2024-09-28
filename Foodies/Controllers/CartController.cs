@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
 
 public class CartController : Controller
     {
@@ -10,23 +11,40 @@ public class CartController : Controller
             _context = context;
         }
 
+    //public IActionResult art(int id)
+    //{
 
-    public IActionResult art(int itemId) {
-
-        Response.Cookies.Append((++cnt).ToString(), itemId.ToString());
+    //    return Content("NORO");
+    //}
+    public IActionResult addCart(int itemId)
+    {
+        CookieOptions options = new CookieOptions();
+        options.Expires = DateTimeOffset.Now.AddDays(5);
+        //replace key with customer id?
+        Response.Cookies.Append(itemId.ToString(), itemId.ToString(),options);
         if (itemId == 0)
         {
             return Content("No itemId received");
         }
 
         // Output the cookie list along with the itemId for testing purposes
-        return Content($"The bobo is {Request.Cookies["3"]}");
+        return Content($"The is {Request.Cookies["3"]}");
     }
+
+    public IActionResult removeCart(int itemId)
+    {
+
+        Response.Cookies.Delete(itemId.ToString());
+
+        // Output the cookie list along with the itemId for testing purposes
+        return Content("The is grg");
+    }
+
     public IActionResult History()
     {
         return View();
     }
-    public IActionResult Index()
+    public IActionResult cart()
     {
         List<MenuItem> myCart = new List<MenuItem>();
         foreach (var cookie in Request.Cookies)
@@ -38,33 +56,13 @@ public class CartController : Controller
                     .SingleOrDefault();
                 myCart.Add(menuItem);
             }
-            Response.Cookies.Delete(cookie.Key);
+            else {
+                Response.Cookies.Delete(cookie.Key);
+            }
         }
         return View(myCart);
     }
-    public IActionResult ff()
-    {
-        // Retrieve the list of item IDs from the cookie
-        var cartItemIdsCookie = Request.Cookies["cartItemIds"];
 
-        if (!string.IsNullOrEmpty(cartItemIdsCookie))
-        {
-            // Split the comma-separated IDs into an array
-            var itemIds = cartItemIdsCookie.Split(',').Select(int.Parse).ToList();
-
-            // Retrieve the MenuItem objects corresponding to the IDs
-            var cartItems = _context.MenuItem.Where(item => itemIds.Contains(item.Id)).ToList();
-
-            if (cartItems.Any())
-            {
-                // If items are found, pass them to the view
-                return View(cartItems);
-            }
-        }
-
-        // If no items are found or cookie is empty, return the EmptyCart view
-        return View("EmptyCart");
-    }
 
 }
 
