@@ -1,0 +1,423 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <script src="script.js" defer></script>
+</head>
+<body>
+ 
+
+  <section class="checkout-section">
+    <div class="left-section">
+        <div class="delivery-options">
+            <label class="radio-label">
+                <input type="radio" name="delivery" value="delivery" id="delivery-option" checked> Delivery
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="delivery" value="pickup" id="pickup-option"> Pick up from restaurant
+            </label>
+        </div>
+
+        <div class="map-container">
+
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3456.192364094608!2d30.939254082238524!3d29.973901210393183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145857502afd5499%3A0x4beb6b963d88d58!2sBazooka%20fried%20chicken!5e0!3m2!1sen!2seg!4v1726173538604!5m2!1sen!2seg" width="300" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <div class="address-section">
+            <p>Your Address    <p class="shoytmrg">6th of October - 4th District</p>      <a href="#" class="change-link">Change</a>     </p>
+
+        </div>
+
+        <div class="delivery-info">
+            <i class="fa-solid fa-car"></i>
+            <p>Arriving in approx. <strong>49 mins</strong></p>
+        </div>
+    </div>
+
+    <div class="right-section">
+        <div class="points">
+            <label>Your total points: <input type="text" id="points" value="470" readonly></label>
+        </div>
+
+        <div class="payment-section">
+            <p class="section-title">Payment Options</p>
+            <label class="radio-label"><input type="radio" name="payment"> Card</label>
+            <label class="radio-label"><input type="radio" name="payment"> Cash</label>
+            <div>
+                <label><input type="checkbox" id="use-points"> Use Your Points</label>
+            </div>
+        </div>
+
+        <div class="order-summary">
+            <p>Sub Total: <span class="price" id="subtotal">375 EGP</span></p>
+            <p>Discount: <span class="price" id="discount">0 EGP</span></p>
+            <p class="total-amount">Total: <span class="price" id="total">375 EGP</span></p>
+        </div>
+
+        <button class="confirm-btn">Confirm Order</button>
+    </div>
+  </section>
+</body>
+</html>
+<<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px 20px;
+    background-color: #007b80;
+    font-size: 24px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header i {
+    margin-right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+.checkout-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.left-section, .right-section {
+    width: 48%;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.radio-label input {
+    margin-right: 10px;
+}
+
+.address-section {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fafafa;
+    border-radius: 10px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.address-map {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.address-details {
+    flex-grow: 1;
+}
+
+.address-details p {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.change-link {
+    color: #FF4B4B;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.change-link:hover {
+    text-decoration: underline;
+}
+
+.delivery-info {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #fdfdfd;
+    border-radius: 8px;
+    border: 1px solid #ececec;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.delivery-info i {
+    margin-right: 10px;
+    font-size: 22px;
+    color: #FF4B4B;
+}
+
+.delivery-info p {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.right-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.points input {
+    width: 60px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ececec;
+    margin-left: 10px;
+    text-align: center;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.payment-section {
+    padding: 15px;
+    background-color: #fafafa;
+    border-radius: 10px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.order-summary {
+    padding: 15px;
+    background-color: #fafafa;
+    border-radius: 10px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.order-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.price {
+    font-weight: 600;
+    color: #333;
+}
+
+.total-amount {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.confirm-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-btn:hover {
+    background-color: #e03a3a;
+}
+
+.confirm-btn:active {
+    background-color: #d12929;
+}
+
+.pale {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.checkout-summary {
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+}
+
+.checkout-summary p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+#discount, #total, #subtotal {
+    font-weight: bold;
+    color: #007b80;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.delivery-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.map-container {
+    text-align: center;
+    margin-bottom: 10px;
+}
+    media (max-width: 768px) {
+    .checkout-section {
+        flex-direction: column;
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .left-section, .right-section {
+        width: 100%;
+    }
+
+    .left-section {
+        order: 2;
+    }
+
+    .right-section {
+        order: 1;
+        margin-bottom: 20px;
+    }
+
+    .header {
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    .header i {
+        font-size: 18px;
+    }
+
+    .map-container iframe {
+        width: 100%;
+        height: 250px;
+    }
+
+    .order-summary p, .delivery-info p {
+        font-size: 14px;
+    }
+
+    .confirm-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .radio-label {
+        font-size: 14px;
+    }
+}
+
+    media (max-width: 500px) {
+    .header {
+        font-size: 18px;
+        padding: 8px;
+    }
+
+    .header i {
+        font-size: 16px;
+    }
+
+    .confirm-btn {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .order-summary p, .delivery-info p, .points input {
+        font-size: 12px;
+    }
+
+    .radio-label {
+        font-size: 12px;
+    }
+
+    .map-container iframe {
+        height: 200px;
+    }
+}
+.shoytmrg{
+    margin: 30px;
+}
+
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const pointsInput = document.getElementById('points');
+    const usePointsCheckbox = document.getElementById('use-points');
+    const subtotalElement = document.getElementById('subtotal');
+    const discountElement = document.getElementById('discount');
+    const totalElement = document.getElementById('total');
+    const SUBTOTAL_AMOUNT = 375; 
+    const DISCOUNT_PERCENTAGE = 0.10; 
+
+    function updateTotal() {
+        let points = parseInt(pointsInput.value, 10) || 0;
+        let subtotal = SUBTOTAL_AMOUNT;
+        let discount = 0;
+        if (usePointsCheckbox.checked && points > 0) {
+            discount = points * DISCOUNT_PERCENTAGE;
+        }
+        if (discount > subtotal) {
+            discount = subtotal;
+        }
+        discountElement.textContent = `${discount.toFixed(2)} EGP`;
+        totalElement.textContent = `${(subtotal - discount).toFixed(2)} EGP`;
+    }
+    usePointsCheckbox.addEventListener('change', updateTotal);
+        pointsInput.addEventListener('input', updateTotal);
+    updateTotal();
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const deliveryOption = document.getElementById('delivery-option');
+    const pickupOption = document.getElementById('pickup-option');
+    const addressSection = document.querySelector('.address-section');
+    const deliveryInfo = document.querySelector('.delivery-info');
+
+    function updateAddressAndArrival() {
+        if (pickupOption.checked) {
+            addressSection.classList.add('pale');
+            deliveryInfo.classList.add('pale');
+        } else {
+            addressSection.classList.remove('pale');
+            deliveryInfo.classList.remove('pale');
+        }
+    }
+    updateAddressAndArrival();
+    deliveryOption.addEventListener('change', updateAddressAndArrival);
+    pickupOption.addEventListener('change', updateAddressAndArrival);
+});
+
+</script>
