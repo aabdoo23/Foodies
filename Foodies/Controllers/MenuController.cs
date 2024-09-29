@@ -13,7 +13,7 @@ namespace Foodies.Controllers
         {
             _context = context;
         }
-
+        
         public async Task<IActionResult> Index(int restaurantId, string? category = null)
         {
             var restaurant = await _context.Restaurant.FindAsync(restaurantId);

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<MenuItem>
+@* <link rel="stylesheet" href="~/css/Menu.css"> *@
 
 <div class="menu">
     @foreach (var item in Model)
@@ -10,8 +11,93 @@
                 <p>Price: @item.Price LE</p>
             </div>
             <div class="add-to-cart">
-                <button class="cart-icon" style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-            </div>
+                <button id = "cart-@item.Id" class="fa fa-shopping-cart" onclick="addToCart(@item.Id)"></button>
+               <button class="" onclick="remCart(@item.Id)"></button>
+
+
+
+                </div>
         </div>
     }
 </div>
+<style>
+    #plus{
+        color:green;
+    }
+        
+</style>
+<script>
+    var itemIds=[];
+    function addToCart(itemId) {
+            var button = document.getElementById("cart-" + itemId);
+
+            if (button.classList.contains("fa-shopping-cart")) {
+                button.classList.remove("fa-shopping-cart");
+                button.classList.add("fa-check");
+                // itemIds.push(itemId);
+                // document.cookie = "MyCookie=cook; path=Cart/cart;";
+                $.ajax({
+                    url: '/Cart/addCart', // URL to the controller's action method
+                    type: 'GET', // Type of request
+                    data: { itemId: itemId }, // Send the first itemId in the query string
+                    success: function(response) {
+                        alert('added to cart');
+                    },
+                    error: function(err) {
+                        console.error('Error adding to cart', err);
+                    }
+                });
+            }
+            else {
+                button.classList.remove("fa-check");
+                button.classList.add("fa-shopping-cart");
+                // itemIds = itemIds.filter(itemIds => itemIds !== itemId);
+                $.ajax({
+                url: '/Cart/removeCart', // URL to the controller's action method
+                type: 'GET', // Type of request
+                data: { itemId: itemId }, // Send the itemId in the query string
+                success: function(response) {
+                    alert('Removed from cart');
+                    // Remove the item from the DOM if the request is successful
+                    
+                },
+                error: function(err) {
+                    console.error('Error removing from cart', err);
+                }
+            });
+            }
+            
+            
+        }
+
+
+    
+// function addToCart(itemId) {
+//     // Get existing cookie (if any) and append the new item ID
+//     let cartItemIds = getCookie("cartItemIds");
+
+//     cartItemIds = cartItemIds ? cartItemIds.split(',') : [];
+
+//     if (!cartItemIds.includes(itemId)) {
+//         cartItemIds.push(itemId); // Add new ID to the list
+//     }
+
+//     // Store updated list of IDs as a comma-separated string in the cookie
+//     document.cookie = "cartItemIds=" + cartItemIds.join(',') + "; path=/";
+
+//     // Optionally, redirect to the cart page
+//     window.location.href = 'cart';
+// }
+
+// // Function to get a cookie by name
+// function getCookie(name) {
+//     let cookieArr = document.cookie.split(";");
+//     for (let i = 0; i < cookieArr.length; i++) {
+//         let cookiePair = cookieArr[i].split("=");
+//         if (name == cookiePair[0].trim()) {
+//             return decodeURIComponent(cookiePair[1]);
+//         }
+//     }
+//     return null;
+// }
+</script>

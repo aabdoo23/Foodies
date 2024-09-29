@@ -2,7 +2,6 @@
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
 }
 
 .container {
@@ -176,7 +175,7 @@
 
 .cart-btn {
     background-color: #2EBFA5;
-    color: white;
+    color: green;
     padding: 5px 10px;
     border: none;
     border-radius: 5px;
