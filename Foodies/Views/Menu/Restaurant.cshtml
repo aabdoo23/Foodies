@@ -1,25 +1,9 @@
 ﻿@model IEnumerable<Restaurant>
 
 <head>
-<<<<<<< Updated upstream
-    <title>Restaurant List</title>
-    <link rel="stylesheet" href="~/css/restaurant.css">
-</head>
-
-<body>
-    <div class="restaurant-list">
-        <h1>Restaurants</h1>
-        <div class="restaurant-cards">
-            @foreach (var restaurant in Model)
-            {
-                <div class="restaurant-card">
-                    <img src="@restaurant.Photo" alt="@restaurant.Name" class="restaurant-image" />
-                    <div class="restaurant-info">
-                        <h2 class="restaurant-name">@restaurant.Name</h2>
-                        <a asp-controller="Menu" asp-action="Index" asp-route-restaurantId="@restaurant.Id" class="view-menu-btn">View Menu</a>
-=======
     <title>Restaurants</title>
 </head>
+
 <body>
     <header class="header">
         <h1>Restaurants</h1>
@@ -38,14 +22,9 @@
                         <p class="card-text">Cuisine Type: @restaurant.CuisineType</p>
                         <p class="card-text">Price Range: @restaurant.MinPrice LE - @restaurant.MaxPrice LE</p>
                         <a asp-controller="Menu" asp-action="Index" asp-route-restaurantId="@restaurant.Id" class="btn btn-primary view-menu-btn">View Menu</a>
->>>>>>> Stashed changes
                     </div>
                 </div>
             }
         </div>
     </div>
-<<<<<<< Updated upstream
 </body>
-=======
-</body>
->>>>>>> Stashed changes

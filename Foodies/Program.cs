@@ -1,11 +1,10 @@
-<<<<<<< Updated upstream
+
 
 using Foodies.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
-=======
->>>>>>> Stashed changes
+
 namespace Foodies
 {
     public class Program

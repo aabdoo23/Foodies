@@ -45,17 +45,12 @@ namespace Foodies.Controllers
         }
 
 
-<<<<<<< Updated upstream
-        // Should be in RestaurantController
 
-=======
->>>>>>> Stashed changes
         public async Task<IActionResult> Restaurant()
         {
             var restaurants = await _context.Restaurant.ToListAsync();
             return View(restaurants);
         }
-<<<<<<< Updated upstream
 
         public async Task<IActionResult> LoadMenuItems(int restaurantId, string? category = null)
         {
