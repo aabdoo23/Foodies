@@ -1,4 +1,6 @@
-﻿<nav class="navbar navbar-expand-lg">
+﻿<html>
+    <header>
+<nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">
@@ -18,7 +20,7 @@
                 <input placeholder="Search" type="search" class="search-input">
             </div>
         </div>
-        <div class="navbar-right">
+        @* <div class="navbar-right">
             <div class="radio-inputs">
                 <label class="radio">
                     <input type="radio" name="radio" checked="">
@@ -28,7 +30,7 @@
                     <input type="radio" name="radio">
                     <span class="name">Pickup</span>
                 </label>
-            </div>
+            </div> *@
 
             @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "Cart", Icon = "shopping-cart", Url = "www.google.com" })
             @await Component.InvokeAsync("ButtonViewComponent", new { Text = "1412 Points", Icon = "medal", Url = "www.google.com" })
@@ -37,7 +39,7 @@
     </div>
 </nav>
 
-
+</header>
 <body>
     @* components of food categories *@
     <div class="category-bar d-flex justify-content-start">
@@ -68,20 +70,24 @@
             </div>
         </div>
 
+        @* restaurants *@
         <div class="home-section-items">
             @foreach (var i in Model)
             {
                 @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.RestaurantName, Hotline = i.Hotline, CusineType = i.CusineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = "https://th.bing.com/th/id/OIP._xqATV2x664IX4Ps-AsBQQHaFj?rs=1&pid=ImgDetMain", Url = $"/CustomerView/Minew/{i.RestaurantId}" })
             }
         </div>
+        
     </div>
 
 </body>
-
+</html>
 
 <style>
     
-
+    html,body{
+        background-color: white;
+    }
     .navbar-brand {
         font-size: 1.5em;
         color: var(--primary-color);
@@ -111,6 +117,7 @@
     }
 
     .category-bar {
+        margin-top: 80px;
         display: flex;
         padding: 10px;
         border-bottom: 1px solid #e5e5e5;
@@ -122,6 +129,7 @@
     @*display:flex;*@align-items: center;
         margin-right: 10px;
         margin-left: 10px;
+        
 
     }
 
@@ -139,14 +147,15 @@
         width: 100%;
         height: 40px;
         line-height: 28px;
-        padding: 0 1rem;
-        padding-left: 2.5rem;
+        /* padding: 0 1rem;
+        padding-left: 2.5rem; */
         border: 2px solid transparent;
         border-radius: 10px;
         outline: none;
         background-color: var(--white);
         color: var(--black);
         transition: .3s ease;
+        padding: 0px 100px;
     }
 
     .search-input::placeholder {

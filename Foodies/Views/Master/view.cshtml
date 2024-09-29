@@ -1,29 +1,33 @@
-﻿{
-    @Layout = null
+﻿@{
+    Layout = null;
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+     
     <!-- stylesheet -->
      <link rel="stylesheet" href="~/css/Main.css" asp-append-version="true">  
+     <link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true">  
 
-    <title>White Navbar with Shadow</title>
+    <title>Foodies</title>
+        <!-- Start Navbar -->
     <div class="navbar">
         <div>
             @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
         </div>
         <div class="nav-links">
-            <a href="~/Master/view">Home</a>
-            <a href="~/cart/cart">🛒 Cart</a>
+            <a href="~/Master/view" style="color: #D35269">Home</a>
+            <a href="#">Services</a>
             <a href="#">About us</a>
         </div>
     </div>
 </head>
 <body>
     
+
     <!-- Content with centered button -->
     <div class="content">
         <img src="/images/text.png" alt="Foodies Logo" class="img"> 
