@@ -21,25 +21,37 @@ public class CartController : Controller
         CookieOptions options = new CookieOptions();
         options.Expires = DateTimeOffset.Now.AddDays(5);
         //replace key with customer id?
-        Response.Cookies.Append(itemId.ToString(), itemId.ToString(),options);
+        Response.Cookies.Append((++cnt).ToString(), itemId.ToString(),options);
         if (itemId == 0)
         {
             return Content("No itemId received");
         }
 
         // Output the cookie list along with the itemId for testing purposes
-        return Content($"The is {Request.Cookies["3"]}");
+        return Content("The is");
     }
 
-    public IActionResult removeCart(int itemId)
+    public IActionResult removeCart(int itemId, bool ?dec)
     {
-
-        Response.Cookies.Delete(itemId.ToString());
+        foreach (var cookie in Request.Cookies)
+        {
+            // Check if the cookie value matches the value to remove
+            if (cookie.Value == itemId.ToString())
+            {
+                // Remove the cookie by its key
+                Response.Cookies.Delete(cookie.Key);
+                if (dec == true)
+                {
+                    break;
+                }
+                
+            }
+        }
 
         // Output the cookie list along with the itemId for testing purposes
-        return Content("The is grg");
+        return Content("The is decrease");
     }
-
+    
     public IActionResult History()
     {
         return View();

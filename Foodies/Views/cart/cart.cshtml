@@ -33,7 +33,8 @@
                 @foreach (var item in Model)
             {
                 @if( item != null){
-                   <div class="cart-item" data-price="@item.Price">
+                 <div class="cart-item" data-price="@item.Price" 
+                               data-item-id="@item.Id">
                     <img src="@item.img" alt="@item.Name" loading="lazy">
                   <div class="item-details">
                       <p class="item-name">@item.Name</p>
@@ -45,7 +46,7 @@
                       <span class="quantity">1</span>
                       <button class="increase-btn">+</button>
                   </div>
-                          <i class="fa-solid fa-trash delicon" data-item-id="@item.Id" ></i>
+                          <i class="fa-solid fa-trash delicon"  ></i>
               </div>
               }
                 }
@@ -107,22 +108,60 @@ document.querySelectorAll('.increase-btn').forEach(button => {
     button.addEventListener('click', (e) => {
         const quantitySpan = e.target.closest('.item-quantity').querySelector('.quantity');
         let quantity = parseInt(quantitySpan.textContent);
-        quantitySpan.textContent = ++quantity;
-        updateCartTotals();
+         const cartItem = e.target.closest('.cart-item');
+        const itemId = cartItem.getAttribute('data-item-id'); // Get the item ID
+
+        incItem(itemId, quantity, quantitySpan)
     });
 });
 
+function incItem(itemId, quantity,quantitySpan ) {
+    
+    console.log(itemId);
+    $.ajax({
+    url: '/Cart/addCart', // URL to the controller's action method
+    type: 'GET', // Type of request
+    data: { itemId: itemId }, // Send the first itemId in the query string
+    success: function(response) {
+        alert('increased');
+        quantitySpan.textContent = ++quantity;
+        updateCartTotals();
+    },
+    error: function(err) {
+        console.error('Error increasing quantity', err);
+    }
+});
+}
 // Decrease quantity
 document.querySelectorAll('.decrease-btn').forEach(button => {
     button.addEventListener('click', (e) => {
         const quantitySpan = e.target.closest('.item-quantity').querySelector('.quantity');
         let quantity = parseInt(quantitySpan.textContent);
-        if (quantity > 1) {
+        const cartItem = e.target.closest('.cart-item');
+        const itemId = cartItem.getAttribute('data-item-id'); // Get the item ID
+        decItem(itemId, quantity, quantitySpan)
+    });
+});
+
+function decItem(itemId, quantity, quantitySpan) {
+    if (quantity > 1) {
+              // console.log(itemId);
+            $.ajax({
+                url: '/Cart/removeCart', // URL to the controller's action method
+                type: 'GET', // Type of request
+                data: { itemId: itemId , dec: true}, // Send the itemId in the query string
+                success: function(response) {
+                    alert('decreased');
+                },
+                error: function(err) {
+                    console.error('Error decreasing the item', err);
+                }
+            });
             quantitySpan.textContent = --quantity;
             updateCartTotals();
         }
-    });
-});
+    
+}
 
 // Delete Item
 
@@ -138,6 +177,7 @@ document.querySelectorAll('.delicon').forEach(button => {
 
 // Define the deleteItem function
 function deleteItem(itemId, cartItem) {
+    console.log(itemId);
     $.ajax({
         url: '/Cart/removeCart', // URL to the controller's action method
         type: 'GET', // Type of request
