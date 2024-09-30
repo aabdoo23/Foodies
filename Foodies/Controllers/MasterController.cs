@@ -2,7 +2,7 @@
 ﻿using Foodies.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Intrinsics.Arm;
-
+using System.Web.Mvc; // For MVC
 
 namespace Foodies.Controllers
 {
@@ -118,7 +118,8 @@ namespace Foodies.Controllers
             var existingCustomer = context.Customer.FirstOrDefault(x => x.Email == email && x.Password == pass);
             if (existingCustomer != null)
             {
-
+                //session to know who is the logged in customer
+                HttpContext.Session.SetInt32("Customer",existingCustomer.Id);
                 return RedirectToAction("index", "CustomerView", existingCustomer);
             }
             else
