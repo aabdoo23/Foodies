@@ -16,6 +16,8 @@
         public string City { get; set; }
         public string? Street { get; set; }
         public string? Building { get; set; }
+        public string? Location { get; set; }
+
         public int Points { get; set; } = 0;
 
         [NotMapped]
