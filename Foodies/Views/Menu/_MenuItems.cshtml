@@ -37,7 +37,7 @@
                 // itemIds.push(itemId);
                 // document.cookie = "MyCookie=cook; path=Cart/cart;";
                 $.ajax({
-                    url: '/Cart/addCart', // URL to the controller's action method
+                    url: '/Order/addCart', // URL to the controller's action method
                     type: 'GET', // Type of request
                     data: { itemId: itemId }, // Send the first itemId in the query string
                     success: function(response) {
@@ -53,7 +53,7 @@
                 button.classList.add("fa-shopping-cart");
                 // itemIds = itemIds.filter(itemIds => itemIds !== itemId);
                 $.ajax({
-                url: '/Cart/removeCart', // URL to the controller's action method
+                url: '/Order/removeCart', // URL to the controller's action method
                 type: 'GET', // Type of request
                 data: { itemId: itemId }, // Send the itemId in the query string
                 success: function(response) {
