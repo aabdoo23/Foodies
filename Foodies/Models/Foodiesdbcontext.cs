@@ -1,6 +1,8 @@
-﻿namespace Foodies.Models
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+namespace Foodies.Models
 {
-    public class FoodiesDbContext : DbContext
+    public class FoodiesDbContext : IdentityDbContext
     {
         public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
         {
@@ -20,6 +22,15 @@
            .WithOne(p => p.BranchManager)
            .HasForeignKey<BranchManager>(o => o.BranchId);
 
+            modelBuilder.Entity<Customer>()
+            .HasOne(o => o.Address)
+           .WithOne(p => p.Customer)
+           .HasForeignKey<Customer>(o => o.AddressId);
+
+            modelBuilder.Entity<Branch>()
+            .HasOne(o => o.Address)
+           .WithOne(p => p.Branch)
+           .HasForeignKey<Branch>(o => o.AddressId);
             //many to many 
             modelBuilder.Entity<Order>().HasAlternateKey(o => o.Id);
 

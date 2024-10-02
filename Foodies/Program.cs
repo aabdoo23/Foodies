@@ -1,5 +1,5 @@
-
 using Foodies.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
@@ -19,6 +19,12 @@ namespace Foodies
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            
+            builder.Services.AddIdentity<BaseUser,IdentityRole>().AddEntityFrameworkStores<FoodiesDbContext>();
+            builder.Services.AddIdentityCore<Customer>().AddEntityFrameworkStores<FoodiesDbContext>();
+            builder.Services.AddIdentityCore<Admin>().AddEntityFrameworkStores<FoodiesDbContext>();
+            builder.Services.AddIdentityCore<BranchManager>().AddEntityFrameworkStores<FoodiesDbContext>();
+
 
             var app = builder.Build();
 
@@ -49,7 +55,7 @@ namespace Foodies
                 name: "default",
 
 
-                pattern: "{controller=Master}/{action=view}/{id?}");
+                pattern: "{controller=Home}/{action=CustomerView}");
 
 
             app.Run();

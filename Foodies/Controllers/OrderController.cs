@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -7,10 +8,12 @@ public class OrderController : Controller
     private readonly FoodiesDbContext _context;
     static private int cnt = 0;
     private List<MenuItem> myCart = new List<MenuItem>();
+    private readonly UserManager<Customer> _customerManager;
 
-    public OrderController(FoodiesDbContext context)
+    public OrderController(FoodiesDbContext context, UserManager<Customer> customerManager)
     {
         _context = context;
+        _customerManager = customerManager;
     }
 
 
@@ -23,30 +26,30 @@ public class OrderController : Controller
         return View();
     }
 
-    public IActionResult order(int total)
+    public async Task <IActionResult>order(int total)
     {
-        //id , State , total , date, paymentid , customerid, branch id
-        Order order = new Order();
-        order.State = "Pending";
-        order.TotalPrice = total;
-        order.OrderDate = DateTime.Now;
-        //order.Payment 
+        ////id , State , total , date, paymentid , customerid, branch id
+        //Order order = new Order();
+        //order.State = "Pending";
+        //order.TotalPrice = total;
+        //order.OrderDate = DateTime.Now;
+        ////order.Payment 
 
-        //Customer
-        var id = HttpContext.Session.GetInt32("Customer");
-        order.Customer = _context.Customer.Where(x => x.Id == id).SingleOrDefault();
-        //order.Branch
+        ////Customer
+        //var id = HttpContext.Session.GetInt32("Customer");
+        //order.Customer = _context.Customer.Where(x => x.Id == id).SingleOrDefault();
+        ////order.Branch
 
 
-        order.Items = myCart;
+        //order.Items = myCart;
 
-        //last add order in menuitem model
-        //empty cart
-        foreach (var item in myCart)
-        {
-            item.Orders.Add(order);
-            removeCart(item.Id,false);
-        }
+        ////last add order in menuitem model
+        ////empty cart
+        //foreach (var item in myCart)
+        //{
+        //    item.Orders.Add(order);
+        //    removeCart(item.Id,false);
+        //}
 
         return Content("still not finished action");
     }

@@ -155,16 +155,16 @@
                <form method="get" action="/Home/CusAddress/@Model.Id">
             <div class="mb-3">
                 <label for="Apartment" class="form-label">City</label>
-                <input type="text" class="form-control" name="City"  value="@Model.City" required />
+                <input type="text" class="form-control" name="City"  value="@Model.Address.City" required />
 
               </div>
               <div class="mb-3">
                 <label for="floor" class="form-label">Street (optional)</label>
-                <input type="text" class="form-control" name="Street" value="@Model.Street" />
+                <input type="text" class="form-control" name="Street" value="@Model.Address.Street" />
               </div>
               <div class="mb-3">
                 <label for="Building" class="form-label">Building Name</label>
-                <input type="text" class="form-control" name="Building" value="@Model.Building" />
+                <input type="text" class="form-control" name="Building" value="@Model.Address.Building" />
               </div>
               
              
