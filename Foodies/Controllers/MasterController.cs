@@ -8,6 +8,9 @@ namespace Foodies.Controllers
     {
         private readonly FoodiesDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+
+
+
         private readonly SignInManager<IdentityUser> _signInManager;
 
         public MasterController(FoodiesDbContext context, 
@@ -105,51 +108,77 @@ namespace Foodies.Controllers
         {
             return View();
         }
-        //public async Task<IActionResult> SaveAdminAndResturant(Restaurant res, Admin adm)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var resturannam = await _context.Restaurant.FirstOrDefaultAsync(x => x.Name == res.Name);
-        //        var Admininsystim = await _userManager.FindByEmailAsync(adm.Email);
-        //        if (resturannam == null && Admininsystim == null)
-        //        {
+        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin)
+        {
+            if (ModelState.IsValid)
+            {
 
-        //            _context.Restaurant.Add(res);
-        //            _context.SaveChanges();
+                var existingCustomer = await _userManager.FindByEmailAsync(admin.Email);
+                if (existingCustomer == null)
+                {
+                    //fill identity info
+                    IdentityUser user = new IdentityUser();
+                    user.UserName = admin.Email;
+                    user.PasswordHash = admin.Password;
+                    user.Email = admin.Email;
+                    user.PhoneNumber = admin.phoneNumber;
 
-        //            var rres = _context.Restaurant.Where(x => x.Name == res.Name).FirstOrDefault();
 
-        //            adm.RestaurantId = rres.Id;
-        //            adm.Restaurant = rres;
+                    var result = await _userManager.CreateAsync(user, admin.Password);
 
-        //            await _userManager.CreateAsync(adm);
-        //            return RedirectToAction("ResturantLogIn", "Master");
-        //        }
-        //        else if (resturannam != null && Admininsystim != null)
-        //        {
-        //            ViewBag.NotificationMessage = "The Resturant Name and Email already in the system";
-        //            ViewBag.NotificationType = "danger";
-        //        }
-        //        else if (resturannam != null)
-        //        {
-        //            ViewBag.NotificationMessage = "The Resturant Name already in the system";
-        //            ViewBag.NotificationType = "danger";
-        //            //return View("UserSignUp", cus);
-        //        }
-        //        else
-        //        {
-        //            ViewBag.NotificationMessage = "The Email already in the system";
-        //            ViewBag.NotificationType = "danger";
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ViewBag.NotificationMessage = "There are missing data.";
-        //        ViewBag.NotificationType = "danger";
-        //    }
+                    Admin adminn = new Admin
+                    {
+                        Id = user.Id,
+                        FirstName = admin.FirstName,
+                        LastName = admin.LastName,
 
-        //    return View("AdminSignUp");
-        //}
+                        
+                        IdentityUser = user,
+
+
+                    };
+                    Restaurant res = new Restaurant
+                    {
+                        Name = admin.Name,
+                        Photo = admin.Photo,
+                        Hotline = admin.Hotline,
+                        CuisineType = admin.CuisineType,
+                    };
+                    //custo}mer.Id = user.Id;
+                    //cus.Address.Customer = customer;
+                    res.RestaurantAdmin = adminn;
+                    _context.Admin.Add(adminn);
+                    _context.Restaurant.Add(res);
+
+                    _context.SaveChanges();
+
+                    if (result.Succeeded)
+                    {
+                        ViewBag.NotificationMessage = "Customer registered successfully!";
+                        ViewBag.NotificationType = "success";
+                        return RedirectToAction("Cusolginsignup");
+                    }
+                    else
+                    {
+                        ViewBag.NotificationMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                        ViewBag.NotificationType = "danger";
+                    }
+                }
+                else
+                {
+                    ViewBag.NotificationMessage = "The email is already registered.";
+                    ViewBag.NotificationType = "danger";
+                }
+            }
+            else
+            {
+                ViewBag.NotificationMessage = "There are missing data.";
+                ViewBag.NotificationType = "danger";
+            }
+
+            return View(admin);
+        }
+
         public IActionResult CustomerLogIn()
         {
             return View();

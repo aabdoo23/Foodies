@@ -2,7 +2,10 @@
 {
     public class AdminRegisterViewModel : RegisterationViewModel
     {
-        public virtual Restaurant Restaurant { get; set; }
-
+        public string Name { get; set; }
+        public string? Photo { get; set; }
+        public string Hotline { get; set; }
+        public string CuisineType { get; set; }
+        
     }
 }
