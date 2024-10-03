@@ -72,6 +72,7 @@ namespace Foodies.Models
                 .HasForeignKey<BaseUser>(b => b.Id);
 
             modelBuilder.Entity<RegisterationViewModel>().HasNoKey();  // Exclude BaseUser from the model
+            modelBuilder.Entity<LogInViewModel>().HasNoKey();  // Exclude BaseUser from the model
 
 
             //modelBuilder.Entity<Order>()
@@ -95,6 +96,7 @@ namespace Foodies.Models
         public virtual DbSet<BranchManager> BranchManager { get; set; }
         public DbSet<Foodies.ViewModels.RegisterationViewModel> RegisterationViewModel { get; set; } = default!;
         public DbSet<Foodies.ViewModels.AdminRegisterViewModel> AdminRegisterViewModel { get; set; } = default!;
+        public DbSet<Foodies.ViewModels.LogInViewModel> LogInViewModel { get; set; } = default!;
     }
 }
 

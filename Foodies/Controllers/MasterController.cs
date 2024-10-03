@@ -9,8 +9,6 @@ namespace Foodies.Controllers
         private readonly FoodiesDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-
-
         private readonly SignInManager<IdentityUser> _signInManager;
 
         public MasterController(FoodiesDbContext context, 
@@ -179,31 +177,31 @@ namespace Foodies.Controllers
             return View(admin);
         }
 
-        public IActionResult CustomerLogIn()
+        public IActionResult ConfirmCustomerLogIn()
         {
             return View();
         }
-        public async Task<IActionResult> ConfirmCustomerLogIn(string email, string pass)
+        [HttpPost]
+        public async Task<IActionResult> Login(LogInViewModel loginUser)
         {
-            var existingCustomer = await _userManager.FindByEmailAsync(email);
-            if (existingCustomer != null)
+            if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(existingCustomer, pass, false, false);
-                if (!result.Succeeded)
+                // Attempt to sign in the user directly
+                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, false);
+
+                if (result.Succeeded)
                 {
-                    ViewBag.NotificationMessage = "Invalid Password";
-                    ViewBag.NotificationType = "danger";
-                    return View("CustomerLogIn");
+                    return RedirectToAction("Restaurant", "Menu");
                 }
-                return RedirectToAction("index", "CustomerView", existingCustomer);
+                else
+                {
+                    ModelState.AddModelError("", "Incorrect username or password");
+                }
             }
-            else
-            {
-                ViewBag.NotificationMessage = "Wrong Email or Password";
-                ViewBag.NotificationType = "danger";
-                return View("CustomerLogIn");
-            }
+
+            return View(loginUser);
         }
+
 
         public IActionResult ResturantLogIn()
         {

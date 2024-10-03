@@ -16,13 +16,12 @@
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public string phoneNumber { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password Not Identical")]
         public string ConfirmPassword { get; set; }
-
+        public string phoneNumber { get; set; } = string.Empty;
         public string? City { get; set; }
     }
 }
