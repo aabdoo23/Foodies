@@ -18,12 +18,12 @@
             <h1>Sign Up</h1>
             <p>Create an account to order your favorite food</p>
 
-            <form method="post" action="">
+            <form method="post" action="/Master/SaveNewCustomer">
 
                 <div class="input-group">
 
                     <label for="UserFirstName">First Name</label>
-                    <input type="text" id="UserFirstName" name="UserFirstName" required>
+                    <input type="text" id="UserFirstName" name="FirstName" required>
                 </div>
 
                 <div class="input-group">
@@ -33,24 +33,36 @@
 
                 <div class="input-group">
                     <label for="UserEmail">Email</label>
-                    <input type="email" id="Email" name="UserEmail" required>
+                    <input type="email" id="Email" name="Email" required>
 
                 </div>
 
                 <div class="input-group">
                     <label for="UserNumber">Phone Number</label>
-                    <input type="tel" id="UserNumber" name="UserNumber" required pattern="[0-9]{11}" placeholder="Enter 11-digit number">
+                    <input type="tel" id="UserNumber" name="phoneNumber" required pattern="[0-9]{11}" placeholder="Enter 11-digit number">
                 </div>
 
                 <div class="input-group">
                     <label for="UserPassword">Password</label>
-                    <input type="password" id="UserPassword" name="Userpassword" required>
+                    <input type="password" id="UserPassword" name="Password" required>
                 </div>
 
                 <div class="input-group">
                     <label for="UserConfirm-password">Confirm Password</label>
                     <input type="password" id="UserConfirm-password" name="UserConfirm-password" required>
                 </div>
+
+                @* address *@
+                <div class="input-group">
+                    <label for="City">City</label>
+                    <input type="text" id="UserConfirm-password" name="City" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="Street">Street</label>
+                    <input type="text" id="Street" name="Street" required>
+                </div>
+
 
                 <button type="submit" class="btn">Create Account</button>
             </form>

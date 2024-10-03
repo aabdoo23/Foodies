@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Foodies.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Foodies.Models
 {
-    public class FoodiesDbContext : IdentityDbContext<BaseUser>
+    public class FoodiesDbContext : IdentityDbContext
     {
         public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
         {
@@ -37,6 +40,40 @@ namespace Foodies.Models
             modelBuilder.Entity<MenuItem>().HasAlternateKey(m => m.Id);
 
 
+            modelBuilder.Entity<BaseUser>()
+             .HasOne(o => o.IdentityUser)
+            .WithOne()
+            .HasForeignKey<BaseUser>(o => o.Id);
+
+            // Configure Admin entity
+            modelBuilder.Entity<Admin>(entity =>
+            {
+                entity.ToTable("Admins");  // Map to Admins table
+                entity.HasOne(a => a.IdentityUser)
+                      .WithOne()  // No navigation property in IdentityUser, so we use WithOne()
+                      .HasForeignKey<Admin>(a => a.Id);  // Foreign key to AspNetUsers
+            });
+
+            // Configure Customer entity
+            modelBuilder.Entity<Customer>(entity =>
+            {
+                entity.ToTable("Customers");  // Map to Customers table
+                entity.HasOne(c => c.IdentityUser)
+                      .WithOne()  // No navigation property in IdentityUser, so we use WithOne()
+                      .HasForeignKey<Customer>(c => c.Id);  // Foreign key to AspNetUsers
+            });
+
+            // Configure BaseUser without mapping it to a table
+            //modelBuilder.Entity<BaseUser>().HasNoKey();  // Exclude BaseUser from the model
+            // Ensure BaseUser has a foreign key relationship with IdentityUser
+            modelBuilder.Entity<BaseUser>()
+                .HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<BaseUser>(b => b.Id);
+
+            modelBuilder.Entity<RegisterationViewModel>().HasNoKey();  // Exclude BaseUser from the model
+
+
             //modelBuilder.Entity<Order>()
             //.HasMany(o => o.Items)
             //.WithMany(mi => mi.Orders)
@@ -56,6 +93,7 @@ namespace Foodies.Models
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<BranchManager> BranchManager { get; set; }
+        public DbSet<Foodies.ViewModels.RegisterationViewModel> RegisterationViewModel { get; set; } = default!;
     }
 }
 

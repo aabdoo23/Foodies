@@ -17,7 +17,7 @@ namespace Foodies
             builder.Services.AddDbContext<FoodiesDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentity<BaseUser, IdentityRole>().AddDefaultTokenProviders()
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<FoodiesDbContext>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
