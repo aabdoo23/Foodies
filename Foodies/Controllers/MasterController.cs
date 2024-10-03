@@ -1,7 +1,7 @@
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 namespace Foodies.Controllers
 {
     public class MasterController : Controller
@@ -27,7 +27,7 @@ namespace Foodies.Controllers
         {
             return View();
         }
-        public IActionResult Cusolginsignup()
+        public IActionResult SaveNewCustomer()
         {
             return View();
         }
@@ -35,6 +35,8 @@ namespace Foodies.Controllers
         {
             return View();
         }
+
+        [HttpPost]
         public async Task<IActionResult> SaveNewCustomer(RegisterationViewModel cus)
         {
             
@@ -52,7 +54,7 @@ namespace Foodies.Controllers
                     user.PhoneNumber = cus.phoneNumber;
 
 
-                    var result = await _userManager.CreateAsync(user, user.PasswordHash);
+                    IdentityResult result = await _userManager.CreateAsync(user);
 
                     Customer customer = new Customer
                     {
@@ -69,37 +71,44 @@ namespace Foodies.Controllers
                         
                     };
 
-                    //customer.Id = user.Id;
-                    //cus.Address.Customer = customer;
-
                     _context.Customer.Add(customer);
                     _context.SaveChanges();
 
                     if (result.Succeeded)
                     {
+                        await _userManager.AddToRoleAsync(user, "Customer");
+
+                        await _signInManager.SignInAsync(user, isPersistent: false);
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
-                        return RedirectToAction("Cusolginsignup");
+                        //return RedirectToAction("Cusolginsignup");
+                        return Content("User registered");
+
                     }
                     else
                     {
                         ViewBag.NotificationMessage = string.Join(", ", result.Errors.Select(e => e.Description));
                         ViewBag.NotificationType = "danger";
+                        return Content("user not registered");
+
                     }
                 }
                 else
                 {
                     ViewBag.NotificationMessage = "The email is already registered.";
                     ViewBag.NotificationType = "danger";
+                    return Content("user is null");
+
                 }
             }
             else
             {
                 ViewBag.NotificationMessage = "There are missing data.";
                 ViewBag.NotificationType = "danger";
+                return Content("model  no ");
+
             }
 
-            return View(cus);
         }
 
         public IActionResult AdminSignUp()
@@ -152,9 +161,12 @@ namespace Foodies.Controllers
 
                     if (result.Succeeded)
                     {
+                        await _userManager.AddToRoleAsync(user, "Admin");
+
+                        await _signInManager.SignInAsync(user, isPersistent: false);
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
-                        return RedirectToAction("Cusolginsignup");
+                        return Content("User registered");
                     }
                     else
                     {
@@ -177,7 +189,7 @@ namespace Foodies.Controllers
             return View(admin);
         }
 
-        public IActionResult ConfirmCustomerLogIn()
+        public IActionResult login()
         {
             return View();
         }
@@ -187,19 +199,22 @@ namespace Foodies.Controllers
             if (ModelState.IsValid)
             {
                 // Attempt to sign in the user directly
-                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, false);
+                SignInResult result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, false);
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Restaurant", "Menu");
+                    return Content("yesss");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Incorrect username or password");
+                    return Content("noooo");
                 }
             }
+            else
+            {
+                return Content("no modelo");
 
-            return View(loginUser);
+            }
         }
 
 
