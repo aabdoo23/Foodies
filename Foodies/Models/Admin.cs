@@ -1,6 +1,6 @@
 ﻿namespace Foodies.Models
 {
-    public class Admin:BaseUser
+    public class Admin : BaseUser
     {
         public int RestaurantId { get; set; }
         public virtual Restaurant Restaurant { get; set; }

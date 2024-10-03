@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Migrations
 {
     [DbContext(typeof(FoodiesDbContext))]
-    [Migration("20241002201705_IdentityTest23")]
-    partial class IdentityTest23
+    [Migration("20241002225445_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

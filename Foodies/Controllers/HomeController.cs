@@ -1,6 +1,6 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace Foodies.Controllers
 {
@@ -8,19 +8,14 @@ namespace Foodies.Controllers
     {
         private readonly FoodiesDbContext _context;
         private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<BranchManager> _branchManager;
-        private readonly UserManager<Admin> _adminManager;
-        private readonly UserManager<Customer> _customerManager;
+        private readonly UserManager<BaseUser> _baseUser;
 
-        public HomeController(FoodiesDbContext context, ILogger<HomeController> logger, UserManager<BranchManager> branchManager, UserManager<Customer> customerManager, UserManager<Admin> adminManager)
+        public HomeController(FoodiesDbContext context, ILogger<HomeController> logger, UserManager<BaseUser> baseUser)
         {
             _context = context;
             _logger = logger;
-            _branchManager = branchManager;
-            _customerManager = customerManager;
-            _adminManager = adminManager;
+            _baseUser = baseUser;
         }
-
 
         public IActionResult CustomerView()
         {
@@ -110,12 +105,12 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> UserView(string id)
         {
-            var Cus = await _customerManager.FindByIdAsync(id);
+            var Cus = await _baseUser.FindByIdAsync(id);
             return View(Cus);
         }
         public async Task<IActionResult> AccountInfo(Customer Cus)
         {
-            await _customerManager.UpdateAsync(Cus);
+            await _baseUser.UpdateAsync(Cus);
             ViewBag.NotificationMessage = "Customer Updated successfully!";
             ViewBag.NotificationType = "success";
             return RedirectToAction("User", Cus);
@@ -129,7 +124,7 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> CusAddress(Customer Cus)
         {
-            await _customerManager.UpdateAsync(Cus);
+            await _baseUser.UpdateAsync(Cus);
             return RedirectToAction("User", Cus);
         }
 
@@ -167,14 +162,14 @@ namespace Foodies.Controllers
             brnch.Restaurant = await _context.Restaurant.FindAsync(restaurantId);
             await _context.Branch.AddAsync(brnch);
             await _context.SaveChangesAsync();
-            var Admin = await _adminManager.FindByIdAsync(adminId);//good
+            var admin = await _baseUser.FindByIdAsync(adminId);//good
             //TODO: Check mapping
             BrMngr.BranchId = brnch.BranchId;
-            BrMngr.Admin = Admin;
+            BrMngr.Admin = (Admin)admin;
 
-            await _branchManager.CreateAsync(BrMngr);
+            await _baseUser.CreateAsync(BrMngr);
 
-            return RedirectToAction("AdminProfile", Admin);
+            return RedirectToAction("AdminProfile", admin);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

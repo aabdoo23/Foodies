@@ -1,25 +1,19 @@
-using Foodies.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.Intrinsics.Arm;
 
 namespace Foodies.Controllers
 {
     public class MasterController : Controller
     {
         private readonly FoodiesDbContext _context;
-        private readonly UserManager<Customer> _customerManager;
-        private readonly UserManager<Admin> _adminManager;
-        private readonly SignInManager<Customer> _customerSignInManager;
-        private readonly SignInManager<Admin> _adminSignInManager;
+        private readonly UserManager<BaseUser> _userManager;
+        private readonly SignInManager<BaseUser> _signInManager;
 
-        public MasterController(FoodiesDbContext _context, UserManager<Customer> customerManager, UserManager<Admin> adminManager, SignInManager<Admin> adminSignInManager, SignInManager<Customer> customerSignInManager)
+        public MasterController(FoodiesDbContext context, UserManager<BaseUser> userManager, SignInManager<BaseUser> signInManager)
         {
-            this._context = _context;
-            _customerManager = customerManager;
-            _adminManager = adminManager;
-            _adminSignInManager = adminSignInManager;
-            _customerSignInManager = customerSignInManager;
+            _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult view()
@@ -38,57 +32,63 @@ namespace Foodies.Controllers
         {
             return View();
         }
-        public async Task <IActionResult> SaveNewcutomer(Customer cus)
+        public async Task<IActionResult> SaveNewCustomer(Customer cus)
         {
             if (ModelState.IsValid)
             {
-                var existingCustomer = await _customerManager.FindByEmailAsync(cus.Email);
+                var existingCustomer = await _userManager.FindByEmailAsync(cus.Email);
                 if (existingCustomer == null)
                 {
-                    await _customerManager.CreateAsync(cus);
-
-                    ViewBag.NotificationMessage = "Customer registered successfully!";
-                    ViewBag.NotificationType = "success";
-                    return RedirectToAction("Cusolginsignup");
+                    var result = await _userManager.CreateAsync(cus, cus.PasswordHash);
+                    if (result.Succeeded)
+                    {
+                        ViewBag.NotificationMessage = "Customer registered successfully!";
+                        ViewBag.NotificationType = "success";
+                        return RedirectToAction("Cusolginsignup");
+                    }
+                    else
+                    {
+                        ViewBag.NotificationMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                        ViewBag.NotificationType = "danger";
+                    }
                 }
                 else
                 {
                     ViewBag.NotificationMessage = "The email is already registered.";
                     ViewBag.NotificationType = "danger";
-                    return View("UserSignUp", cus);
-                } 
+                }
             }
             else
             {
                 ViewBag.NotificationMessage = "There are missing data.";
                 ViewBag.NotificationType = "danger";
-                return View("UserSignUp", cus);
-
             }
 
+            return View("UserSignUp", cus);
         }
+
         public IActionResult AdminSignUp()
         {
             return View();
         }
-        public async Task<IActionResult >SaveAdminAndResturant(Restaurant res, Admin adm)
+        public async Task<IActionResult> SaveAdminAndResturant(Restaurant res, Admin adm)
         {
             if (ModelState.IsValid)
             {
                 var resturannam = await _context.Restaurant.FirstOrDefaultAsync(x => x.Name == res.Name);
-                var Admininsystim = await _adminManager.FindByEmailAsync(adm.Email);
+                var Admininsystim = await _userManager.FindByEmailAsync(adm.Email);
                 if (resturannam == null && Admininsystim == null)
                 {
-                    
+
                     _context.Restaurant.Add(res);
                     _context.SaveChanges();
-                    
+
                     var rres = _context.Restaurant.Where(x => x.Name == res.Name).FirstOrDefault();
-                    
+
                     adm.RestaurantId = rres.Id;
                     adm.Restaurant = rres;
 
-                    await _adminManager.CreateAsync(adm);
+                    await _userManager.CreateAsync(adm);
                     return RedirectToAction("ResturantLogIn", "Master");
                 }
                 else if (resturannam != null && Admininsystim != null)
@@ -122,10 +122,10 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> ConfirmCustomerLogIn(string email, string pass)
         {
-            var existingCustomer = await _customerManager.FindByEmailAsync(email);
+            var existingCustomer = await _userManager.FindByEmailAsync(email);
             if (existingCustomer != null)
             {
-                var result = await _customerSignInManager.PasswordSignInAsync(existingCustomer, pass, false, false);
+                var result = await _signInManager.PasswordSignInAsync(existingCustomer, pass, false, false);
                 if (!result.Succeeded)
                 {
                     ViewBag.NotificationMessage = "Wrong Email or Password";
@@ -147,10 +147,10 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> REsturantonerLogIn(string email, string pass)
         {
-            var existingAdmin = await _adminManager.FindByEmailAsync(email);
+            var existingAdmin = await _userManager.FindByEmailAsync(email);
             if (existingAdmin != null)
             {
-                var result = await _adminSignInManager.PasswordSignInAsync(existingAdmin, pass, false, false);
+                var result = await _signInManager.PasswordSignInAsync(existingAdmin, pass, false, false);
                 if (!result.Succeeded)
                 {
                     ViewBag.NotificationMessage = "wrong email or password";

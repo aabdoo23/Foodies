@@ -1,6 +1,5 @@
-using Foodies.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.FileProviders;
 
 namespace Foodies
@@ -16,15 +15,15 @@ namespace Foodies
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<FoodiesDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            
-            builder.Services.AddIdentity<BaseUser,IdentityRole>().AddEntityFrameworkStores<FoodiesDbContext>();
-            builder.Services.AddIdentityCore<Customer>().AddEntityFrameworkStores<FoodiesDbContext>();
-            builder.Services.AddIdentityCore<Admin>().AddEntityFrameworkStores<FoodiesDbContext>();
-            builder.Services.AddIdentityCore<BranchManager>().AddEntityFrameworkStores<FoodiesDbContext>();
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddIdentity<BaseUser, IdentityRole>().AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<FoodiesDbContext>();
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 
@@ -42,21 +41,25 @@ namespace Foodies
             {
                 FileProvider = new PhysicalFileProvider(
                 Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
-                
+
             });
 
-            //app.UseStaticFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
 
 
-                pattern: "{controller=Home}/{action=CustomerView}");
-
+            //pattern: "{controller=Home}/{action=CustomerView}");
+            pattern: "{controller=Master}/{action=view}/{id?}");
 
             app.Run();
         }

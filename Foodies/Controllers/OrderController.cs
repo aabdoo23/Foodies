@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Net;
 
 public class OrderController : Controller
 {
@@ -26,7 +24,7 @@ public class OrderController : Controller
         return View();
     }
 
-    public async Task <IActionResult>order(int total)
+    public async Task<IActionResult> order(int total)
     {
         ////id , State , total , date, paymentid , customerid, branch id
         //Order order = new Order();

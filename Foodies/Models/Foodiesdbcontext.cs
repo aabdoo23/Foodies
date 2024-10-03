@@ -2,12 +2,12 @@
 
 namespace Foodies.Models
 {
-    public class FoodiesDbContext : IdentityDbContext
+    public class FoodiesDbContext : IdentityDbContext<BaseUser>
     {
         public FoodiesDbContext(DbContextOptions<FoodiesDbContext> options) : base(options)
         {
         }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //One-to-one relationship

@@ -3,7 +3,7 @@
 
     public class Customer : BaseUser
 
-    { 
+    {
         public int Points { get; set; } = 0;
         public int AddressId { get; set; }
         public virtual Address Address { get; set; }

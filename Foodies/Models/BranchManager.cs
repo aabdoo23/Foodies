@@ -1,6 +1,6 @@
 ﻿namespace Foodies.Models
 {
-    public class BranchManager: BaseUser
+    public class BranchManager : BaseUser
     {
         public int BranchId { get; set; }
         public virtual Branch Branch { get; set; }
