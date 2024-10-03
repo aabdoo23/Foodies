@@ -54,7 +54,7 @@ namespace Foodies.Controllers
                     user.PhoneNumber = cus.phoneNumber;
 
 
-                    var result = await _userManager.CreateAsync(user, cus.Password);
+                    var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
                     Customer customer = new Customer
                     {
@@ -101,7 +101,7 @@ namespace Foodies.Controllers
                 ViewBag.NotificationType = "danger";
             }
 
-            return View( cus);
+            return View(cus);
         }
 
         public IActionResult AdminSignUp()
@@ -183,27 +183,28 @@ namespace Foodies.Controllers
         {
             return View();
         }
-        //public async Task<IActionResult> ConfirmCustomerLogIn(string email, string pass)
-        //{
-        //    var existingCustomer = await _userManager.FindByEmailAsync(email);
-        //    if (existingCustomer != null)
-        //    {
-        //        var result = await _signInManager.PasswordSignInAsync(existingCustomer, pass, false, false);
-        //        if (!result.Succeeded)
-        //        {
-        //            ViewBag.NotificationMessage = "Wrong Email or Password";
-        //            ViewBag.NotificationType = "danger";
-        //            return View("CustomerLogIn");
-        //        }
-        //        return RedirectToAction("index", "CustomerView", existingCustomer);
-        //    }
-        //    else
-        //    {
-        //        ViewBag.NotificationMessage = "Wrong Email or Password";
-        //        ViewBag.NotificationType = "danger";
-        //        return View("CustomerLogIn");
-        //    }
-        //}
+        public async Task<IActionResult> ConfirmCustomerLogIn(string email, string pass)
+        {
+            var existingCustomer = await _userManager.FindByEmailAsync(email);
+            if (existingCustomer != null)
+            {
+                var result = await _signInManager.PasswordSignInAsync(existingCustomer, pass, false, false);
+                if (!result.Succeeded)
+                {
+                    ViewBag.NotificationMessage = "Invalid Password";
+                    ViewBag.NotificationType = "danger";
+                    return View("CustomerLogIn");
+                }
+                return RedirectToAction("index", "CustomerView", existingCustomer);
+            }
+            else
+            {
+                ViewBag.NotificationMessage = "Wrong Email or Password";
+                ViewBag.NotificationType = "danger";
+                return View("CustomerLogIn");
+            }
+        }
+
         public IActionResult ResturantLogIn()
         {
             return View();
