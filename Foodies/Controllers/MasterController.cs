@@ -23,10 +23,7 @@ namespace Foodies.Controllers
         {
             return View();
         }
-        public IActionResult Ressolginsignup()
-        {
-            return View();
-        }
+        
         public IActionResult SaveNewCustomer()
         {
             return View();
@@ -49,12 +46,11 @@ namespace Foodies.Controllers
                     //fill identity info
                     IdentityUser user = new IdentityUser();
                     user.UserName = cus.Email;
-                    user.PasswordHash = cus.Password;
                     user.Email = cus.Email;
                     user.PhoneNumber = cus.phoneNumber;
 
 
-                    IdentityResult result = await _userManager.CreateAsync(user);
+                    IdentityResult result = await _userManager.CreateAsync(user, cus.Password);
 
                     Customer customer = new Customer
                     {
@@ -76,9 +72,11 @@ namespace Foodies.Controllers
 
                     if (result.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(user, "Customer");
+                        //await _userManager.AddToRoleAsync(user, "Customer");
+
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
+
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
                         //return RedirectToAction("Cusolginsignup");
@@ -111,10 +109,11 @@ namespace Foodies.Controllers
 
         }
 
-        public IActionResult AdminSignUp()
+        public IActionResult SaveAdminAndResturant()
         {
             return View();
         }
+        [HttpPost]
         public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin)
         {
             if (ModelState.IsValid)
@@ -126,7 +125,6 @@ namespace Foodies.Controllers
                     //fill identity info
                     IdentityUser user = new IdentityUser();
                     user.UserName = admin.Email;
-                    user.PasswordHash = admin.Password;
                     user.Email = admin.Email;
                     user.PhoneNumber = admin.phoneNumber;
 
@@ -161,9 +159,11 @@ namespace Foodies.Controllers
 
                     if (result.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(user, "Admin");
+                        //await _userManager.AddToRoleAsync(user, "Admin");
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
+
+
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
                         return Content("User registered");
@@ -198,53 +198,73 @@ namespace Foodies.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Attempt to sign in the user directly
-                SignInResult result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, false);
+                IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-                if (result.Succeeded)
+                if (user != null)
                 {
-                    return Content("yesss");
+                    SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
+                    if (result.Succeeded)
+                    {
+
+
+                        return Content("success wee");
+                    }
+                    else
+                    {
+                        return Content("not success");
+                    }
                 }
                 else
                 {
-                    return Content("noooo");
+                    return Content("user null");
                 }
             }
             else
             {
-                return Content("no modelo");
+                return Content("state no");
 
             }
+
         }
 
 
         public IActionResult ResturantLogIn()
         {
-            return View();
+            return View("login");
         }
-        //public async Task<IActionResult> REsturantonerLogIn(string email, string pass)
-        //{
-        //    var existingAdmin = await _userManager.FindByEmailAsync(email);
-        //    if (existingAdmin != null)
-        //    {
-        //        var result = await _signInManager.PasswordSignInAsync(existingAdmin, pass, false, false);
-        //        if (!result.Succeeded)
-        //        {
-        //            ViewBag.NotificationMessage = "wrong email or password";
-        //            ViewBag.NotificationType = "danger";
-        //            return View("ResturantLogIn");
-        //        }
+        [HttpPost]
+        public async Task<IActionResult> ResturantLogIn(LogInViewModel loginUser)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-        //        return RedirectToAction("AdminProfile", "Home", existingAdmin);
-        //    }
-        //    else
-        //    {
-        //        ViewBag.NotificationMessage = "wrong email or password";
-        //        ViewBag.NotificationType = "danger";
-        //        return View("ResturantLogIn");
-        //    }
+                if (user != null)
+                {
+                    SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
+                    if (result.Succeeded)
+                    {
 
-        //}
+
+                        return Content("success wee");
+                    }
+                    else
+                    {
+                        return Content("not success");
+                    }
+                }
+                else
+                {
+                    return Content("user null");
+                }
+            }
+            else
+            {
+                return Content("state no");
+
+            }
+
+        }
 
     }
 }

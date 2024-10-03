@@ -25,6 +25,12 @@ namespace Foodies
 
             builder.Services.AddRazorPages();
 
+            //RoleManager<IdentityRole> roleManager;
+            //IdentityResult result =  UserRoles.CreateRole(roleManager, "Admin");
+
+            //UserRoles.CreateRole(roleManager,"Admin");
+
+
             var app = builder.Build();
 
             app.UseHttpsRedirection();
