@@ -94,9 +94,7 @@ namespace Foodies.Models
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<BranchManager> BranchManager { get; set; }
-        public DbSet<Foodies.ViewModels.RegisterationViewModel> RegisterationViewModel { get; set; } = default!;
-        public DbSet<Foodies.ViewModels.AdminRegisterViewModel> AdminRegisterViewModel { get; set; } = default!;
-        public DbSet<Foodies.ViewModels.LogInViewModel> LogInViewModel { get; set; } = default!;
+       
     }
 }
 

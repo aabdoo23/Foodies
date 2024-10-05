@@ -11,12 +11,24 @@ namespace Foodies.Controllers
 
         private readonly SignInManager<IdentityUser> _signInManager;
 
+      
+
         public MasterController(FoodiesDbContext context, 
             UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+        public async Task CreateRole(RoleManager<IdentityRole> roleManager, string who)
+        {
+            if (!roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
+            {
+                roleManager.CreateAsync(new IdentityRole(UserRoles.Customer)).GetAwaiter().GetResult();
+                roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager)).GetAwaiter().GetResult();
+                roleManager.CreateAsync(new IdentityRole(UserRoles.Admin)).GetAwaiter().GetResult();
+            }
         }
 
         public IActionResult view()
@@ -48,7 +60,8 @@ namespace Foodies.Controllers
                     user.UserName = cus.Email;
                     user.Email = cus.Email;
                     user.PhoneNumber = cus.phoneNumber;
-
+                    
+                    await _userManager.AddToRoleAsync(user,"Admin");
 
                     IdentityResult result = await _userManager.CreateAsync(user, cus.Password);
 

@@ -14,7 +14,7 @@ namespace Foodies.Controllers
         {
             var mnui = ViewData["Reslist"] = context.Restaurant.ToList();
             //	Console.WriteLine(
-            Console.WriteLine(Cus);
+            //Console.WriteLine(Cus);
             return View(Cus);
         }
         public IActionResult Minew(int id)
