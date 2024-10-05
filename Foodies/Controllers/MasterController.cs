@@ -9,10 +9,7 @@ namespace Foodies.Controllers
         private readonly FoodiesDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
         private readonly SignInManager<IdentityUser> _signInManager;
-
-
 
         public MasterController(FoodiesDbContext context,
             UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
@@ -25,11 +22,11 @@ namespace Foodies.Controllers
 
         public async Task CreateRole()
         {
-            if (!_roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Customer))
             {
-                _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin)).GetAwaiter().GetResult();
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer));
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager));
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             }
         }
 
@@ -37,7 +34,7 @@ namespace Foodies.Controllers
         {
             return View();
         }
-        
+
         public IActionResult SaveNewCustomer()
         {
             return View();
@@ -50,7 +47,7 @@ namespace Foodies.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveNewCustomer(RegisterationViewModel cus)
         {
-            
+
             if (ModelState.IsValid)
             {
 
@@ -58,28 +55,28 @@ namespace Foodies.Controllers
                 if (existingCustomer == null)
                 {
                     //fill identity info
-                    CreateRole();
+                    await CreateRole();
                     IdentityUser user = new IdentityUser();
                     user.UserName = cus.Email;
                     user.Email = cus.Email;
                     user.PhoneNumber = cus.phoneNumber;
-                    
+
 
                     IdentityResult result = await _userManager.CreateAsync(user, cus.Password);
 
                     Customer customer = new Customer
                     {
-                        Id = user.Id, 
-                            FirstName = cus.FirstName,
-                            LastName = cus.LastName,
-                        
+                        Id = user.Id,
+                        FirstName = cus.FirstName,
+                        LastName = cus.LastName,
+
                         Address = new Address // Initialize Address object
                         {
                             City = cus.City,
                         },
                         IdentityUser = user,
 
-                        
+
                     };
 
                     _context.Customer.Add(customer);
@@ -155,7 +152,7 @@ namespace Foodies.Controllers
                         FirstName = admin.FirstName,
                         LastName = admin.LastName,
 
-                        
+
                         IdentityUser = user,
 
 
@@ -244,7 +241,6 @@ namespace Foodies.Controllers
             }
 
         }
-
 
         public IActionResult ResturantLogIn()
         {

@@ -9,7 +9,7 @@ namespace Foodies.Controllers
         private readonly FoodiesDbContext _context;
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<BaseUser> _baseUser;
-        
+
         public HomeController(FoodiesDbContext context, ILogger<HomeController> logger, UserManager<BaseUser> baseUser)
         {
             _context = context;
@@ -29,7 +29,7 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> AdminProfile(Admin adm)
         {
-            
+
             var restaurant = await _context.Restaurant.Include(x => x.MenuItems).SingleOrDefaultAsync(x => x.Id == adm.RestaurantId);
             ViewBag.Rest = restaurant;  // Assign restaurant to ViewBag.Rest
 

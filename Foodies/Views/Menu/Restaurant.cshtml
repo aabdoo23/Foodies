@@ -6,7 +6,7 @@
                 <link rel="stylesheet" href="~/css/restaurant.css">
                 @* <link rel="stylesheet" href="~/css/Navbar.css"> *@
                 <link rel="stylesheet" href="~/css/Main.css">
-
+                
 
 @* <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -81,18 +81,31 @@
         @* restaurants *@
         <div class="restaurant-list">
         <h1>Restaurants</h1>
-        <div class="restaurant-cards">
-                @foreach (var i in Model)
-                {
-                   
-                @await Component.InvokeAsync("FoodCardViewComponent", 
-                new { Title = i.Name, Hotline = i.Hotline, CusineType = i.CuisineType,
-                    MinPrice = i.MinPrice, MaxPrice = i.MaxPrice,
-                    ImageUrl = @i.Photo,
-                                Url = $"/Menu/Index?restaurantId={i.Id}"
-                            })
-                }
+            <div class="restaurant-cards">
+    @foreach (var restaurant in Model)
+    {
+        @await Component.InvokeAsync("FoodCardViewComponent",
+                 new
+                 {
+                     Title = restaurant.Name,
+                     Hotline = restaurant.Hotline,
+                     CuisineType = restaurant.CuisineType,
+                     MinPrice = restaurant.MinPrice,
+                     MaxPrice = restaurant.MaxPrice,
+                     ImageUrl = restaurant.Photo,
+                     Url = $"/Menu/Index?restaurantId={restaurant.Id}",
+                 })
+        <div class="rating-container">
+            <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">Rate Restaurant</button>
+            <div class="rating-input" style="display: none;">
+                <input type="number" min="1" max="5" step="0.1" placeholder="Rate (1-5)" class="form-control" />
+                <button class="btn btn-primary submit-rating" data-restaurant-id="@restaurant.Id">Submit</button>
+            </div>
         </div>
+    }
+</div>
+
+
     </div>
         @* @foreach (var restaurant in Model)
         {
@@ -106,8 +119,9 @@
         } *@
 
     </div>
-
+    <script src="~/js/rate.js"></script>
 </body>
+
 </html>
 
 <style>
@@ -273,5 +287,6 @@
         padding: 10px 10px 0 10px;
     }
 </style>
+
 
 

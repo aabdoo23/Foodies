@@ -1,7 +1,5 @@
-﻿using Foodies.ViewModels;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 namespace Foodies.Models
 {
@@ -94,7 +92,7 @@ namespace Foodies.Models
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<BranchManager> BranchManager { get; set; }
-       
+
     }
 }
 
