@@ -28,9 +28,10 @@
                     <p>Open 24 Hours | Delivery time: 40 minutes | Delivered by: Foodies</p>
                 </div>
                 <div class="restaurant-rating">
-                    <p>Rating: 4.5</p>
+                    <p>Rating: @Model.Restaurant.AverageRating.ToString("F1")</p>
                 </div>
             </div>
+
 
             <div class="category-filters">
                 @foreach (var category in Model.Categories)
