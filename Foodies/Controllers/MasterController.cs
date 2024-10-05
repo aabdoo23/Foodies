@@ -58,12 +58,12 @@ namespace Foodies.Controllers
                 if (existingCustomer == null)
                 {
                     //fill identity info
+                    CreateRole();
                     IdentityUser user = new IdentityUser();
                     user.UserName = cus.Email;
                     user.Email = cus.Email;
                     user.PhoneNumber = cus.phoneNumber;
                     
-                    await _userManager.AddToRoleAsync(user,"Admin");
 
                     IdentityResult result = await _userManager.CreateAsync(user, cus.Password);
 
@@ -89,6 +89,7 @@ namespace Foodies.Controllers
                     {
                         //await _userManager.AddToRoleAsync(user, "Customer");
 
+                        await _userManager.AddToRoleAsync(user, "Customer");
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
 
@@ -138,6 +139,8 @@ namespace Foodies.Controllers
                 if (existingCustomer == null)
                 {
                     //fill identity info
+                    CreateRole();
+
                     IdentityUser user = new IdentityUser();
                     user.UserName = admin.Email;
                     user.Email = admin.Email;
@@ -174,7 +177,7 @@ namespace Foodies.Controllers
 
                     if (result.Succeeded)
                     {
-                        //await _userManager.AddToRoleAsync(user, "Admin");
+                        await _userManager.AddToRoleAsync(user, "Admin");
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
 
