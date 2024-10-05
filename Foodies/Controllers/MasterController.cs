@@ -8,26 +8,28 @@ namespace Foodies.Controllers
     {
         private readonly FoodiesDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         private readonly SignInManager<IdentityUser> _signInManager;
 
-      
 
-        public MasterController(FoodiesDbContext context, 
-            UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+
+        public MasterController(FoodiesDbContext context,
+            UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
-        public async Task CreateRole(RoleManager<IdentityRole> roleManager, string who)
+        public async Task CreateRole()
         {
-            if (!roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
+            if (!_roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
             {
-                roleManager.CreateAsync(new IdentityRole(UserRoles.Customer)).GetAwaiter().GetResult();
-                roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager)).GetAwaiter().GetResult();
-                roleManager.CreateAsync(new IdentityRole(UserRoles.Admin)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin)).GetAwaiter().GetResult();
             }
         }
 
