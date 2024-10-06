@@ -6,12 +6,12 @@ public class OrderController : Controller
     private readonly FoodiesDbContext _context;
     static private int cnt = 0;
     private List<MenuItem> myCart = new List<MenuItem>();
-    private readonly UserManager<Customer> _customerManager;
+    //private readonly UserManager<Customer> _customerManager;
 
-    public OrderController(FoodiesDbContext context, UserManager<Customer> customerManager)
+    public OrderController(FoodiesDbContext context /*,UserManager<Customer> customerManager*/)
     {
         _context = context;
-        _customerManager = customerManager;
+        //_customerManager = customerManager;
     }
 
 

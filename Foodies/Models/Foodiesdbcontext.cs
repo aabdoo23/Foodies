@@ -77,7 +77,16 @@ namespace Foodies.Models
             //.HasMany(o => o.Items)
             //.WithMany(mi => mi.Orders)
             //.UsingEntity(j => j.ToTable("OrderMenuItems"));
-
+            
+            //many to many
+            modelBuilder.Entity<Customer>()
+            .HasMany(c => c.FavouriteRestaurants)
+            .WithMany(r => r.FavouriteCustomers)
+            .UsingEntity<Dictionary<string, object>>(
+                "Favourites",
+                r => r.HasOne<Restaurant>().WithMany().HasForeignKey("RestaurantId"),
+                c => c.HasOne<Customer>().WithMany().HasForeignKey("CustomerId")
+            );
             base.OnModelCreating(modelBuilder);
         }
 
