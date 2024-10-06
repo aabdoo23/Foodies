@@ -1,6 +1,4 @@
-﻿@model IEnumerable<Restaurant>
-
-<html>
+﻿<html>
     <header>
             <title>Restaurant List</title>
                 <link rel="stylesheet" href="~/css/restaurant.css">
@@ -13,7 +11,7 @@
 
         @* restaurants *@
         <div class="restaurant-list">
-        <h1>Restaurants</h1>
+        <div class="btn"><h1>Your Favourites</h1></div>
             <div class="restaurant-cards">
             @foreach (var restaurant in ViewBag.fav.FavouriteRestaurants)
                 {
@@ -56,10 +54,13 @@
         background-color: var(--secondary-color); 
     } */
    .restaurant-list h1{
-    color:white;
+    color:black;
+    margin-top: 50px;
     }
 
-
+    #fl{
+        background-color :white
+    }
     .navbar-brand {
         font-size: 1.5em;
         color: var(--primary-color);
