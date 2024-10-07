@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Foodies.Models;
 using Foodies.ViewModels;
 using Foodies.ViewModels.Components;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
@@ -49,7 +50,7 @@ namespace Foodies.Controllers
 
             ViewBag.Rest = restaurant; 
 
-            ViewBag.Branch = _context.Branch.Where(x => x.Restaurant == restaurant).ToList();
+            ViewBag.Branch = _context.Branch.Where(x => x.Restaurant == restaurant).Include(c => c.Address).ToList();
 
             ViewBag.menu = _context.MenuItem.Where(x => x.Resturant.Id == Admncon.RestaurantId).ToList();
             return View(Admine);
@@ -218,23 +219,31 @@ namespace Foodies.Controllers
               _context.savechanges();
               return redirecttoaction("addbranch");
           }*/
-
+        [HttpGet]
         public IActionResult AddBranch(int id)
         {
             var admin = _context.Admin.SingleOrDefault(x => x.RestaurantId == id);
-            ViewBag.RestId = id;
+            //ViewBag.RestId = id;
+            Response.Cookies.Append("resiid", id.ToString());
+            //int resId = int.Parse(Request.Cookies["resiid"]);
+
             return View(admin);
+            //return Content($"done done done{resId}");
+
         }
-        public async Task<IActionResult> SaveBranch(AddbrancViewmodel adbr)//Branch brnch, BranchManager BrMngr, int restaurantId, int adminId
+
+        [HttpPost]
+        public async Task<IActionResult> SaveBranch( AddbrancViewmodel adbr)//Branch brnch, BranchManager BrMngr, int restaurantId, int adminId
         {
             IdentityUser user = new IdentityUser();
             user.UserName = adbr.Email;
             user.Email = adbr.Email;
             user.PhoneNumber = adbr.phoneNumber;
-           
+
+            int resId = int.Parse(Request.Cookies["resiid"]);
 
             // restaurant 
-            Restaurant res = _context.Restaurant.Where(x => x.Id == adbr.restid).
+            Restaurant res = _context.Restaurant.Where(x => x.Id == resId).
                 Include(c => c.Branches).FirstOrDefault();
 
 
@@ -254,6 +263,7 @@ namespace Foodies.Controllers
                 }
             };
 
+            //return Content($"done done done{resId}");
 
             res.Branches.Add(newBranch);  
 
@@ -264,18 +274,22 @@ namespace Foodies.Controllers
 
             //logged in user
             //var userId = _userManager.GetUserId(User);
-            var admin = _context.Admin.SingleOrDefault(x => x.RestaurantId == adbr.restid);
+            var admin = _context.Admin.SingleOrDefault(x => x.RestaurantId == resId);
 
             BranchManager newBranchMngr = new BranchManager  //adminID
             {
-                Admin = _context.Admin.Find(admin.Id),
+                Id= user.Id,
+                AdminId = admin.Id,
                 BranchId = newBranch.BranchId,
                 FirstName= adbr.FirstName,  
                 LastName= adbr.LastName,
+                IdentityUser = user,
+
 
             };
             _context.BranchManager.Add(newBranchMngr);
             _context.SaveChanges();
+            //return C
             return RedirectToAction("AdminProfile", admin);
         }
 

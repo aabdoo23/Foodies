@@ -25,12 +25,12 @@ namespace Foodies.Controllers
 
         public async Task CreateRole()
         {
-            if (!_roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
-            {
+            //if (!_roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
+            //{
                 _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin)).GetAwaiter().GetResult();
-            }
+            //}
         }
 
         public IActionResult view()
@@ -122,7 +122,7 @@ namespace Foodies.Controllers
 
         }
 
-        public IActionResult AdminSignUp()
+        public IActionResult SaveAdminAndResturant()
         {
             return View();
         }
@@ -201,7 +201,7 @@ namespace Foodies.Controllers
                 ViewBag.NotificationType = "danger";
             }
 
-            return View("AdminSignUp", admin);
+            return View( admin);
         }
 
         public IActionResult Login()
