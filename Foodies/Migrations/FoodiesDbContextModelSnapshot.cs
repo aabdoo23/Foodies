@@ -266,10 +266,8 @@ namespace Foodies.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("Rate")
@@ -687,7 +685,9 @@ namespace Foodies.Migrations
                 {
                     b.HasOne("Foodies.Models.Customer", "Customer")
                         .WithMany("Ratings")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Foodies.Models.Restaurant", "Restaurant")
                         .WithMany("Ratings")

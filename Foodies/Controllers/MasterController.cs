@@ -9,7 +9,10 @@ namespace Foodies.Controllers
         private readonly FoodiesDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+
         private readonly SignInManager<IdentityUser> _signInManager;
+
+
 
         public MasterController(FoodiesDbContext context,
             UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
@@ -22,11 +25,11 @@ namespace Foodies.Controllers
 
         public async Task CreateRole()
         {
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Customer))
+            if (!_roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
             {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer));
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager));
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin)).GetAwaiter().GetResult();
             }
         }
 
@@ -35,10 +38,7 @@ namespace Foodies.Controllers
             return View();
         }
 
-        public IActionResult SaveNewCustomer()
-        {
-            return View();
-        }
+        [HttpGet]
         public IActionResult UserSignUp()
         {
             return View();
@@ -55,7 +55,7 @@ namespace Foodies.Controllers
                 if (existingCustomer == null)
                 {
                     //fill identity info
-                    await CreateRole();
+                    CreateRole();
                     IdentityUser user = new IdentityUser();
                     user.UserName = cus.Email;
                     user.Email = cus.Email;
@@ -73,9 +73,11 @@ namespace Foodies.Controllers
                         Address = new Address // Initialize Address object
                         {
                             City = cus.City,
+                            Street = cus.Street,
+                            Building = cus.Building,
+                            Location = cus.Location,
                         },
                         IdentityUser = user,
-
 
                     };
 
@@ -84,23 +86,21 @@ namespace Foodies.Controllers
 
                     if (result.Succeeded)
                     {
-                        //await _userManager.AddToRoleAsync(user, "Customer");
 
                         await _userManager.AddToRoleAsync(user, "Customer");
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
-
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
                         //return RedirectToAction("Cusolginsignup");
-                        return Content("User registered");
+                        return View("UserSignUp");
 
                     }
                     else
                     {
                         ViewBag.NotificationMessage = string.Join(", ", result.Errors.Select(e => e.Description));
                         ViewBag.NotificationType = "danger";
-                        return Content("user not registered");
+                        return View("UserSignUp");
 
                     }
                 }
@@ -108,7 +108,7 @@ namespace Foodies.Controllers
                 {
                     ViewBag.NotificationMessage = "The email is already registered.";
                     ViewBag.NotificationType = "danger";
-                    return Content("user is null");
+                    return View("UserSignUp", cus);
 
                 }
             }
@@ -116,13 +116,13 @@ namespace Foodies.Controllers
             {
                 ViewBag.NotificationMessage = "There are missing data.";
                 ViewBag.NotificationType = "danger";
-                return Content("model  no ");
+                return View("UserSignUp");
 
             }
 
         }
 
-        public IActionResult SaveAdminAndResturant()
+        public IActionResult AdminSignUp()
         {
             return View();
         }
@@ -151,10 +151,7 @@ namespace Foodies.Controllers
                         Id = user.Id,
                         FirstName = admin.FirstName,
                         LastName = admin.LastName,
-
-
                         IdentityUser = user,
-
 
                     };
                     Restaurant res = new Restaurant
@@ -163,6 +160,9 @@ namespace Foodies.Controllers
                         Photo = admin.Photo,
                         Hotline = admin.Hotline,
                         CuisineType = admin.CuisineType,
+                        MaxPrice = admin.MaxPrice,
+                        MinPrice = admin.MinPrice,
+
                     };
                     //custo}mer.Id = user.Id;
                     //cus.Address.Customer = customer;
@@ -181,7 +181,7 @@ namespace Foodies.Controllers
 
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
-                        return Content("User registered");
+                        return RedirectToAction("AdminProfile", "Home", new { id = user.Id });
                     }
                     else
                     {
@@ -201,18 +201,17 @@ namespace Foodies.Controllers
                 ViewBag.NotificationType = "danger";
             }
 
-            return View(admin);
+            return View("AdminSignUp", admin);
         }
 
-        public IActionResult login()
+        public IActionResult Login()
         {
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> Login(LogInViewModel loginUser)
         {
-            if (ModelState.IsValid)
-            {
+            
                 IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
 
                 if (user != null)
@@ -220,68 +219,84 @@ namespace Foodies.Controllers
                     SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
                     if (result.Succeeded)
                     {
+                        var roles = await _userManager.GetRolesAsync(user);
+                        string x = string.Join(", ", roles);
 
-
-                        return Content("success wee");
+                        if (x == "Customer")
+                        {
+                            return RedirectToAction("UserView", "Home", new { id = user.Id });
+                        }
+                        else if (x == "Admin")
+                        {
+                            return RedirectToAction("AdminProfile", "Home", new { id = user.Id });
+                        }
+                        else
+                        {
+                            ViewBag.NotificationMessage = "Unrecognized role.";
+                            ViewBag.NotificationType = "danger";
+                            return View("Login");
+                        }
                     }
                     else
                     {
-                        return Content("not success");
+                        ViewBag.NotificationMessage = "Login failed. Incorrect password.";
+                        ViewBag.NotificationType = "danger";
+                        return View("Login");
                     }
                 }
                 else
                 {
-                    return Content("user null");
+                    ViewBag.NotificationMessage = "User not found.";
+                    ViewBag.NotificationType = "danger";
+                    return View("Login");
                 }
-            }
-            else
-            {
-                return Content("state no");
-
-            }
-
+            
+            
         }
 
-        public IActionResult ResturantLogIn()
-        {
-            return View("login");
-        }
-        [HttpPost]
-        public async Task<IActionResult> ResturantLogIn(LogInViewModel loginUser)
-        {
-            if (ModelState.IsValid)
-            {
-                IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-                if (user != null)
+        /*
+            public IActionResult ResturantLogIn()
+            {
+                return View("login");
+            }
+            [HttpPost]
+            public async Task<IActionResult> ResturantLogIn(LogInViewModel loginUser)
+            {
+                if (ModelState.IsValid)
                 {
-                    SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
-                    if (result.Succeeded)
+                    IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
+
+                    if (user != null)
                     {
+                        SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
+                        if (result.Succeeded)
+                        {
 
-
-                        return Content("success wee");
+                            var x = _userManager.GetRolesAsync(user);
+                            ViewBag.Roles = x;
+                            return Content(ViewBag.Roles);
+                        }
+                        else
+                        {
+                            return Content("not success");
+                        }
                     }
                     else
                     {
-                        return Content("not success");
+                        return Content("user null");
                     }
                 }
                 else
                 {
-                    return Content("user null");
+                    return Content("state no");
+
                 }
-            }
-            else
-            {
-                return Content("state no");
 
             }
 
         }
-
+        */
     }
 }
-
-
 

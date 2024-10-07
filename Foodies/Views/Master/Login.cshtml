@@ -1,38 +1,175 @@
 ﻿@model Foodies.ViewModels.LogInViewModel
-
 @{
     ViewData["Title"] = "Login";
-}
+}﻿
 
-<h1>Login</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Foodies</title>
+    @* <link rel="stylesheet" href="~/css/Main.css"> *@
 
-<h4>LogInViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+    @* <link rel="stylesheet" href="styles.css"> *@
+</head>
+<body>
+
+
+    <div class="content">
+        @if (ViewBag.NotificationMessage != null)
+        {
+        <div class="alert alert-@ViewBag.NotificationType">
+                @ViewBag.NotificationMessage
+        </div>
+        }
+        <div class="login-form">
+            <h1>Login</h1>
+            <p>Enter your credentials to access your account</p>
+
+            <form method="post"  >
+                <div class="input-group">
+                    <label for="Email">Email</label>
+                    <input type="email" name="Email" required>
+                </div>
+                <div class="input-group">
+                    <label for="Password">Password</label>
+                    <input type="Password" name="Password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <div class="redirect-signup">
+                <p>Don't have an account? <a href="@Url.Action("UserSignUp", "Master")">Sign up here</a></p>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
     </div>
-</div>
 
-<div>
-    @* <a asp-action="Index">Back to List</a> *@
-</div>
+</body>
+</html>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+<style>
+    /* Basic Styles */
+
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        padding-top: 150px;
+        padding-bottom: 150px;
+        width: 100%;
+    }
+
+    .login-form {
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+    }
+
+        .login-form h1 {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            color: #D35269;
+            margin-bottom: 20px;
+        }
+
+        .login-form p {
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+            color: black;
+            font-size: 16px;
+        }
+
+        .login-form form {
+            display: flex;
+            flex-direction: column;
+        }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+    .login-form button {
+        background-color: #048a81;
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 14px;
+    }
+
+        .login-form button:hover {
+            background-color: #2EBFA5;
+            color: #b0374d;
+        }
+
+    .redirect-signup {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+        .redirect-signup a {
+            color: #D35269;
+            text-decoration: none;
+        }
+
+            .redirect-signup a:hover {
+                text-decoration: underline;
+            }
+
+    .logo {
+        width: 90px;
+        height: auto;
+    }
+       .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
 }
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+</style>
+<script>
+    setTimeout(function () {
+        var alert = document.querySelector('.alert');
+        if (alert) {
+            alert.style.display = 'none';
+        }
+    }, 5000); 
+</script>
