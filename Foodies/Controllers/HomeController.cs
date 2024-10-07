@@ -225,36 +225,50 @@ namespace Foodies.Controllers
             ViewBag.RestId = id;
             return View(admin);
         }
-        public async Task<IActionResult> SaveBranch(AddbrancViewmodel adbr, int restaurantId)//Branch brnch, BranchManager BrMngr, int restaurantId, int adminId
+        public async Task<IActionResult> SaveBranch(AddbrancViewmodel adbr)//Branch brnch, BranchManager BrMngr, int restaurantId, int adminId
         {
-
-            
             IdentityUser user = new IdentityUser();
             user.UserName = adbr.Email;
             user.Email = adbr.Email;
             user.PhoneNumber = adbr.phoneNumber;
            
+
+            // restaurant 
+            Restaurant res = _context.Restaurant.Where(x => x.Id == adbr.restid).
+                Include(c => c.Branches).FirstOrDefault();
+
+
             IdentityResult result = await _userManager.CreateAsync(user, adbr.Password);
+
             Branch newBranch = new Branch
             {
-                Restaurant = _context.Restaurant.Find(adbr.restid),
+                Restaurant = res,
                 OpeningHour = adbr.OpeningHour,
                 ClosingHour = adbr.ClosingHour,
+                Address = new Address
+                {
+                    City = adbr.City,
+                    Street = adbr.Street,
+                    Building = adbr.Building,
+                    Location = adbr.Location,
+                }
             };
-            Address ad = new Address
-            {
-                City = adbr.City,
-                Street = adbr.Street,
-                Building = adbr.Building,
-                Location = adbr.Location,
-            };
+
+
+            res.Branches.Add(newBranch);  
+
+
+            
             _context.Branch.Add(newBranch);
             _context.SaveChanges();
 
-           
-            BranchManager newBranchMngr = new BranchManager
+            //logged in user
+            //var userId = _userManager.GetUserId(User);
+            var admin = _context.Admin.SingleOrDefault(x => x.RestaurantId == adbr.restid);
+
+            BranchManager newBranchMngr = new BranchManager  //adminID
             {
-                Admin = _context.Admin.Find(adminId),
+                Admin = _context.Admin.Find(admin.Id),
                 BranchId = newBranch.BranchId,
                 FirstName= adbr.FirstName,  
                 LastName= adbr.LastName,
@@ -262,9 +276,7 @@ namespace Foodies.Controllers
             };
             _context.BranchManager.Add(newBranchMngr);
             _context.SaveChanges();
-            var adm = _context.Admin.SingleOrDefault(x => x.Id == adminId);
-            var addm = _context.Admin.SingleOrDefault(x => x.Id == adminId);
-            return RedirectToAction("AdminProfile", adm);
+            return RedirectToAction("AdminProfile", admin);
         }
 
 
