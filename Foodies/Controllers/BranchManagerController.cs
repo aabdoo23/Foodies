@@ -19,8 +19,8 @@ namespace Foodies.Controllers
         {
             var customers = new List<Customer>
             {
-                new Customer { Id = 1, FirstName = "John", LastName = "Doe", Email = "john@example.com", PhoneNumber = "1234567890" },
-                new Customer { Id = 2, FirstName = "Jane", LastName = "Smith", Email = "jane@example.com", PhoneNumber = "0987654321" }
+                //new Customer { Id = 1, FirstName = "John", LastName = "Doe", Email = "john@example.com", PhoneNumber = "1234567890" },
+                //new Customer { Id = 2, FirstName = "Jane", LastName = "Smith", Email = "jane@example.com", PhoneNumber = "0987654321" }
             };
 
             var orders = new List<Order> // Make sure this Order is from Foodies.Models
@@ -76,21 +76,21 @@ namespace Foodies.Controllers
         //    return View(order);
         //}
 
-        public async Task<IActionResult> Profile(int id)
-    {
-        var branchManager = await _context.BranchManager
-            .Include(b => b.Branch)
-            .ThenInclude(r => r.Restaurant)
-            .SingleOrDefaultAsync(x => x.Id == id);
+        //public async Task<IActionResult> Profile(int id)
+    //{
+        //var branchManager = await _context.BranchManager
+        //    .Include(b => b.Branch)
+        //    .ThenInclude(r => r.Restaurant)
+            //.SingleOrDefaultAsync(x => x.Id == id);
 
-        if (branchManager == null)
-        {
-            return NotFound(); 
-        }
+        //if (branchManager == null)
+        //{
+        //    return NotFound(); 
+        //}
 
-        ViewBag.Restaurant = branchManager.Branch.Restaurant;
-        return View(branchManager); 
-    }
+        //ViewBag.Restaurant = branchManager.Branch.Restaurant;
+        //return View(branchManager); 
+    //}
 
     // POST: /BranchManager/UpdateInfo
     [HttpPost]
@@ -100,8 +100,8 @@ namespace Foodies.Controllers
 
         if (branchManager != null)
         {
-            branchManager.Username = manager.Username;
-            branchManager.Password = manager.Password;
+            //branchManager.Username = manager.Username;
+            //branchManager.Password = manager.Password;
 
             _context.SaveChanges();
             ViewBag.NotificationMessage = "Account details updated successfully!";
@@ -124,8 +124,8 @@ namespace Foodies.Controllers
 
         if (existingBranch != null)
         {
-            existingBranch.BranchArea = branch.BranchArea;
-            existingBranch.BranchLocation = branch.BranchLocation;
+            //existingBranch.BranchArea = branch.BranchArea;
+            //existingBranch.BranchLocation = branch.BranchLocation;
             existingBranch.OpeningHour = branch.OpeningHour;
             existingBranch.ClosingHour = branch.ClosingHour;
 

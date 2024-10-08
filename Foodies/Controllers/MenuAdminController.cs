@@ -27,20 +27,20 @@ namespace Foodies.Controllers
         }
 
         // List Menu Items for the Logged-in Admin's Restaurant
-        public async Task<IActionResult> Admin()
-        {
-            var user = await _userManager.GetUserAsync(User); // Get the currently logged-in admin
-            var restaurant = await _context.Restaurant
-                .Include(r => r.MenuItems) // Include the restaurant's menu items
-                .FirstOrDefaultAsync(r => r.RestaurantAdmin.AdminId == user.AdminId);
+        //public async Task<IActionResult> Admin()
+        //{
+            //var user = await _userManager.GetUserAsync(User); // Get the currently logged-in admin
+            //var restaurant = await _context.Restaurant
+            //    .Include(r => r.MenuItems) // Include the restaurant's menu items
+                //.FirstOrDefaultAsync(r => r.RestaurantAdmin.AdminId == user.AdminId);
 
-            if (restaurant == null)
-            {
-                return Unauthorized(); // Make sure the user is authorized to view their restaurant
-            }
+            //if (restaurant == null)
+            //{
+            //    return Unauthorized(); // Make sure the user is authorized to view their restaurant
+            //}
 
-            return View(restaurant.MenuItems);
-        }
+            //return View(restaurant.MenuItems);
+        //}
 
         // Display form to add a new menu item
         public IActionResult Create()
@@ -54,14 +54,14 @@ namespace Foodies.Controllers
         public async Task<IActionResult> Create(MenuItem menuItem)
         {
             var user = await _userManager.GetUserAsync(User);
-            var restaurant = await _context.Restaurant.FirstOrDefaultAsync(r => r.RestaurantAdmin.AdminId == user.AdminId);
+            //var restaurant = await _context.Restaurant.FirstOrDefaultAsync(r => r.RestaurantAdmin.AdminId == user.AdminId);
 
-            if (restaurant == null)
-            {
-                return Unauthorized();
-            }
+            //if (restaurant == null)
+            //{
+            //    return Unauthorized();
+            //}
 
-            menuItem.Resturant = restaurant; // Set the restaurant for the menu item
+            //menuItem.Resturant = restaurant; // Set the restaurant for the menu item
             _context.MenuItem.Add(menuItem);
             await _context.SaveChangesAsync();
 
@@ -75,10 +75,10 @@ namespace Foodies.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var user = await _userManager.GetUserAsync(User);
-            if (menuItem == null || menuItem.Resturant.RestaurantAdmin.AdminId != user.AdminId)
-            {
-                return Unauthorized();
-            }
+            //if (menuItem == null || menuItem.Resturant.RestaurantAdmin.AdminId != user.AdminId)
+            //{
+            //    return Unauthorized();
+            //}
 
             return View(menuItem);
         }
@@ -88,13 +88,13 @@ namespace Foodies.Controllers
         public async Task<IActionResult> Edit(MenuItem menuItem)
         {
             var user = await _userManager.GetUserAsync(User);
-            var restaurant = await _context.Restaurant
-                .FirstOrDefaultAsync(r => r.RestaurantAdmin.AdminId == user.AdminId);
+            //var restaurant = await _context.Restaurant
+            //    .FirstOrDefaultAsync(r => r.RestaurantAdmin.AdminId == user.AdminId);
 
-            if (restaurant == null || menuItem.Resturant.Id != restaurant.Id)
-            {
-                return Unauthorized();
-            }
+            //if (restaurant == null || menuItem.Resturant.Id != restaurant.Id)
+            //{
+            //    return Unauthorized();
+            //}
 
             _context.Update(menuItem);
             await _context.SaveChangesAsync();
@@ -108,10 +108,10 @@ namespace Foodies.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var user = await _userManager.GetUserAsync(User);
-            if (menuItem == null || menuItem.Resturant.RestaurantAdmin.AdminId != user.AdminId)
-            {
-                return Unauthorized();
-            }
+            //if (menuItem == null || menuItem.Resturant.RestaurantAdmin.AdminId != user.AdminId)
+            //{
+            //    return Unauthorized();
+            //}
 
             return View(menuItem);
         }
@@ -124,10 +124,10 @@ namespace Foodies.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var user = await _userManager.GetUserAsync(User);
-            if (menuItem == null || menuItem.Resturant.RestaurantAdmin.AdminId != user.AdminId)
-            {
-                return Unauthorized();
-            }
+            //if (menuItem == null || menuItem.Resturant.RestaurantAdmin.AdminId != user.AdminId)
+            //{
+            //    return Unauthorized();
+            //}
 
             _context.MenuItem.Remove(menuItem);
             await _context.SaveChangesAsync();
