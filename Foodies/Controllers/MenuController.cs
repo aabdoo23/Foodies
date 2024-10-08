@@ -114,6 +114,7 @@ namespace Foodies.Controllers
 
             ViewBag.fav = customer;
 
+
             return View();
         }
         public async Task<IActionResult> Restaurant()

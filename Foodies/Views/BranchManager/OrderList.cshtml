@@ -1,0 +1,194 @@
+﻿@model IEnumerable<Foodies.Models.Order>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <!-- Navbar with Profile Button -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <i class="fa-solid fa-utensils"></i>
+                    <b>Foodies</b>
+                </a>
+            </div>
+            <div class="button-container">
+                <!-- Order List Button -->
+                <button class="order-btn" onclick="location.href='/BranchManager/OrderList'">
+                    <i class="fa fa-list"></i> Orders
+                </button>
+                <!-- Profile Button -->
+                <button class="profile-btn" onclick="location.href='/BranchManager/Profile'">
+                    <i class="fa fa-user"></i> Profile
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <div class="order-header">
+                <h1>Order List</h1>
+            </div>
+
+            <div class="order-list">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var order in Model)
+                    {
+                        <div class="order-item">
+                            <img src="/assets/images/orders/order_placeholder.png" alt="Order Icon" class="order-icon">
+                            <div class="order-details">
+                                <h4>Order ID: @order.Id</h4>
+                                <p>Customer: @order.Customer?.FirstName @order.Customer?.LastName</p>
+                                <p>Date: @order.OrderDate.ToString("MM/dd/yyyy")</p>
+                                <p>Total: @order.TotalPrice.ToString("C")</p>
+                                <p>Status: @order.State</p>
+                            </div>
+                            <div class="order-actions">
+                                <button class="view-details-btn" onclick="location.href='/BranchManager/Details'">View Details</button>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No orders available.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- CSS -->
+    <style>
+        /* Navbar Styles */
+        .navbar {
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between; /* Align items on opposite ends */
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        /* Container to hold buttons */
+        .button-container {
+            display: flex;
+            align-items: center; /* Vertically aligns items */
+        }
+
+        /* Order button styling */
+        .order-btn, .profile-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px; /* Add space between buttons */
+        }
+
+            /* Hover effect for both buttons */
+            .profile-btn:hover,
+            .order-btn:hover {
+                background-color: var(--primary-color);
+            }
+
+        /* Main Content Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-color);
+            background-image: none;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .main-content {
+            margin-top: 60px;
+        }
+
+        .order-header h1 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        .order-header p {
+            color: #666;
+        }
+
+        .order-list {
+            margin-top: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .order-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+            }
+
+        .order-icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        .order-details h4 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .order-details p {
+            margin: 5px 0;
+            color: var(--primary-color);
+        }
+
+        .view-details-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .view-details-btn:hover {
+                background-color: var(--primary-color);
+                transform: translateY(-2px);
+            }
+    </style>
+
+</body>
+</html>

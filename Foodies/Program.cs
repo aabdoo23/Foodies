@@ -1,6 +1,12 @@
+
+using Foodies.Models;
+using Microsoft.EntityFrameworkCore;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+
 using Microsoft.Extensions.FileProviders;
+
 
 namespace Foodies
 {

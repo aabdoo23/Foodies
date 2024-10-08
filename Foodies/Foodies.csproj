@@ -41,6 +41,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Views\BranchManager\" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="wwwroot\foodies.png" />
     <None Include="wwwroot\images\food.png" />
     <None Include="wwwroot\images\foodies logo.png" />
@@ -49,5 +52,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\Image\" />
     <Folder Include="wwwroot\assets\images\order_history\" />
+    <Folder Include="Views\BranchManager\" />
   </ItemGroup>
 </Project>

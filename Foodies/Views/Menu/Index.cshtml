@@ -3,7 +3,9 @@
 <head>
     <title>Restaurant Menu</title>
     <link rel="stylesheet" href="~/css/Menu.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
@@ -20,7 +22,11 @@
     </header>
 
     <div class="container">
+
         <div class="main-content">
+            <div class="return-button">
+                <a asp-controller="Menu" asp-action="Restaurant" asp-route-restaurantId="@Model.Restaurant.Id" class="return-link btn btn-primary">Return to Restaurant</a>
+            </div>
             <div class="restaurant-info">
                 <img src="@Model.Restaurant.Photo" alt="Restaurant Logo">
                 <div class="restaurant-details">
@@ -28,6 +34,8 @@
                     <p>Open 24 Hours | Delivery time: 40 minutes | Delivered by: Foodies</p>
                 </div>
                 <div class="restaurant-rating">
+
+
                     <p>Rating: @Model.Restaurant.AverageRating.ToString("F1")</p>
                 </div>
             </div>
@@ -66,4 +74,34 @@
             });
         });
     </script>
+=======
+            <div class="menu">
+                @foreach (var item in Model.MenuItems)
+                {
+                    <div class="menu-item">
+                        <img src="@item.img" alt="@item.Name">
+                        <div class="menu-details">
+                            <h4>@item.Name</h4>
+                            <p>Price: @item.Price LE</p>
+                        </div>
+                        <div class="add-to-cart">
+                            <button class="cart-icon"
+                                    style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* <!-- Pagination -->
+            <div class="pagination">
+            <a href="#">Previous</a>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">Next</a>
+            </div> *@
+        
+            </div>
+        </div>
+
 </body>

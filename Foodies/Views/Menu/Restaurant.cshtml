@@ -1,12 +1,13 @@
 ﻿@model IEnumerable<Restaurant>
 
+
 <html>
     <header>
             <title>Restaurant List</title>
                 <link rel="stylesheet" href="~/css/restaurant.css">
                 @* <link rel="stylesheet" href="~/css/Navbar.css"> *@
                 <link rel="stylesheet" href="~/css/Main.css">
-                
+
 
 @* <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -49,6 +50,7 @@
 
 </header>
 <body>
+
     @* components of food categories *@
     <div class="category-bar d-flex justify-content-center">
         @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Burger", Icon = "burger", Url = "" })
@@ -123,6 +125,8 @@
         } *@
 
     </div>
+
+</body>
     <script src="~/js/rate.js"></script>
 </body>
 
