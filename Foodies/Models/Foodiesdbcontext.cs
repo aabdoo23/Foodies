@@ -61,6 +61,7 @@ namespace Foodies.Models
                       .HasForeignKey<Customer>(c => c.Id);  // Foreign key to AspNetUsers
             });
 
+
             // Configure BaseUser without mapping it to a table
             //modelBuilder.Entity<BaseUser>().HasNoKey();  // Exclude BaseUser from the model
             // Ensure BaseUser has a foreign key relationship with IdentityUser
@@ -101,6 +102,8 @@ namespace Foodies.Models
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<BranchManager> BranchManager { get; set; }
+
+        public virtual DbSet<Address> Address { get; set; }
 
     }
 }
