@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<MenuItem>
+@* <link rel="stylesheet" href="~/css/Menu.css"> *@
 
 <div class="menu">
     @foreach (var item in Model)
@@ -10,8 +11,61 @@
                 <p>Price: @item.Price LE</p>
             </div>
             <div class="add-to-cart">
-                <button class="cart-icon" style="background-image: url('/assets/images/menu/cart_icon.png');"></button>
-            </div>
+                <button id = "cart-@item.Id" class="fa fa-shopping-cart" onclick="addToCart(@item.Id)"></button>
+               <button class="" onclick="remCart(@item.Id)"></button>
+
+
+
+                </div>
         </div>
     }
 </div>
+<style>
+    #plus{
+        color:green;
+    }
+        
+</style>
+<script>
+    
+    function addToCart(itemId) {
+            var button = document.getElementById("cart-" + itemId);
+
+            if (button.classList.contains("fa-shopping-cart")) {
+                button.classList.remove("fa-shopping-cart");
+                button.classList.add("fa-check");
+                
+                $.ajax({
+                    url: '/Order/addCart', 
+                    type: 'GET', 
+                    data: { itemId: itemId },
+                    success: function(response) {
+                        alert('added to cart');
+                    },
+                    error: function(err) {
+                        console.error('Error adding to cart', err);
+                    }
+                });
+            }
+            else {
+                button.classList.remove("fa-check");
+                button.classList.add("fa-shopping-cart");
+                $.ajax({
+                url: '/Order/removeCart',
+                type: 'GET', 
+                data: { itemId: itemId }, 
+                success: function(response) {
+                    alert('Removed from cart'); 
+                },
+                error: function(err) {
+                    console.error('Error removing from cart', err);
+                }
+            });
+            }
+            
+            
+        }
+
+
+
+</script>

@@ -23,6 +23,10 @@ html, body {
     background-size: cover; /* Ensures the image covers the whole page */
     background-position: center; /* Centers the image */
     background-repeat: no-repeat; /* Prevents the image from repeating */
+
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .navbar {

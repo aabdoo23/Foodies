@@ -8,7 +8,6 @@
 .btn, .btn-second  {
     
     border: none;
-    font-size: 18px;
     cursor: pointer;
     border-radius: 30px;
     font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
@@ -19,11 +18,9 @@
     background-color: #2ebfa5;
     color: white;
     padding: 10px 30px;
-    font-size: 13px;
 }
 .btn {
-    margin-top: 20px;
-    margin-left: 605px;
+    
     background-color: #d35269;
     color: white;
     padding: 15px 60px;

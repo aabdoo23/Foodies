@@ -1,0 +1,79 @@
+﻿@model Admin
+<h3>Your Branches</h3>
+<br /><br /><br /><br /><br />
+<form method="post" asp-action="SaveBranch">
+  @*  <div class="mb-3">
+        <label class="form-label">Branch Area</label>
+        <input type="text" name="BranchArea" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Location Link</label>
+        <input type="text" name="BranchLocation" class="form-control" required />
+    </div>
+
+    <h5>Working Hours</h5>
+    <div class="mb-3">
+        <label class="form-label">Opening Hour</label>
+        <input type="text" name="OpeningHour" class="form-control" placeholder="HH:MM:SS" pattern="^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Closing Hour</label>
+        <input type="text" name="ClosingHour" class="form-control" placeholder="HH:MM:SS" pattern="^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Branch Manager Username</label>
+        <input type="text" name="Username" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Branch Manager Password</label>
+        <input type="password" name="Password" class="form-control" required />
+    </div>
+    <input type="hidden" name="restaurantId" value="@ViewBag.RestId" />
+    <input type="hidden" name="AdminId" value="@Model.Id" />
+    <input type="submit" value="Add" class="btn btn-secondary" />*@
+     <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="text" name="Email" class="form-control" required />
+    </div>
+     <div class="mb-3">
+        <label class="form-label">FirstName</label>
+        <input type="text" name="FirstName" class="form-control" required />
+    </div>
+     <div class="mb-3">
+        <label class="form-label">LastName</label>
+        <input type="text" name="LastName" class="form-control" required />
+    </div>
+ <div class="mb-3">
+        <label class="form-label">phoneNumber</label>
+        <input type="text" name="phoneNumber" class="form-control" required />
+    </div>
+     <div class="mb-3">
+        <label class="form-label">OpeningHour</label>
+        <input type="text" name="OpeningHour" class="form-control" required />
+    </div>
+     <div class="mb-3">
+        <label class="form-label">ClosingHour</label>
+        <input type="text" name="ClosingHour" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">pass</label>
+        <input type="password" name="Password" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">confirm</label>
+        <input type="password" name="Password" class="form-control" required />
+    </div>
+        <input type="hidden" name="restaurantId" value="@ViewBag.RestId" />
+
+     <div class="mb-3">
+        <label class="form-label">City</label>
+        <input type="text" name="City" class="form-control" required />
+        <input type="submit" value="Add" class="btn btn-secondary" />
+    </div>
+
+
+
+</form>

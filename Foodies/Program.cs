@@ -1,7 +1,10 @@
 
-
 using Foodies.Models;
 using Microsoft.EntityFrameworkCore;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 using Microsoft.Extensions.FileProviders;
 
 
@@ -18,9 +21,21 @@ namespace Foodies
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<FoodiesDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<FoodiesDbContext>();
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+
+            builder.Services.AddRazorPages();
+
+            //RoleManager<IdentityRole> roleManager;
+            //IdentityResult result =  UserRoles.CreateRole(roleManager, "Admin");
+
+            //UserRoles.CreateRole(roleManager,"Admin");
+
 
             var app = builder.Build();
 
@@ -38,21 +53,25 @@ namespace Foodies
             {
                 FileProvider = new PhysicalFileProvider(
                 Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
-                
+
             });
 
-            //app.UseStaticFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
 
 
-                pattern: "{controller=master}/{action=view}/{id?}");
-
+            //pattern: "{controller=Home}/{action=CustomerView}");
+            pattern: "{controller=Master}/{action=view}/{id?}");
 
             app.Run();
         }

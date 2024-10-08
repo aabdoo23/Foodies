@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        @* <link rel="stylesheet" href="css/Main.css"> *@
+    @* <link rel="stylesheet" href="css/Main.css"> *@
 
     <title>Sign Up - Foodies</title>
 </head>
@@ -13,9 +13,9 @@
     <div class="content">
         @if (ViewBag.NotificationMessage != null)
         {
-                    <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
+                            <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
                 @ViewBag.NotificationMessage
-                    </div>
+                            </div>
         }
         <div class="signup-form">
             <h1>Sign Up</h1>
@@ -47,13 +47,17 @@
                     </div>
                 </div>
 
-              
+
                      <div class="form-row">
                     <div class="input-group">
                         <label for="AdminPassword">Password</label>
                         <input type="password" name="Password" required>
                     </div>
-                   
+                    <div class="input-group">
+                        <label for="AdminPassword">Confirm Password</label>
+                        <input type="password" name="ConfirmPassword" required>
+                    </div>
+
                     <div class="input-group">
                         <label for="restaurant-name">Restaurant Name</label>
                         <input type="text" name="Name" required>
@@ -66,22 +70,22 @@
                         <input type="tel" name="Hotline" required>
                     </div>
 
-                    @* <div class="input-group">
+                     <div class="input-group">
                         <label for="min-price">Minimum Price</label>
                         <input type="number"  name="MinPrice" value="0">
-                    </div> *@
+                    </div> 
+
+
+                <div class="form-row">
                     <div class="input-group">
+                        <label for="max-price">Maximum Price</label>
+                        <input type="number" name="MaxPrice" required>
+                    </div> 
+<div class="input-group">
                         <label for="cusine-type">Cuisine Type</label>
                         <input type="text" name="CuisineType" required>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    @* <div class="input-group">
-                        <label for="max-price">Maximum Price</label>
-                        <input type="number" name="MaxPrice" required>
-                    </div> *@
-
 
                 </div>
 
@@ -91,18 +95,18 @@
                         <label for="file">Upload Restaurant Image:</label>
                         <input type="file" id="file" name="file" accept="image/*" required>
                         <br><br>
-                        
+
 
                     </div>
 
 
-        
+
                   </div>
 
                         <button type="submit" class="btn">Create Account</button>
 </form>
             <div class="redirect-login">
-                <p>Already have an account? <a href="@Url.Action("ResturantLogIn", "Master")">Login here</a></p>
+                <p>Already have an account? <a href="@Url.Action("Login", "Master")">Login here</a></p>
 
             </div>
         </div>

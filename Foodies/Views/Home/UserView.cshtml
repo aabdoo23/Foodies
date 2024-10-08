@@ -1,4 +1,5 @@
-﻿@model Customer
+﻿@using Foodies.ViewModels.Components
+@model Customerviewmodel
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,7 +53,7 @@
             <!-- Left Sidebar -->
             <div class="col-md-3 left-panel shadow rounded">
                 <div class="text-center mb-4">
-                    <img src="@Model.img" alt="User Photo" class="profile-img" />
+                    <img src="" alt="User Photo" class="profile-img" />
                     <h4 class="mt-3">@Model.FirstName @Model.LastName</h4>
                 </div>
                 <div id="sidebar-menu">
@@ -103,7 +104,7 @@
               </div>
               <div class="mb-3">
                 <label for="phone" class="form-label">Mobile Number</label>
-                <input type="tel" class="form-control" name="PhoneNumber" value="@Model.PhoneNumber" required/>
+                <input type="tel" class="form-control" name="Phone" value="@Model.Phone" required/>
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -164,7 +165,7 @@
               </div>
               <div class="mb-3">
                 <label for="Building" class="form-label">Building Name</label>
-                <input type="text" class="form-control" name="Building" value="@Model.Building" />
+                <input type="text" class="form-control" name="bulding" value="@Model.bulding" />
               </div>
               
              

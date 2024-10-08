@@ -3,10 +3,9 @@
 <head>
     <title>Restaurant Menu</title>
     <link rel="stylesheet" href="~/css/Menu.css">
-<<<<<<< Updated upstream
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-=======
->>>>>>> Stashed changes
+
 </head>
 
 <body>
@@ -23,22 +22,7 @@
     </header>
 
     <div class="container">
-<<<<<<< Updated upstream
-=======
-        <div class="sidebar">
-            <div class="logo">
-                <img src="~/assets/images/menu/foodies_logo.png" alt="Foodies Logo" style="height: 50px; margin-bottom: 20px;">
-            </div>
-            <h2>Menu</h2>
-            <div class="categories">
-                @foreach (var category in Model.Categories)
-                {
-                    <a href="@Url.Action("Index", new { restaurantId = Model.Restaurant.Id, category = category })" class="@(category == Model.SelectedCategory ? "active" : "")">@category</a>
-                }
-            </div>
-        </div>
 
->>>>>>> Stashed changes
         <div class="main-content">
             <div class="return-button">
                 <a asp-controller="Menu" asp-action="Restaurant" asp-route-restaurantId="@Model.Restaurant.Id" class="return-link btn btn-primary">Return to Restaurant</a>
@@ -50,11 +34,13 @@
                     <p>Open 24 Hours | Delivery time: 40 minutes | Delivered by: Foodies</p>
                 </div>
                 <div class="restaurant-rating">
-                    <p>Rating: 4.5
+
+
+                    <p>Rating: @Model.Restaurant.AverageRating.ToString("F1")</p>
                 </div>
             </div>
 
-<<<<<<< Updated upstream
+
             <div class="category-filters">
                 @foreach (var category in Model.Categories)
                 {
@@ -117,5 +103,5 @@
         
             </div>
         </div>
->>>>>>> Stashed changes
+
 </body>

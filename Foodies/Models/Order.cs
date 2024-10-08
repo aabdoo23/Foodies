@@ -11,11 +11,11 @@ namespace Foodies.Models
         public DateTime OrderDate { get; set; }
 
         public virtual Customer Customer { get; set; } = default!;
-        public virtual Restaurant Restaurant { get; set; } = default!;
+   
         public virtual Payment Payment { get; set; } = default!;
 
         public int PaymentId { get; set; } // Foreign key added
-        public virtual ICollection<MenuItem> Items { get; set; }
+        public virtual List<MenuItem> Items { get; set; }
 
         public virtual Branch Branch { get; set; }
 

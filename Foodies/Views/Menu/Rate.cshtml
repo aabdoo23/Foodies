@@ -1,0 +1,15 @@
+﻿@model RatingViewModel
+
+<h2>Rate @Model.RestaurantName</h2>
+
+<form asp-action="AddRating" method="post">
+    <input type="hidden" asp-for="RestaurantId" />
+
+    <div class="form-group">
+        <label for="Rate">Rate</label>
+        <input asp-for="Rate" class="form-control" />
+        <span asp-validation-for="Rate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Rating</button>
+</form>

@@ -1,16 +1,11 @@
 ﻿namespace Foodies.Models
 {
-    public class BranchManager
+    public class BranchManager : BaseUser
     {
-        public int Id { get; set; }
-
-        public string Username { get; set; }
-        public string Password { get; set; }
-
+        public int BranchId { get; set; }
         public virtual Branch Branch { get; set; }
+        public string AdminId { get; set; }
         public virtual Admin Admin { get; set; }
-
-        public int BranchId { get; set; } // Foreign key added
 
     }
 }

@@ -1,56 +1,70 @@
-﻿
-<!DOCTYPE html>
+﻿ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />   *@
-             @* <link rel="stylesheet" href="~/css/Main.css" asp-append-version="true">   *@
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />   *@
+    @* <link rel="stylesheet" href="~/css/Main.css" asp-append-version="true">   *@
 
     <title>Sign Up - Foodies</title>
 </head>
 <body>
 
-   
+
     <!-- Sign Up Content -->
     <div class="content">
         <div class="signup-form">
+            @if (ViewBag.NotificationMessage != null)
+            {
+                                <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
+                    @ViewBag.NotificationMessage
+                                </div>
+            }
             <h1>Sign Up</h1>
             <p>Create an account to order your favorite food</p>
 
-            <form method="post" action="">
+             <form method="post" action="/Master/SaveNewCustomer">
 
                 <div class="input-group">
-
-                    <label for="UserFirstName">First Name</label>
-                    <input type="text" id="UserFirstName" name="UserFirstName" required>
+                    <label>First Name</label>
+                    <input type="text"  name="FirstName"  required>
                 </div>
 
                 <div class="input-group">
-                    <label for="UserLastName">Last Name</label>
-                    <input type="text" id="UserLastName" name="LastName" required>
+                    <label>Last Name</label>
+                    <input type="text" name="LastName" required>
                 </div>
+
+                  <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" name="Email" required>
+                </div>
+
+
+             <div class="input-group">
+                    <label>phone Number</label>
+                    <input type="text" name="phoneNumber" required>
+                </div>
+
 
                 <div class="input-group">
-                    <label for="UserEmail">Email</label>
-                    <input type="email" id="Email" name="UserEmail" required>
-
+                    <label>Password</label>
+                    <input type="Password" name="Password" required>
                 </div>
 
-                <div class="input-group">
-                    <label for="UserNumber">Phone Number</label>
-                    <input type="tel" id="UserNumber" name="UserNumber" required pattern="[0-9]{11}" placeholder="Enter 11-digit number">
+            <div class="input-group">
+                    <label>Confirm Password</label>
+                    <input type="Password" name="ConfirmPassword" required>
+                </div>
+                @* address *@
+
+                 <div class="input-group">
+                    <label>City</label>
+                    <input type="text" name="City" required>
                 </div>
 
-                <div class="input-group">
-                    <label for="UserPassword">Password</label>
-                    <input type="password" id="UserPassword" name="Userpassword" required>
-                </div>
 
-                <div class="input-group">
-                    <label for="UserConfirm-password">Confirm Password</label>
-                    <input type="password" id="UserConfirm-password" name="UserConfirm-password" required>
-                </div>
+
 
                 <button type="submit" class="btn">Create Account</button>
             </form>
@@ -166,3 +180,35 @@
 .redirect-login button:hover {
     text-decoration: underline;
 }
+ .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+
+</style>
+
+ <script>
+    setTimeout(function () {
+        var alert = document.querySelector('.alert');
+        if (alert) {
+            alert.style.display = 'none';
+        }
+    }, 5000); 
+</script>

@@ -1,0 +1,219 @@
+﻿<html>
+    <header>
+            <title>Restaurant List</title>
+                <link rel="stylesheet" href="~/css/restaurant.css">
+    @* <link rel="stylesheet" href="~/css/Navbar.css"> *@
+                <link rel="stylesheet" href="~/css/Main.css">
+
+
+</header>
+<body>
+
+        @* restaurants *@
+        <div class="restaurant-list">
+        <div class="btn"><h1>Your Favourites</h1></div>
+            <div class="restaurant-cards">
+            @foreach (var restaurant in ViewBag.fav.FavouriteRestaurants)
+                {
+
+                    @await Component.InvokeAsync("FoodCardViewComponent",new
+                    {
+                        Id = restaurant.Id,
+                        Title = restaurant.Name,
+                        Hotline = restaurant.Hotline,
+                        CuisineType = restaurant.CuisineType,
+                        MinPrice = restaurant.MinPrice,
+                        MaxPrice = restaurant.MaxPrice,
+                        ImageUrl = restaurant.Photo,
+                        Customer = ViewBag.fav,
+
+                        Url = $"/Menu/Index?restaurantId={restaurant.Id}",
+                    })
+            <div class="rating-container">
+                <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">Rate Restaurant</button>
+                <div class="rating-input" style="display: none;">
+                    <input type="number" min="1" max="5" step="0.1" placeholder="Rate (1-5)" class="form-control" />
+                    <button class="btn btn-primary submit-rating" data-restaurant-id="@restaurant.Id">Submit</button>
+                </div>
+            </div>
+                }
+</div>
+
+
+    </div>
+      
+    </div>
+    <script src="~/js/rate.js"></script>
+</body>
+
+</html>
+
+<style>
+
+    /* html,body{
+        background-color: var(--secondary-color); 
+    } */
+   .restaurant-list h1{
+    color:black;
+    margin-top: 50px;
+    }
+
+    #fl{
+        background-color :white
+    }
+    .navbar-brand {
+        font-size: 1.5em;
+        color: var(--primary-color);
+    }
+
+    .navbar-right {
+        display: flex;
+        align-items: center;
+        align-self: end;
+    }
+
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .navbar-nav li {
+        margin-left: 15px;
+    }
+
+    .form-control,
+    .btn-group,
+    .form-select {
+        margin: 0 10px;
+    }
+
+    .category-bar {
+        margin-top: 80px;
+        display: flex;
+        padding: 10px;
+        border-bottom: 1px solid #e5e5e5;
+        overflow-x: auto;
+
+    }
+
+    /*Search*/
+    .search-section {
+    @*display:flex;*@
+    align-items: center;
+        margin-right: 10px;
+        margin-left: 10px;
+
+
+    }
+
+    .search-group {
+        display: flex;
+        line-height: 28px;
+        align-items: right;
+        margin-right: 10px;
+        margin-left: 10px;
+        width: 100%;
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        height: 40px;
+        line-height: 28px;
+        /* padding: 0 1rem;
+        padding-left: 2.5rem; */
+        border: 2px solid transparent;
+        border-radius: 10px;
+        outline: none;
+        background-color: var(--white);
+        color: var(--black);
+        transition: .3s ease;
+        padding: 0px 100px;
+    }
+
+    .search-input::placeholder {
+        color: var(--primary-color);
+        font-weight: 400;
+    }
+
+    .search-input:focus,
+    search-input:hover {
+        outline: none;
+        border-color: var(--teirtary-color);
+        background-color: #fff;
+        box-shadow: 0 0 0 4px var(--primary-color) /10%;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        fill: var(--primary-color);
+        width: 1rem;
+        height: 1rem;
+    }
+
+
+    /* From Uiverse.io by Yaya12085 */
+    .radio-inputs {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 10px;
+        background-color: var(--teirtary-color);
+        box-sizing: border-box;
+        box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+        padding: 0.25rem;
+        width: 200px;
+        margin-right: 10px;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    .radio-inputs .radio {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+
+    .radio-inputs .radio input {
+        display: none;
+    }
+
+    .radio-inputs .radio .name {
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        border: none;
+        padding: .5rem 0;
+        color: var(--white);
+        transition: all .15s ease-in-out;
+    }
+
+    .radio-inputs .radio input:checked+.name {
+        background-color: var(--primary-color);
+        font-weight: 700;
+    }
+
+    .home-section-items {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 10px;
+    }
+
+    .home-section-title {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: var(--black);
+    }
+    .home-section-top {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 10px 0 10px;
+    }
+</style>
+
+
+

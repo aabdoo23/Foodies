@@ -1,44 +1,46 @@
-﻿<!DOCTYPE html>
+﻿@model Foodies.ViewModels.LogInViewModel
+@{
+    ViewData["Title"] = "Login";
+}﻿
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Foodies</title>
+    @* <link rel="stylesheet" href="~/css/Main.css"> *@
 
-
-    <link rel="stylesheet" href="css/Main.css">
-
+    @* <link rel="stylesheet" href="styles.css"> *@
 </head>
 <body>
 
-    
 
-    <!-- Login Content -->
     <div class="content">
         @if (ViewBag.NotificationMessage != null)
         {
-                        <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
+        <div class="alert alert-@ViewBag.NotificationType">
                 @ViewBag.NotificationMessage
-                        </div>
+        </div>
         }
         <div class="login-form">
             <h1>Login</h1>
             <p>Enter your credentials to access your account</p>
 
-            <form method="post" asp-action="REsturantonerLogIn" asp-controller="Master">
+            <form method="post"  >
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email"  name="Email" required>
+                    <label for="Email">Email</label>
+                    <input type="email" name="Email" required>
                 </div>
                 <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password"  name="pass" required>
+                    <label for="Password">Password</label>
+                    <input type="Password" name="Password" required>
                 </div>
                 <button type="submit" class="btn">Login</button>
             </form>
 
             <div class="redirect-signup">
-                <p>Don't have an account? <a href="@Url.Action("AdminSignUp", "Master")">Sign up here</a></p>
+                <p>Don't have an account? <a href="@Url.Action("UserSignUp", "Master")">Sign up here</a></p>
             </div>
         </div>
 
@@ -50,34 +52,8 @@
 
 
 <style>
+    /* Basic Styles */
 
-    
-        .alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-}
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
-
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-    
-
-    /* Navbar Styles */
-    
-
-    /* Centering the content */
     .content {
         display: flex;
         justify-content: center;
@@ -163,7 +139,30 @@
                 text-decoration: underline;
             }
 
-    
+    .logo {
+        width: 90px;
+        height: auto;
+    }
+       .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
 
 </style>
 <script>
