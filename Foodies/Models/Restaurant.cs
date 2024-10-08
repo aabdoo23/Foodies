@@ -13,6 +13,7 @@ namespace Foodies.Models
         public virtual List<MenuItem>? MenuItems { get; set; }
         //200 - 1400
         public virtual List<Branch>? Branches { get; set; }
+        public virtual List<Customer>? FavouriteCustomers { get; set; }
 
         public virtual Admin RestaurantAdmin { get; set; }
 

@@ -27,19 +27,18 @@
         
 </style>
 <script>
-    var itemIds=[];
+    
     function addToCart(itemId) {
             var button = document.getElementById("cart-" + itemId);
 
             if (button.classList.contains("fa-shopping-cart")) {
                 button.classList.remove("fa-shopping-cart");
                 button.classList.add("fa-check");
-                // itemIds.push(itemId);
-                // document.cookie = "MyCookie=cook; path=Cart/cart;";
+                
                 $.ajax({
-                    url: '/Order/addCart', // URL to the controller's action method
-                    type: 'GET', // Type of request
-                    data: { itemId: itemId }, // Send the first itemId in the query string
+                    url: '/Order/addCart', 
+                    type: 'GET', 
+                    data: { itemId: itemId },
                     success: function(response) {
                         alert('added to cart');
                     },
@@ -51,15 +50,12 @@
             else {
                 button.classList.remove("fa-check");
                 button.classList.add("fa-shopping-cart");
-                // itemIds = itemIds.filter(itemIds => itemIds !== itemId);
                 $.ajax({
-                url: '/Order/removeCart', // URL to the controller's action method
-                type: 'GET', // Type of request
-                data: { itemId: itemId }, // Send the itemId in the query string
+                url: '/Order/removeCart',
+                type: 'GET', 
+                data: { itemId: itemId }, 
                 success: function(response) {
-                    alert('Removed from cart');
-                    // Remove the item from the DOM if the request is successful
-                    
+                    alert('Removed from cart'); 
                 },
                 error: function(err) {
                     console.error('Error removing from cart', err);
@@ -71,33 +67,5 @@
         }
 
 
-    
-// function addToCart(itemId) {
-//     // Get existing cookie (if any) and append the new item ID
-//     let cartItemIds = getCookie("cartItemIds");
 
-//     cartItemIds = cartItemIds ? cartItemIds.split(',') : [];
-
-//     if (!cartItemIds.includes(itemId)) {
-//         cartItemIds.push(itemId); // Add new ID to the list
-//     }
-
-//     // Store updated list of IDs as a comma-separated string in the cookie
-//     document.cookie = "cartItemIds=" + cartItemIds.join(',') + "; path=/";
-
-//     // Optionally, redirect to the cart page
-//     window.location.href = 'cart';
-// }
-
-// // Function to get a cookie by name
-// function getCookie(name) {
-//     let cookieArr = document.cookie.split(";");
-//     for (let i = 0; i < cookieArr.length; i++) {
-//         let cookiePair = cookieArr[i].split("=");
-//         if (name == cookiePair[0].trim()) {
-//             return decodeURIComponent(cookiePair[1]);
-//         }
-//     }
-//     return null;
-// }
 </script>

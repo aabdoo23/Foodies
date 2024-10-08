@@ -84,15 +84,19 @@
             <div class="restaurant-cards">
     @foreach (var restaurant in Model)
     {
+                    
         @await Component.InvokeAsync("FoodCardViewComponent",
                  new
                  {
+                     Id = restaurant.Id,
                      Title = restaurant.Name,
                      Hotline = restaurant.Hotline,
                      CuisineType = restaurant.CuisineType,
                      MinPrice = restaurant.MinPrice,
                      MaxPrice = restaurant.MaxPrice,
                      ImageUrl = restaurant.Photo,
+                     Customer = ViewBag.fav ,
+
                      Url = $"/Menu/Index?restaurantId={restaurant.Id}",
                  })
         <div class="rating-container">

@@ -25,6 +25,7 @@ namespace Foodies.Controllers
 
         public async Task CreateRole()
         {
+
             //if (!_roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
             //{
                 _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer)).GetAwaiter().GetResult();
@@ -70,6 +71,7 @@ namespace Foodies.Controllers
                         FirstName = cus.FirstName,
                         LastName = cus.LastName,
 
+
                         Address = new Address // Initialize Address object
                         {
                             City = cus.City,
@@ -93,7 +95,8 @@ namespace Foodies.Controllers
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
                         //return RedirectToAction("Cusolginsignup");
-                        return View("UserSignUp");
+                        return RedirectToAction("restaurant", "menu");
+
 
                     }
                     else
@@ -221,6 +224,7 @@ namespace Foodies.Controllers
                     {
                         var roles = await _userManager.GetRolesAsync(user);
                         string x = string.Join(", ", roles);
+
 
                         if (x == "Customer")
                         {
