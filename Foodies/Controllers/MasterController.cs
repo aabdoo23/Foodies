@@ -125,9 +125,9 @@ namespace Foodies.Controllers
 
         }
 
-        public IActionResult SaveAdminAndResturant()
+        public IActionResult AdminSignUp()
         {
-            return View("AdminSignUp");
+            return View();
         }
         [HttpPost]
         public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin)
