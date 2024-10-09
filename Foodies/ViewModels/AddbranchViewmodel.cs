@@ -1,6 +1,6 @@
 ﻿namespace Foodies.ViewModels
 {
-    public class AddbrancViewmodel: RegisterationViewModel
+    public class AddbranchViewmodel: RegistrationViewModel
     {
         //public int restid {  get; set; }
         public TimeSpan OpeningHour { get; set; }//0-23

@@ -1,8 +1,9 @@
-﻿namespace Foodies.Models
+﻿using Foodies.Common;
+
+namespace Foodies.Models
 {
-    public class Branch
+    public class Branch: BaseEntity
     {
-        public int BranchId { get; set; }
         public virtual Restaurant Restaurant { get; set; } = default!; // rest id 
         [Column(TypeName = "time")]
         public TimeSpan OpeningHour { get; set; }//0-23

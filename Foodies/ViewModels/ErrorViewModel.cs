@@ -1,4 +1,4 @@
-namespace Foodies.Models
+namespace Foodies.ViewModels
 {
     public class ErrorViewModel
     {

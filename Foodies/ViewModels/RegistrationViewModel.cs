@@ -2,7 +2,7 @@
 {
 
     //merging UserIdentity required Info and BaseUser in one Model
-    public class RegisterationViewModel
+    public class RegistrationViewModel
     {
         [Required]
         public string FirstName { get; set; } = string.Empty;

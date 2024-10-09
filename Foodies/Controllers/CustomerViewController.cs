@@ -1,35 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Foodies.Common;
+using Foodies.Data;
+using Foodies.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 namespace Foodies.Controllers
 {
     public class CustomerViewController : Controller
     {
-        private readonly FoodiesDbContext context;
-
-        public CustomerViewController(FoodiesDbContext context)
+        private readonly IBaseRepository<Restaurant> _restaurantRepository;
+        //private readonly IBaseRepository<MenuItem> _menuItemRepository;
+        private readonly MenuItemRepository _menuItemRepository;
+        public CustomerViewController(
+            IBaseRepository<Restaurant> restaurantRepository,
+            MenuItemRepository menuItemRepository)
         {
-            this.context = context;
+            _restaurantRepository = restaurantRepository;
+            _menuItemRepository = menuItemRepository;
         }
 
-        public IActionResult index(Customer Cus)
+        public async Task<IActionResult> index(Customer Cus)
         {
-            var mnui = ViewData["Reslist"] = context.Restaurant.ToList();
+            var mnui = ViewData["Reslist"] = await _restaurantRepository.GetAll();
             //	Console.WriteLine(
             //Console.WriteLine(Cus);
             return View(Cus);
         }
-        public IActionResult Minew(int id)
+        public async Task<IActionResult> Menu(string id)
         {
-
-            var rest = context.Restaurant.Where(x => x.Id == id).SingleOrDefault();
-            ViewData["data"] = context.MenuItem.Where(x => x.Resturant.Id == id).ToList();
+            var rest = await _restaurantRepository.GetById(id);
+            ViewData["data"] = await _menuItemRepository.GetAllByRestaurantId(id);
             // var result=context.MenuItems.Where(x=>x.Resturant.RestaurantId==id).ToList();
             return View(rest);
 
         }
-
-
-
-
     }
 }
 

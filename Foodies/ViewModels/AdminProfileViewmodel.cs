@@ -1,6 +1,6 @@
 ﻿namespace Foodies.ViewModels
 {
-    public class AdminProfileViewmodel: RegisterationViewModel
+    public class AdminProfileViewmodel: RegistrationViewModel
     {
         public string Id {  get; set; } 
         public string LastName { get; set; }

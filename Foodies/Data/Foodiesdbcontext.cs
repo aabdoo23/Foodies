@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Foodies.Models
+namespace Foodies.Data
 {
     public class FoodiesDbContext : IdentityDbContext
     {
@@ -82,19 +82,19 @@ namespace Foodies.Models
             base.OnModelCreating(modelBuilder);
         }
 
-        public virtual DbSet<Admin> Admin { get; set; }
-        public virtual DbSet<Message> Message { get; set; }
-        public virtual DbSet<Branch> Branch { get; set; }
-        public virtual DbSet<Rating> Rating { get; set; }
-        public virtual DbSet<Chat> Chat { get; set; }
-        public virtual DbSet<MenuItem> MenuItem { get; set; }
-        public virtual DbSet<Restaurant> Restaurant { get; set; }
-        public virtual DbSet<Payment> Payment { get; set; }
-        public virtual DbSet<Order> Order { get; set; }
-        public virtual DbSet<Customer> Customer { get; set; }
-        public virtual DbSet<BranchManager> BranchManager { get; set; }
+        public virtual DbSet<Admin> Admins { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Branch> Branches { get; set; }
+        public virtual DbSet<Rating> Ratings { get; set; }
+        public virtual DbSet<Chat> Chats { get; set; }
+        public virtual DbSet<MenuItem> MenuItems { get; set; }
+        public virtual DbSet<Restaurant> Restaurants { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<BranchManager> BranchManagers { get; set; }
 
-        public virtual DbSet<Address> Address { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
 
     }
 }

@@ -1,8 +1,9 @@
+using Foodies.Common;
+
 namespace Foodies.Models
 {
-    public class Restaurant
+    public class Restaurant: BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string? Photo { get; set; }
         public string Hotline { get; set; }

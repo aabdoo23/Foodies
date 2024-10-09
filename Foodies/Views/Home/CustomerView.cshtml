@@ -74,7 +74,7 @@
         @* <div class="home-section-items">
             @foreach (var i in Model)
             {
-                @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.RestaurantName, Hotline = i.Hotline, CusineType = i.CusineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = "https://th.bing.com/th/id/OIP._xqATV2x664IX4Ps-AsBQQHaFj?rs=1&pid=ImgDetMain", Url = $"/CustomerView/Minew/{i.RestaurantId}" })
+                @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.RestaurantName, Hotline = i.Hotline, CusineType = i.CusineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = "https://th.bing.com/th/id/OIP._xqATV2x664IX4Ps-AsBQQHaFj?rs=1&pid=ImgDetMain", Url = $"/CustomerView/Minew/MenustaurantId}" })
             }
         </div> *@
         
