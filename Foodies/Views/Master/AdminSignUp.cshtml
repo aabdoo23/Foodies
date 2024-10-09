@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< Updated upstream
      <link rel="stylesheet" href="~/css/Main.css"> 
+=======
+     <link rel="stylesheet" href="css/Main.css"> 
+>>>>>>> Stashed changes
 
     <title>Sign Up - Foodies</title>
 </head>
@@ -82,9 +86,25 @@
                         <label for="max-price">Maximum Price</label>
                         <input type="number" name="MaxPrice" required>
                     </div> 
-<div class="input-group">
+                    <div class="input-group">
                         <label for="cusine-type">Cuisine Type</label>
-                        <input type="text" name="CuisineType" required>
+                        <select  class="input-group" name="CuisineType">
+                       <option value="" disabled selected>Select cuisine type</option>
+                       <option value="burger">Burger</option>
+  <option value="pizza">Pizza</option>
+  <option value="desserts">Desserts</option>
+  <option value="drinks">Drinks</option>
+  <option value="salads">Salads</option>
+  <option value="seafood">Seafood</option>
+  <option value="chicken">Chicken</option>
+  <option value="beef">Beef</option>
+  <option value="vegan">Vegan</option>
+  <option value="sushi">Sushi</option>
+  <option value="pasta">Pasta</option>
+  <option value="chinese">Chinese</option>
+  <option value="indian">Indian</option>
+</select>
+
                     </div>
                 </div>
 
@@ -200,6 +220,32 @@
     text-decoration: underline;
 }
 
+
+.btn, .btn-second  {
+
+    border: none;
+    cursor: pointer;
+    border-radius: 30px;
+    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
+    font-weight: bold;
+
+}
+.btn-second {
+    background-color: #2ebfa5;
+    color: white;
+    padding: 10px 30px;
+}
+.btn {
+
+    background-color: #d35269;
+    color: white;
+    padding: 15px 60px;
+}
+    .btn:hover, .btn-second:hover {
+        background-color: black; /* Darker shade of blue for hover */
+        color: #d35269;
+        font-weight: bold;
+    }
   
 </style>
   <script>

@@ -118,12 +118,12 @@
                 <input type="text" class="form-control" id="points" value="@Model.Points" readonly/>
               </div>
               <div class="mb-3">
-                <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
+                <button type="submit" class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #048A81;">Save Changes</button>
               </div>
 
               <div class="mt-3">
-                <a href="#" class="text-dark text-decoration-none d-block mb-2">Change Password</a>
-                <a href="#" class="text-danger text-decoration-none d-block">Delete Account</a>
+         <a href="/Home/changepass/@Model.Id" class="text-danger text-decoration-none d-block">Change Password</a>   
+                 <a href="/Home/DeletAdmin/@Model.Id" class="text-danger text-decoration-none d-block">Delete Account</a>   
               </div>
             </form>
           `,
@@ -147,7 +147,7 @@
                 <input type="text" class="form-control" id="cvv" placeholder="Enter CVV" />
               </div>
               <div class="mb-3">
-                <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
+                <button type="submit" class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #048A81;">Save Changes</button>
               </div>
             </form>
           `,
@@ -170,7 +170,7 @@
               
              
               <div class="mb-3">
-                <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
+              <button type="submit" class="btn btn-primary w-100" style="background-color:#3e1ba6; border-color: #048A81;">Save Changes</button>
               </div>
             </form>
           `,

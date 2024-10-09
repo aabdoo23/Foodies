@@ -88,21 +88,22 @@
             <input type="text" class="form-control" name="LastName" value="@Model.LastName" required />               </div>
                <div class="mb-3">
                  <label for="phone" class="form-label">Mobile Number</label>
-            <input type="text" class="form-control" name="PhoneNumber" value="@Model.Phone" required />               </div>
+            <input type="text" class="form-control" name="PhoneNumber" value="@Model.PhoneNumber" required />               </div>
                </div>
                <div class="mb-3">
                  <label for="email" class="form-label">Email</label>
             <input type="text" class="form-control" name="Email" value="@Model.Email" required />               </div>
                </div>
                <div class="mb-3">
-                 <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
+                 <button type="submit" class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #048A81;">Save Changes</button>
                </div>
 
                <div class="mt-3">
-                 <a href="#" class="text-dark text-decoration-none d-block mb-2">Change Password</a>
-                 <a href="#" class="text-danger text-decoration-none d-block">Delete Account</a>
+                 <a href="/Home/changepass/@Model.Id" class="text-danger text-decoration-none d-block">Change Password</a>   
+                 <a href="/Home/DeletAdmin/@Model.Id" class="text-danger text-decoration-none d-block">Delete Account</a>   
+
                </div>
-             </form> NameCuisineHotline
+             </form>
            `,
            'my-restaurant': `
           <h3>About Your Restaurant</h3>
@@ -125,7 +126,7 @@
     </div>
 
     <div class="mb-3">
-        <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
+        <button type="submit" class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #048A81;">Save Changes</button>
     </div>
 </form>
 

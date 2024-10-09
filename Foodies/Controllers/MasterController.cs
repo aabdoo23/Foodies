@@ -12,7 +12,7 @@ namespace Foodies.Controllers
 
         private readonly SignInManager<IdentityUser> _signInManager;
 
-
+       
 
         public MasterController(FoodiesDbContext context,
             UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
@@ -227,8 +227,9 @@ namespace Foodies.Controllers
 
 
                         if (x == "Customer")
-                        {
-                            return RedirectToAction("UserView", "Home", new { id = user.Id });
+                    {
+
+                        return RedirectToAction("UserView", "Home", new { id = user.Id });
                         }
                         else if (x == "Admin")
                         {

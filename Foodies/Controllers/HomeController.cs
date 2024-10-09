@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.Intrinsics.Arm;
 using Foodies.Models;
 using Foodies.ViewModels;
 using Foodies.ViewModels.Components;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Foodies.Controllers
 {
@@ -15,15 +17,19 @@ namespace Foodies.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+      
 
 
 
-        public HomeController(FoodiesDbContext context, ILogger<HomeController> logger, UserManager<IdentityUser> baseUser, RoleManager<IdentityRole> roleManager)
+        public HomeController(FoodiesDbContext context, ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> baseUser, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _logger = logger;
             _roleManager = roleManager;
             _userManager = baseUser;
+            _signInManager = signInManager;
+
         }
         public IActionResult CustomerView()
         {
@@ -44,7 +50,7 @@ namespace Foodies.Controllers
             Admine.Email = Adminmndr.Email;
             Admine.FirstName= Admncon.FirstName;
             Admine.LastName= Admncon.LastName;
-            Admine.Phone = Adminmndr.PhoneNumber;
+            Admine.PhoneNumber = Adminmndr.PhoneNumber;
             Admine.Resturantid = Admncon.RestaurantId;
    
 
@@ -63,8 +69,10 @@ namespace Foodies.Controllers
             Admncon.FirstName = adm.FirstName;
             Admncon.LastName = adm.LastName;
             Adminmndr.PhoneNumber = adm.PhoneNumber;
-            _context.SaveChanges(); 
-            return RedirectToAction("AdminProfile",adm);
+            _context.SaveChanges();
+            var addm = await _context.Admin.SingleOrDefaultAsync(x => x.Id ==adm.Id);
+
+            return RedirectToAction("AdminProfile", addm);
 
         }
         public async Task<IActionResult> EditRest(RestaurantEditView res)
@@ -125,6 +133,50 @@ namespace Foodies.Controllers
             {
                 return RedirectToAction("Error");
             }
+        }
+        public async Task<IActionResult> DeletAdmin(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id); // Find the user by their ID
+            var result = await _userManager.DeleteAsync(user);
+            return RedirectToAction("view", "Master");//Master/view
+        }
+        public IActionResult changepass(string id)
+        {
+
+            return View("changepass", id);
+        }
+
+        public async Task<IActionResult> changepasso(string oldpas, string Newpass, string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            SignInResult result = await _signInManager.PasswordSignInAsync(user, oldpas, false, false);
+            //if (result.Succeeded)
+            //{
+            //    user.PasswordHash = Newpass;
+            //    _context.SaveChanges();
+            //    return RedirectToAction("AdminProfile",user);
+            //}
+            if (result.Succeeded)
+            {
+                // Change the password and hash it
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var passwordChangeResult = await _userManager.ResetPasswordAsync(user, token, Newpass);
+
+                if (passwordChangeResult.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, false); 
+                    return RedirectToAction("view", "Master");
+                }
+                else
+                {
+                    ViewBag.NotificationMessage = "The New Password invalid";
+                    ViewBag.NotificationType = "danger";
+                    return View("changepass", id);
+                }
+            }
+            ViewBag.NotificationMessage = "Worng old Password";
+            ViewBag.NotificationType = "danger";
+            return View("changepass",id);
         }
         public async Task<IActionResult> Deletitem(int id)
         {
