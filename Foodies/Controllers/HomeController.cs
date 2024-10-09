@@ -1,11 +1,8 @@
-using System.Diagnostics;
-using Foodies.Models;
 using Foodies.ViewModels;
 using Foodies.ViewModels.Components;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
 
 namespace Foodies.Controllers
 {
@@ -16,8 +13,6 @@ namespace Foodies.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-
-
         public HomeController(FoodiesDbContext context, ILogger<HomeController> logger, UserManager<IdentityUser> baseUser, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
@@ -25,9 +20,16 @@ namespace Foodies.Controllers
             _roleManager = roleManager;
             _userManager = baseUser;
         }
+        [Authorize(Roles = "Customer")]
         public IActionResult CustomerView()
         {
-            return View();
+            //get the signed in user
+            var userId = _userManager.GetUserId(User);
+            var customer = _context.Customer.SingleOrDefault(x => x.Id == userId);
+            var model = new CustomerHomePageViewModel();
+            model.customer = customer;
+            model.restaurants = _context.Restaurant.ToList();
+            return View(model);
         }
         public IActionResult Privacy()
         {
@@ -38,24 +40,24 @@ namespace Foodies.Controllers
             var Adminmndr = await _userManager.FindByIdAsync(id);
             var Admncon = _context.Admin.Where(x => x.Id == id).FirstOrDefault();
             var restaurant = await _context.Restaurant.Include(x => x.MenuItems).SingleOrDefaultAsync(x => x.Id == Admncon.RestaurantId);
-            AdminProfileViewmodel Admine=new AdminProfileViewmodel();
+            AdminProfileViewmodel Admine = new AdminProfileViewmodel();
             //Admine.Id = new { id = Adminmndr.Id }
             Admine.Id = Adminmndr.Id;
             Admine.Email = Adminmndr.Email;
-            Admine.FirstName= Admncon.FirstName;
-            Admine.LastName= Admncon.LastName;
+            Admine.FirstName = Admncon.FirstName;
+            Admine.LastName = Admncon.LastName;
             Admine.Phone = Adminmndr.PhoneNumber;
             Admine.Resturantid = Admncon.RestaurantId;
-   
 
-            ViewBag.Rest = restaurant; 
+
+            ViewBag.Rest = restaurant;
 
             ViewBag.Branch = _context.Branch.Where(x => x.Restaurant == restaurant).Include(c => c.Address).ToList();
 
             ViewBag.menu = _context.MenuItem.Where(x => x.Resturant.Id == Admncon.RestaurantId).ToList();
             return View(Admine);
         }
-        public async Task<IActionResult>EditAdmin(AdminProfileViewmodel adm)
+        public async Task<IActionResult> EditAdmin(AdminProfileViewmodel adm)
         {
             var Adminmndr = await _userManager.FindByIdAsync(adm.Id);
             var Admncon = _context.Admin.Where(x => x.Id == adm.Id).FirstOrDefault();
@@ -63,16 +65,16 @@ namespace Foodies.Controllers
             Admncon.FirstName = adm.FirstName;
             Admncon.LastName = adm.LastName;
             Adminmndr.PhoneNumber = adm.PhoneNumber;
-            _context.SaveChanges(); 
-            return RedirectToAction("AdminProfile",adm);
+            _context.SaveChanges();
+            return RedirectToAction("AdminProfile", adm);
 
         }
         public async Task<IActionResult> EditRest(RestaurantEditView res)
         {
-            var restaurant = await _context.Restaurant.SingleOrDefaultAsync(x=>x.Id == res.Id);
-            restaurant.Name= res.Name;
-            restaurant.CuisineType=res.Cuisine;
-            restaurant.Hotline=res.Hotline;
+            var restaurant = await _context.Restaurant.SingleOrDefaultAsync(x => x.Id == res.Id);
+            restaurant.Name = res.Name;
+            restaurant.CuisineType = res.Cuisine;
+            restaurant.Hotline = res.Hotline;
             _context.SaveChanges();
             var adm = await _context.Admin.SingleOrDefaultAsync(x => x.Id == res.AdminId);
             return RedirectToAction("AdminProfile", adm);
@@ -145,8 +147,8 @@ namespace Foodies.Controllers
         {
             var Cususer = await _userManager.FindByIdAsync(id);
 
-            var cutomer=_context.Customer.Where(x=>x.Id==id).FirstOrDefault();  
-            var addrress=_context.Address.Where(x=>x.Id==cutomer.AddressId).FirstOrDefault();
+            var cutomer = _context.Customer.Where(x => x.Id == id).FirstOrDefault();
+            var addrress = _context.Address.Where(x => x.Id == cutomer.AddressId).FirstOrDefault();
             Customerviewmodel cusview = new Customerviewmodel();
             cusview.Id = id;
             cusview.FirstName = cutomer.FirstName;
@@ -156,12 +158,12 @@ namespace Foodies.Controllers
             cusview.City = addrress.City;
             cusview.Street = addrress.Street;
             cusview.bulding = addrress.Building;
-            cusview.Points= cutomer.Points;
+            cusview.Points = cutomer.Points;
             cusview.Location = addrress.Location;
             return View(cusview);
         }
-        
-       public async Task<IActionResult> AccountInfo(Customerviewmodel cus)
+
+        public async Task<IActionResult> AccountInfo(Customerviewmodel cus)
         {
             var Cususer = await _userManager.FindByIdAsync(cus.Id);
             var cutomer = _context.Customer.Where(x => x.Id == cus.Id).FirstOrDefault();
@@ -171,9 +173,9 @@ namespace Foodies.Controllers
             Cususer.PhoneNumber = cus.Phone;
             _context.SaveChanges();
             ViewBag.NotificationMessage = "Customer Updated successfully!";
-           ViewBag.NotificationType = "success";
-            
-           return RedirectToAction("UserView", cus);
+            ViewBag.NotificationType = "success";
+
+            return RedirectToAction("UserView", cus);
         }
         public async Task<IActionResult> AddMenuItem(MenuItem Menu)
         {
@@ -233,7 +235,7 @@ namespace Foodies.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveBranch( AddbrancViewmodel adbr)//Branch brnch, BranchManager BrMngr, int restaurantId, int adminId
+        public async Task<IActionResult> SaveBranch(AddbrancViewmodel adbr)//Branch brnch, BranchManager BrMngr, int restaurantId, int adminId
         {
             IdentityUser user = new IdentityUser();
             user.UserName = adbr.Email;
@@ -265,10 +267,10 @@ namespace Foodies.Controllers
 
             //return Content($"done done done{resId}");
 
-            res.Branches.Add(newBranch);  
+            res.Branches.Add(newBranch);
 
 
-            
+
             _context.Branch.Add(newBranch);
             _context.SaveChanges();
 
@@ -278,11 +280,11 @@ namespace Foodies.Controllers
 
             BranchManager newBranchMngr = new BranchManager  //adminID
             {
-                Id= user.Id,
+                Id = user.Id,
                 AdminId = admin.Id,
                 BranchId = newBranch.BranchId,
-                FirstName= adbr.FirstName,  
-                LastName= adbr.LastName,
+                FirstName = adbr.FirstName,
+                LastName = adbr.LastName,
                 IdentityUser = user,
 
 
@@ -292,7 +294,5 @@ namespace Foodies.Controllers
             //return C
             return RedirectToAction("AdminProfile", admin);
         }
-
-
     }
 }

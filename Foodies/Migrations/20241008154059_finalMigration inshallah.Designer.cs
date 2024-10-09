@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Migrations
 {
     [DbContext(typeof(FoodiesDbContext))]
-    [Migration("20241005184930_dd")]
-    partial class dd
+    [Migration("20241008154059_finalMigration inshallah")]
+    partial class finalMigrationinshallah
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,25 +112,27 @@ namespace Foodies.Migrations
 
             modelBuilder.Entity("Foodies.Models.Chat", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ChatId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatId"));
 
-                    b.Property<string>("CustomerId")
+                    b.Property<string>("AdminId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ChatId");
+
+                    b.HasIndex("AdminId");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("Chat");
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("Foodies.Models.MenuItem", b =>
@@ -171,31 +173,34 @@ namespace Foodies.Migrations
 
             modelBuilder.Entity("Foodies.Models.Message", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("MessageId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
 
-                    b.Property<int?>("ChatId")
+                    b.Property<int>("ChatId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TimeStamp")
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SenderId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isCustomerSender")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("MessageId");
 
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Foodies.Models.Order", b =>
@@ -270,12 +275,13 @@ namespace Foodies.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("Rate")
                         .HasColumnType("decimal(5, 2)");
 
-                    b.Property<int?>("RestaurantId")
+                    b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -319,54 +325,6 @@ namespace Foodies.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Restaurant");
-                });
-
-            modelBuilder.Entity("Foodies.ViewModels.LogInViewModel", b =>
-                {
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("LogInViewModel");
-                });
-
-            modelBuilder.Entity("Foodies.ViewModels.RegisterationViewModel", b =>
-                {
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("img")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("phoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("RegisterationViewModel");
                 });
 
             modelBuilder.Entity("MenuItemOrder", b =>
@@ -671,19 +629,21 @@ namespace Foodies.Migrations
 
             modelBuilder.Entity("Foodies.Models.Chat", b =>
                 {
-                    b.HasOne("Foodies.Models.Customer", "Customer")
+                    b.HasOne("Foodies.Models.Admin", "Admin")
                         .WithMany()
-                        .HasForeignKey("CustomerId");
-
-                    b.HasOne("Foodies.Models.Restaurant", "Restaurant")
-                        .WithMany()
-                        .HasForeignKey("RestaurantId")
+                        .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.HasOne("Foodies.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Restaurant");
+                    b.Navigation("Admin");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Foodies.Models.MenuItem", b =>
@@ -699,9 +659,13 @@ namespace Foodies.Migrations
 
             modelBuilder.Entity("Foodies.Models.Message", b =>
                 {
-                    b.HasOne("Foodies.Models.Chat", null)
+                    b.HasOne("Foodies.Models.Chat", "Chat")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId");
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("Foodies.Models.Order", b =>
@@ -735,11 +699,15 @@ namespace Foodies.Migrations
                 {
                     b.HasOne("Foodies.Models.Customer", "Customer")
                         .WithMany("Ratings")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Foodies.Models.Restaurant", "Restaurant")
                         .WithMany("Ratings")
-                        .HasForeignKey("RestaurantId");
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
 

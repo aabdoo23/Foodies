@@ -1,4 +1,5 @@
-﻿<html>
+﻿@model CustomerHomePageViewModel
+<html>
     <header>
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -33,8 +34,8 @@
             </div> *@
 
             @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "Cart", Icon = "shopping-cart", Url = "www.google.com" })
-            @await Component.InvokeAsync("ButtonViewComponent", new { Text = "1412 Points", Icon = "medal", Url = "www.google.com" })
-            @await Component.InvokeAsync("ButtonViewComponent", new { Text = "Welcome, User", Icon = "user", Url = "" })
+            @await Component.InvokeAsync("ButtonViewComponent", new { Text = $"{Model.customer.Points} Points", Icon = "medal", Url = "www.google.com" })
+            @await Component.InvokeAsync("ButtonViewComponent", new { Text = $"Welcome,{Model.customer.FirstName} ", Icon = "user", Url = "" })
         </div>
     </div>
 </nav>
@@ -71,12 +72,12 @@
         </div>
 
         @* restaurants *@
-        @* <div class="home-section-items">
-            @foreach (var i in Model)
+        <div class="home-section-items">
+            @foreach (var i in Model.restaurants)
             {
-                @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.RestaurantName, Hotline = i.Hotline, CusineType = i.CusineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = "https://th.bing.com/th/id/OIP._xqATV2x664IX4Ps-AsBQQHaFj?rs=1&pid=ImgDetMain", Url = $"/CustomerView/Minew/{i.RestaurantId}" })
+                @await Component.InvokeAsync("FoodCardViewComponent", new { Title = i.Name, Hotline = i.Hotline, CusineType = i.CuisineType, MinPrice = i.MinPrice, MaxPrice = i.MaxPrice, ImageUrl = i.Photo, Url = $"/CustomerView/Minew/{i.Id}" })
             }
-        </div> *@
+        </div>
         
     </div>
 

@@ -2,10 +2,12 @@
 {
     public class Chat
     {
-        public int Id { get; set; }
-        public virtual Restaurant Restaurant { get; set; } = default!;
-        public virtual Customer Customer { get; set; } = default!;
-        public virtual ICollection<Message> Messages { get; set; }
-
+        [Key]
+        public int ChatId { get; set; }
+        public string AdminId { get; set; }
+        public virtual Admin Admin { get; set; }
+        public string CustomerId { get; set; }
+        public virtual Customer Customer { get; set; }
+        public virtual List<Message> Messages { get; set; } = new List<Message>();
     }
 }

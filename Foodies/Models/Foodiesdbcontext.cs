@@ -83,17 +83,16 @@ namespace Foodies.Models
         }
 
         public virtual DbSet<Admin> Admin { get; set; }
-        public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Branch> Branch { get; set; }
         public virtual DbSet<Rating> Rating { get; set; }
-        public virtual DbSet<Chat> Chat { get; set; }
+        public virtual DbSet<Chat> Chats { get; set; }
         public virtual DbSet<MenuItem> MenuItem { get; set; }
         public virtual DbSet<Restaurant> Restaurant { get; set; }
         public virtual DbSet<Payment> Payment { get; set; }
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<BranchManager> BranchManager { get; set; }
-
         public virtual DbSet<Address> Address { get; set; }
 
     }

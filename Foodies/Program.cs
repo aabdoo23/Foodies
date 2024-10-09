@@ -1,3 +1,4 @@
+using Foodies.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.FileProviders;
@@ -24,6 +25,7 @@ namespace Foodies
 
 
             builder.Services.AddRazorPages();
+            builder.Services.AddSignalR();
 
             //RoleManager<IdentityRole> roleManager;
             //IdentityResult result =  UserRoles.CreateRole(roleManager, "Admin");
@@ -66,7 +68,7 @@ namespace Foodies
 
             //pattern: "{controller=Home}/{action=CustomerView}");
             pattern: "{controller=Master}/{action=view}/{id?}");
-
+            app.MapHub<ChatHub>("/chatHub");
             app.Run();
         }
     }

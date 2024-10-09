@@ -160,8 +160,8 @@ namespace Foodies.Controllers
                         Photo = admin.Photo,
                         Hotline = admin.Hotline,
                         CuisineType = admin.CuisineType,
-                        MaxPrice = admin.MaxPrice,
-                        MinPrice = admin.MinPrice,
+                        MaxPrice = 0,
+                        MinPrice = 0,
 
                     };
                     //custo}mer.Id = user.Id;
@@ -211,47 +211,47 @@ namespace Foodies.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LogInViewModel loginUser)
         {
-            
-                IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-                if (user != null)
+            IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
+
+            if (user != null)
+            {
+                SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
+                if (result.Succeeded)
                 {
-                    SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
-                    if (result.Succeeded)
-                    {
-                        var roles = await _userManager.GetRolesAsync(user);
-                        string x = string.Join(", ", roles);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    string x = string.Join(", ", roles);
 
-                        if (x == "Customer")
-                        {
-                            return RedirectToAction("UserView", "Home", new { id = user.Id });
-                        }
-                        else if (x == "Admin")
-                        {
-                            return RedirectToAction("AdminProfile", "Home", new { id = user.Id });
-                        }
-                        else
-                        {
-                            ViewBag.NotificationMessage = "Unrecognized role.";
-                            ViewBag.NotificationType = "danger";
-                            return View("Login");
-                        }
+                    if (x == "Customer")
+                    {
+                        return RedirectToAction("UserView", "Home", new { id = user.Id });
+                    }
+                    else if (x == "Admin")
+                    {
+                        return RedirectToAction("AdminProfile", "Home", new { id = user.Id });
                     }
                     else
                     {
-                        ViewBag.NotificationMessage = "Login failed. Incorrect password.";
+                        ViewBag.NotificationMessage = "Unrecognized role.";
                         ViewBag.NotificationType = "danger";
                         return View("Login");
                     }
                 }
                 else
                 {
-                    ViewBag.NotificationMessage = "User not found.";
+                    ViewBag.NotificationMessage = "Login failed. Incorrect password.";
                     ViewBag.NotificationType = "danger";
                     return View("Login");
                 }
-            
-            
+            }
+            else
+            {
+                ViewBag.NotificationMessage = "User not found.";
+                ViewBag.NotificationType = "danger";
+                return View("Login");
+            }
+
+
         }
 
 

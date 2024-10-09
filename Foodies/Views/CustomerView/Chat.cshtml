@@ -1,0 +1,40 @@
+﻿@model ChatViewModel
+<div id="chatWindow">
+    <!-- Messages List -->
+    <ul id="messagesList">
+        @foreach (var message in Model.Messages)
+        {
+            <li>@message.SenderId: @message.Content</li>
+        }
+    </ul>
+
+    <!-- Send Message Form -->
+    <input type="text" id="messageInput" placeholder="Enter message" />
+    <button id="sendMessageButton">Send</button>
+</div>
+
+<script src="~/lib/signalr/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chathub")
+        .build();
+
+    // Start connection and join the chat room
+    connection.start().then(function () {
+        connection.invoke("JoinChat", "@Model.ChatId");
+    });
+
+    // Send a message
+    document.getElementById("sendMessageButton").addEventListener("click", function (event) {
+        const message = document.getElementById("messageInput").value;
+        connection.invoke("SendMessage", "@Model.ChatId", "@Model.UserId", message);
+        document.getElementById("messageInput").value = "";
+    });
+
+    // Receive message
+    connection.on("ReceiveMessage", function (userId, message) {
+        const msg = document.createElement("li");
+        msg.textContent = userId + ": " + message;
+        document.getElementById("messagesList").appendChild(msg);
+    });
+</script>
