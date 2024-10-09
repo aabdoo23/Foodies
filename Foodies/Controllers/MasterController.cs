@@ -127,7 +127,7 @@ namespace Foodies.Controllers
 
         public IActionResult SaveAdminAndResturant()
         {
-            return View();
+            return View("AdminSignUp");
         }
         [HttpPost]
         public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin)
@@ -204,7 +204,7 @@ namespace Foodies.Controllers
                 ViewBag.NotificationType = "danger";
             }
 
-            return View( admin);
+            return View("AdminSignUp", admin);
         }
 
         public IActionResult Login()
