@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 using Microsoft.Extensions.FileProviders;
+using Firebase.Storage;
 
 
 namespace Foodies
@@ -28,6 +29,16 @@ namespace Foodies
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+            // Add Firebase Storage
+            var firebaseConfig = builder.Configuration.GetSection("Firebase");
+            builder.Services.AddSingleton<FirebaseStorage>(new FirebaseStorage(
+                firebaseConfig["Bucket"],
+                new FirebaseStorageOptions
+                {
+                    AuthTokenAsyncFactory = async () => null
+                }
+           ));
+            builder.Services.AddTransient<ImageUploader>();
 
             builder.Services.AddRazorPages();
 
