@@ -11,9 +11,11 @@
         public string Category { get; set; }
         public string? img { get; set; }
 
+        public int? Quantity { get; set; } = 1;
         public string Description { get; set; }
 
         public Restaurant Resturant { get; set; } = default!;
+
         public virtual ICollection<Order>? Orders { get; set; }
 
     }

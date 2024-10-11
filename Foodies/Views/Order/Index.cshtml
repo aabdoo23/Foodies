@@ -1,0 +1,52 @@
+﻿@model Foodies.Models.Payment
+
+@{
+    ViewBag.Title = "Payment Form";
+}
+
+<h2>Payment Form</h2>
+
+<form asp-action="SavePayment" method="post">
+    <div class="form-group">
+        <label asp-for="PaymentMethod">Payment Method</label>
+        <select asp-for="PaymentMethod" class="form-control">
+            <option value="Credit Card">Credit Card</option>
+            <option value="Debit Card">Debit Card</option>
+            <option value="PayPal">PayPal</option>
+            <option value="Cash">Cash</option>
+        </select>
+        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Amount">Amount</label>
+        <input asp-for="Amount" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PaymentDate">Payment Date</label>
+        <input asp-for="PaymentDate" class="form-control" type="datetime-local" />
+        <span asp-validation-for="PaymentDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.Id">Order ID</label>
+        <input asp-for="Order.Id" class="form-control" type="number" />
+        <span asp-validation-for="Order.Id" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="card">Card</label>
+        <input asp-for="card" class="form-control" type="text" placeholder="Optional: Enter Card Details" />
+        <span asp-validation-for="card" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

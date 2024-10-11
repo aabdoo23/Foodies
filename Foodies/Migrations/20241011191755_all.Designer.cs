@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Migrations
 {
     [DbContext(typeof(FoodiesDbContext))]
-    [Migration("20241008194656_favo")]
-    partial class favo
+    [Migration("20241011191755_all")]
+    partial class all
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -125,6 +125,34 @@ namespace Foodies.Migrations
                     b.ToTable("Branch");
                 });
 
+            modelBuilder.Entity("Foodies.Models.Card", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CVC")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpiryMonth")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpiryYear")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Card");
+                });
+
             modelBuilder.Entity("Foodies.Models.Chat", b =>
                 {
                     b.Property<int>("Id")
@@ -169,6 +197,9 @@ namespace Foodies.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<int>("ResturantId")
@@ -271,7 +302,12 @@ namespace Foodies.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("cardId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("cardId");
 
                     b.ToTable("Payment");
                 });
@@ -714,6 +750,15 @@ namespace Foodies.Migrations
                     b.Navigation("Payment");
                 });
 
+            modelBuilder.Entity("Foodies.Models.Payment", b =>
+                {
+                    b.HasOne("Foodies.Models.Card", "card")
+                        .WithMany("payments")
+                        .HasForeignKey("cardId");
+
+                    b.Navigation("card");
+                });
+
             modelBuilder.Entity("Foodies.Models.Rating", b =>
                 {
                     b.HasOne("Foodies.Models.Customer", "Customer")
@@ -871,6 +916,11 @@ namespace Foodies.Migrations
                         .IsRequired();
 
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Foodies.Models.Card", b =>
+                {
+                    b.Navigation("payments");
                 });
 
             modelBuilder.Entity("Foodies.Models.Chat", b =>
