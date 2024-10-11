@@ -11,7 +11,7 @@ namespace Foodies.Models
         public TimeSpan ClosingHour { get; set; }
         public virtual List<Order>? Orders { get; set; }
         public virtual BranchManager BranchManager { get; set; } 
-        public int AddressId { get; set; }
+        public string AddressId { get; set; }
         public virtual Address? Address { get; set; }
 
     }

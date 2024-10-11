@@ -19,13 +19,14 @@ namespace Foodies.Common
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+
             return services;
         }
         public static IServiceCollection AddServiceInjection(this IServiceCollection services)
         {
             services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped<ICustomerService, BranchManagerService>();
-
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IBranchManagerService, BranchManagerService>();
 
             return services;
         }

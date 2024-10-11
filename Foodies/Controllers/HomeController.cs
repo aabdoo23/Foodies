@@ -224,6 +224,7 @@ namespace Foodies.Controllers
                 ClosingHour = adbr.ClosingHour,
                 Address = new Address
                 {
+                    Id = Guid.NewGuid().ToString(),
                     City = adbr.City,
                     Street = adbr.Street,
                     Building = adbr.Building,

@@ -1,127 +1,123 @@
 ﻿using Foodies.Data;
+using Foodies.Interfaces.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-public class OrderController : Controller
+namespace Foodies.Controllers
 {
-    private readonly FoodiesDbContext _context;
-    static private int cnt = 0;
-    private List<MenuItem> myCart = new List<MenuItem>();
-    private readonly UserManager<Customer> _customerManager;
-
-    public OrderController(FoodiesDbContext context, UserManager<Customer> customerManager)
+    public class OrderController : Controller
     {
-        _context = context;
-        _customerManager = customerManager;
-    }
+        //idk who these guys are
+        static private int cnt = 0;
+        private static List<MenuItem> myCart = new List<MenuItem>();
 
 
-    //checkout
-    [HttpPost]
-    public IActionResult checkout(int total)
-    {
-        ViewBag.Total = total.ToString();
-        //return Content($"noura{ViewBag.Total}");
-        return View();
-    }
+        //this is me
+        private readonly IMenuItemRepository _menuItemRepository;
 
-    public async Task<IActionResult> order(int total)
-    {
-        ////id , State , total , date, paymentid , customerid, branch id
-        //Order order = new Order();
-        //order.State = "Pending";
-        //order.TotalPrice = total;
-        //order.OrderDate = DateTime.Now;
-        ////order.Payment 
-
-        ////Customer
-        //var id = HttpContext.Session.GetInt32("Customer");
-        //order.Customer = _context.Customer.Where(x => x.Id == id).SingleOrDefault();
-        ////order.Branch
-
-
-        //order.Items = myCart;
-
-        ////last add order in menuitem model
-        ////empty cart
-        //foreach (var item in myCart)
-        //{
-        //    item.Orders.Add(order);
-        //    removeCart(item.Id,false);
-        //}
-
-        return Content("still not finished action");
-    }
-
-
-    //Cart
-    public IActionResult addCart(int itemId)
-    {
-        CookieOptions options = new CookieOptions();
-        options.Expires = DateTimeOffset.Now.AddDays(5);
-        //replace key with customer id?
-        Response.Cookies.Append((++cnt).ToString(), itemId.ToString(), options);
-        if (itemId == 0)
+        public OrderController(IMenuItemRepository menuItemRepository)
         {
-            return Content("No itemId received");
+            _menuItemRepository = menuItemRepository;
         }
 
-        // Output the cookie list along with the itemId for testing purposes
-        return Content("The is");
-    }
-
-
-    public IActionResult removeCart(int itemId, bool? dec)
-    {
-        foreach (var cookie in Request.Cookies)
+        //checkout
+        [HttpPost]
+        public IActionResult checkout(int total)
         {
-            // Check if the cookie value matches the value to remove
-            if (cookie.Value == itemId.ToString())
+            ViewBag.Total = total.ToString();
+            //return Content($"noura{ViewBag.Total}");
+            return View();
+        }
+
+        public async Task<IActionResult> order(int total)
+        {
+            ////id , State , total , date, paymentid , customerid, branch id
+            //Order order = new Order();
+            //order.State = "Pending";
+            //order.TotalPrice = total;
+            //order.OrderDate = DateTime.Now;
+            ////order.Payment 
+
+            ////Customer
+            //var id = HttpContext.Session.GetInt32("Customer");
+            //order.Customer = _context.Customer.Where(x => x.Id == id).SingleOrDefault();
+            ////order.Branch
+
+
+            //order.Items = myCart;
+
+            ////last add order in menuitem model
+            ////empty cart
+            //foreach (var item in myCart)
+            //{
+            //    item.Orders.Add(order);
+            //    removeCart(item.Id,false);
+            //}
+
+            return Content("still not finished action");
+        }
+
+
+        //Cart
+        public IActionResult addCart(int itemId)
+        {
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTimeOffset.Now.AddDays(5);
+            //replace key with customer id?
+            Response.Cookies.Append((++cnt).ToString(), itemId.ToString(), options);
+            if (itemId == 0)
             {
-                // Remove the cookie by its key
-                Response.Cookies.Delete(cookie.Key);
-                MenuItem menuItem = _context.MenuItem
-                    .Where(x => x.Id == itemId)
-                    .SingleOrDefault();
-                myCart.Remove(menuItem);
-                if (dec == true)
+                return Content("No itemId received");
+            }
+
+            // Output the cookie list along with the itemId for testing purposes
+            return Content("The is");
+        }
+
+
+        public async Task<IActionResult> removeCart(string itemId, bool? dec)
+        {
+            foreach (var cookie in Request.Cookies)
+            {
+                // Check if the cookie value matches the value to remove
+                if (cookie.Value == itemId.ToString())
                 {
-                    break;
+                    // Remove the cookie by its key
+                    Response.Cookies.Delete(cookie.Key);
+                    MenuItem menuItem = await _menuItemRepository.GetById(itemId);
+                    myCart.Remove(menuItem);
+                    if (dec == true)
+                    {
+                        break;
+                    }
+
                 }
-
             }
+
+            // Output the cookie list along with the itemId for testing purposes
+            return Content("The is decrease");
         }
 
-        // Output the cookie list along with the itemId for testing purposes
-        return Content("The is decrease");
-    }
-
-    public IActionResult History()
-    {
-        return View();
-    }
-
-    //view cart
-    public IActionResult cart()
-    {
-        foreach (var cookie in Request.Cookies)
+        public IActionResult History()
         {
-            if (int.TryParse(cookie.Value, out int itemId))
-            {
-                MenuItem menuItem = _context.MenuItem
-                    .Where(x => x.Id == itemId)
-                    .SingleOrDefault();
-                myCart.Add(menuItem);
-            }
-            else
-            {
-                Response.Cookies.Delete(cookie.Key);
-            }
+            return View();
         }
-        return View(myCart);
+
+        //view cart
+        //what is this?
+        //
+        public async Task<IActionResult> cart()
+        {
+            //foreach (var cookie in Request.Cookies)
+            //{
+            //        MenuItem menuItem = await _menuItemRepository.GetById(cookie);
+            //        myCart.Add(menuItem);
+            //}
+            return View(myCart);
+        }
+
+
     }
-
-
 }
 
 

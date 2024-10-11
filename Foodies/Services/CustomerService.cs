@@ -45,6 +45,7 @@ namespace Foodies.Services
 
                     Address = new Address
                     {
+                        Id = Guid.NewGuid().ToString(),
                         City = viewModel.City,
                         Street = viewModel.Street,
                         Building = viewModel.Building,

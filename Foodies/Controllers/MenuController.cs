@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using Foodies.Data;
-using Foodies.Interfaces.Repositories;
+﻿using Foodies.Interfaces.Repositories;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Foodies.Controllers
 {
@@ -25,7 +24,7 @@ namespace Foodies.Controllers
         {
             var restaurant = await _restaurantRepository.GetByIdWithRatings(restaurantId);
 
-            if (restaurant == null)return NotFound();
+            if (restaurant == null) return NotFound();
 
             var menuItems = await _menuItemRepository.GetAllByRestaurantId(restaurantId, category);
 
