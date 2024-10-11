@@ -1,18 +1,14 @@
-﻿using Foodies.Common;
-using Foodies.Data;
-using Foodies.Repositories;
+﻿using Foodies.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol.Core.Types;
 namespace Foodies.Controllers
 {
     public class CustomerViewController : Controller
     {
-        private readonly IBaseRepository<Restaurant> _restaurantRepository;
-        //private readonly IBaseRepository<MenuItem> _menuItemRepository;
-        private readonly MenuItemRepository _menuItemRepository;
+        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IMenuItemRepository _menuItemRepository;
         public CustomerViewController(
-            IBaseRepository<Restaurant> restaurantRepository,
-            MenuItemRepository menuItemRepository)
+            IRestaurantRepository restaurantRepository,
+            IMenuItemRepository menuItemRepository)
         {
             _restaurantRepository = restaurantRepository;
             _menuItemRepository = menuItemRepository;

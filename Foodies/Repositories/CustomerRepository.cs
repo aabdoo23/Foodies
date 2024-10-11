@@ -1,9 +1,11 @@
 ﻿using Foodies.Common;
 using Foodies.Data;
+using Foodies.Exceptions;
+using Foodies.Interfaces.Repositories;
 
 namespace Foodies.Repositories
 {
-    public class CustomerRepository : IBaseRepository<Customer>
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly FoodiesDbContext _context;
         public CustomerRepository(FoodiesDbContext context) {
@@ -18,7 +20,7 @@ namespace Foodies.Repositories
 
         public async Task<Customer> Delete(string id)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(cus => cus.Id == id);
+            var customer = await _context.Customers.FirstOrDefaultAsync(cus => cus.Id == id) ?? throw new NotFoundException($"Customer with ID {id} not found");
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return customer;
@@ -32,7 +34,7 @@ namespace Foodies.Repositories
 
         public async Task<Customer> GetById(string id)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
+            var customer = await _context.Customers.Include(x => x.IdentityUser).Include(x=>x.Address).FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"BranchManager with ID {id} not found");
             return customer;
         }
 

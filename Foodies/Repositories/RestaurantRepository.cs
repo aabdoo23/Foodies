@@ -1,9 +1,11 @@
 ﻿using Foodies.Common;
 using Foodies.Data;
+using Foodies.Exceptions;
+using Foodies.Interfaces.Repositories;
 
 namespace Foodies.Repositories
 {
-    public class RestaurantRepository : IBaseRepository<Restaurant>
+    public class RestaurantRepository : IRestaurantRepository
     {
         private readonly FoodiesDbContext _context;
         public RestaurantRepository(FoodiesDbContext context)
@@ -19,11 +21,7 @@ namespace Foodies.Repositories
 
         public async Task<Restaurant> Delete(string id)
         {
-            var restaurant = await _context.Restaurants.FirstOrDefaultAsync(x => x.Id == id);
-            if (restaurant == null)
-            {
-                return null;
-            }
+            var restaurant = await _context.Restaurants.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
             _context.Restaurants.Remove(restaurant);
             await _context.SaveChangesAsync();
             return restaurant;
@@ -34,9 +32,23 @@ namespace Foodies.Repositories
             return await _context.Restaurants.ToListAsync();
         }
 
+        public async Task<Restaurant> GetByIdWithMenuItems(string id)
+        {
+            return await _context.Restaurants
+                .Include(x => x.MenuItems)
+                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
+        }
+        public async Task<Restaurant> GetByIdWithMenuItemsAndBranches(string id)
+        {
+            return await _context.Restaurants
+                .Include(x => x.MenuItems)
+                .Include(x => x.Branches)
+                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
+        }
+
         public async Task<Restaurant> GetById(string id)
         {
-            return await _context.Restaurants.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Restaurants.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
         }
 
         public async Task<Restaurant> Update(Restaurant entity)

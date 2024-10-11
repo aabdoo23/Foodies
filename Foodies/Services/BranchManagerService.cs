@@ -2,28 +2,30 @@
 using Foodies.Exceptions;
 using Foodies.Interfaces.Repositories;
 using Foodies.Interfaces.Services;
+using Foodies.Repositories;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 
 namespace Foodies.Services
 {
-    public class AdminService : IAdminService
+    public class BranchManagerService : IBranchManagerService
     {
-        private readonly IAdminRepository _adminRepository;
+        private readonly IBranchManagerRepository _branchManagerRepository;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AdminService(IAdminRepository adminRepository,
+        public BranchManagerService(IBranchManagerRepository branchmanager, 
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager)
         {
-            _adminRepository = adminRepository;
+            _branchManagerRepository = branchmanager;
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task<Admin> CreateAdmin(AdminRegisterViewModel viewModel)
+
+        public async Task<BranchManager> CreateBranchManager(AddbranchViewmodel viewModel, Admin admin, Branch branch)
         {
-            var existingAdmin = await _userManager.FindByEmailAsync(viewModel.Email);
-            if (existingAdmin != null)
+            var existingCustomer = await _userManager.FindByEmailAsync(viewModel.Email);
+            if (existingCustomer != null)
             {
                 throw new UserAlreadyExistsException(viewModel.Email);
             }
@@ -35,17 +37,19 @@ namespace Foodies.Services
             IdentityResult result = await _userManager.CreateAsync(user, viewModel.Password);
             if (result.Succeeded)
             {
-                _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin)).GetAwaiter().GetResult();
-                await _userManager.AddToRoleAsync(user, "Admin");
-                Admin admin = new Admin
+                _roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager)).GetAwaiter().GetResult();
+                await _userManager.AddToRoleAsync(user, "BranchManager");
+                BranchManager branchManager = new BranchManager
                 {
                     Id = user.Id,
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
+                    Admin = admin,
+                    Branch = branch,
                     IdentityUser = user,
                 };
-                await _adminRepository.Create(admin);
-                return admin;
+                await _branchManagerRepository.Create(branchManager);
+                return branchManager;
             }
             return null;
         }

@@ -1,3 +1,4 @@
+using Foodies.Common;
 using Foodies.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -12,8 +13,11 @@ namespace Foodies
             var builder = WebApplication.CreateBuilder(args);
 
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //inject custome made repos and services
+            builder.Services.AddRepositories();
+            builder.Services.AddServiceInjection();
 
             builder.Services.AddDbContext<FoodiesDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

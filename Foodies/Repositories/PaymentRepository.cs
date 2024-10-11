@@ -1,9 +1,11 @@
 ﻿using Foodies.Common;
 using Foodies.Data;
+using Foodies.Exceptions;
+using Foodies.Interfaces.Repositories;
 
 namespace Foodies.Repositories
 {
-    public class PaymentRepository : IBaseRepository<Payment>
+    public class PaymentRepository : IPaymentRepository
     {
         private readonly FoodiesDbContext _context;
         public PaymentRepository(FoodiesDbContext context)
@@ -19,11 +21,7 @@ namespace Foodies.Repositories
 
         public async Task<Payment> Delete(string id)
         {
-            var payment = await _context.Payments.FirstOrDefaultAsync(x => x.Id == id);
-            if (payment == null)
-            {
-                return null;
-            }
+            var payment = await _context.Payments.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Payment with {id} not found");
             _context.Payments.Remove(payment);
             await _context.SaveChangesAsync();
             return payment;
@@ -36,7 +34,7 @@ namespace Foodies.Repositories
 
         public async Task<Payment> GetById(string id)
         {
-            return await _context.Payments.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Payments.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Payment with {id} not found");
         }
 
         public async Task<Payment> Update(Payment entity)

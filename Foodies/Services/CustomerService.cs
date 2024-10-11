@@ -1,16 +1,18 @@
 ﻿using Foodies.Common;
 using Foodies.Exceptions;
+using Foodies.Interfaces.Repositories;
+using Foodies.Interfaces.Services;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 
 namespace Foodies.Services
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
-        private readonly IBaseRepository<Customer> _customerRepository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public CustomerService(IBaseRepository<Customer> customerRepository, 
+        public CustomerService(ICustomerRepository customerRepository, 
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager)
         {

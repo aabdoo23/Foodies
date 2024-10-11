@@ -1,7 +1,5 @@
-using Foodies.Common;
-using Foodies.Data;
-using Foodies.Models;
-using Foodies.Services;
+using Foodies.Interfaces.Repositories;
+using Foodies.Interfaces.Services;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,24 +9,21 @@ namespace Foodies.Controllers
     public class MasterController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly CustomerService _customerService;
-        private readonly AdminService _adminService;
-        private readonly IBaseRepository<Restaurant> _restaurantRepository;
+        private readonly ICustomerService _customerService;
+        private readonly IAdminService _adminService;
+        private readonly IRestaurantRepository _restaurantRepository;
 
         private readonly SignInManager<IdentityUser> _signInManager;
 
         public MasterController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            RoleManager<IdentityRole> roleManager,
-            CustomerService customerService,
-            AdminService adminService,
-            IBaseRepository<Restaurant> repository)
+            ICustomerService customerService,
+            IAdminService adminService,
+            IRestaurantRepository repository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
             _customerService = customerService;
             _adminService = adminService;
             _restaurantRepository = repository;
@@ -110,7 +105,7 @@ namespace Foodies.Controllers
             }
 
             return View(admin);
-}
+        }
 
         public IActionResult Login()
         {

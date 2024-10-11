@@ -1,9 +1,11 @@
 ﻿using Foodies.Common;
 using Foodies.Data;
+using Foodies.Exceptions;
+using Foodies.Interfaces.Repositories;
 
 namespace Foodies.Repositories
 {
-    public class BranchRepository : IBaseRepository<Branch>
+    public class BranchRepository : IBranchRepository
     {
         private readonly FoodiesDbContext _context;
         public BranchRepository(FoodiesDbContext context)
@@ -20,7 +22,7 @@ namespace Foodies.Repositories
 
         public async Task<Branch> Delete(string id)
         {
-            var branch = await _context.Branches.FirstOrDefaultAsync(br => br.Id == id);
+            var branch = await _context.Branches.FirstOrDefaultAsync(br => br.Id == id) ?? throw new NotFoundException($"Branch with ID {id} not found");
             _context.Branches.Remove(branch);
             await _context.SaveChangesAsync();
             return branch;
@@ -32,9 +34,18 @@ namespace Foodies.Repositories
             return branches;
         }
 
+        public async Task<IEnumerable<Branch>> GetAllBrancheshByRestaurantId(string restaurantId)
+        {
+            var branches = await _context.Branches
+                .Where(br => br.Restaurant.Id == restaurantId)
+                .Include(br => br.Address)
+                .ToListAsync();
+            return branches;
+        }
+
         public async Task<Branch> GetById(string id)
         {
-            var branch = await _context.Branches.FirstOrDefaultAsync(x => x.Id == id);
+            var branch = await _context.Branches.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"BranchManager with ID {id} not found");
             return branch;
         }
 

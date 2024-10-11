@@ -1,9 +1,11 @@
 ﻿using Foodies.Common;
 using Foodies.Data;
+using Foodies.Exceptions;
+using Foodies.Interfaces.Repositories;
 
 namespace Foodies.Repositories
 {
-    public class OrderRepository : IBaseRepository<Order>
+    public class OrderRepository : IOrderRepository
     {
         private readonly FoodiesDbContext _context;
         public OrderRepository(FoodiesDbContext context)
@@ -19,11 +21,7 @@ namespace Foodies.Repositories
 
         public async Task<Order> Delete(string id)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(x=>x.Id==id);
-            if (order == null)
-            {
-                return null;
-            }
+            var order = await _context.Orders.FirstOrDefaultAsync(x=>x.Id==id) ?? throw new NotFoundException($"Order with ID {id} not found");
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
             return order;
@@ -36,7 +34,7 @@ namespace Foodies.Repositories
 
         public async Task<Order> GetById(string id)
         {
-            return await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Orders.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Order with ID {id} not found");
         }
 
         public async Task<Order> Update(Order entity)

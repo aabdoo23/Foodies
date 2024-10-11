@@ -1,30 +1,43 @@
+using Foodies.Exceptions;
+using Foodies.Interfaces.Repositories;
+using Foodies.Interfaces.Services;
+using Foodies.Models;
 using Foodies.Repositories;
 using Foodies.ViewModels;
 using Foodies.ViewModels.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Foodies.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly AdminRepository _adminRepository;
-        private readonly RestaurantRepository _restaurantRepository;
+        private readonly IAdminRepository _adminRepository;
+        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IBranchRepository _branchRepository;
+        private readonly IMenuItemRepository _menuItemRepository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IAddressRepository _addressRepository;
+        private readonly IBranchManagerService _branchManagerService;
         public HomeController(ILogger<HomeController> logger,
-            UserManager<IdentityUser> baseUser,
-            RoleManager<IdentityRole> roleManager,
-            AdminRepository adminRepository,
-            RestaurantRepository restaurantRepository
-            )
+            IAdminRepository adminRepository,
+            IRestaurantRepository restaurantRepository,
+            IBranchRepository branchRepository,
+            IMenuItemRepository menuItemRepository,
+            ICustomerRepository customerRepository,
+            IAddressRepository addressRepository,
+            IBranchManagerService branchManagerService)
         {
             _logger = logger;
-            _roleManager = roleManager;
-            _userManager = baseUser;
             _adminRepository = adminRepository;
             _restaurantRepository = restaurantRepository;
+            _branchRepository = branchRepository;
+            _menuItemRepository = menuItemRepository;
+            _customerRepository = customerRepository;
+            _addressRepository = addressRepository;
+            _branchManagerService = branchManagerService;
         }
         public IActionResult CustomerView()
         {
@@ -36,141 +49,129 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> AdminProfile(string id)
         {
-            var Adminmndr = await _userManager.FindByIdAsync(id);
-            var Admncon = _adminRepository.GetById(id);
-            var restaurant = await _context.Restaurant.Include(x => x.MenuItems).SingleOrDefaultAsync(x => x.Id == Admncon.RestaurantId);
-            AdminProfileViewmodel Admine = new AdminProfileViewmodel();
+            var admin= await _adminRepository.GetById(id);
+            var restaurant = await _restaurantRepository.GetByIdWithMenuItems(admin.RestaurantId);
+            AdminProfileViewmodel adminProfileViewModel = new AdminProfileViewmodel();
             //Admine.Id = new { id = Adminmndr.Id }
-            Admine.Id = Adminmndr.Id;
-            Admine.Email = Adminmndr.Email;
-            Admine.FirstName = Admncon.FirstName;
-            Admine.LastName = Admncon.LastName;
-            Admine.Phone = Adminmndr.PhoneNumber;
-            Admine.Resturantid = Admncon.RestaurantId;
+            adminProfileViewModel.Id = admin.Id;
+            adminProfileViewModel.Email = admin.IdentityUser.Email;
+            adminProfileViewModel.FirstName = admin.FirstName;
+            adminProfileViewModel.LastName = admin.LastName;
+            adminProfileViewModel.Phone = admin.IdentityUser.PhoneNumber;
+            adminProfileViewModel.Resturant = restaurant;
+            adminProfileViewModel.Branch = await _branchRepository.GetAllBrancheshByRestaurantId(admin.RestaurantId);
 
-
-            ViewBag.Rest = restaurant;
-
-            ViewBag.Branch = _context.Branch.Where(x => x.Restaurant == restaurant).Include(c => c.Address).ToList();
-
-            ViewBag.menu = _context.MenuItem.Where(x => x.Resturant.Id == Admncon.RestaurantId).ToList();
-            return View(Admine);
+            return View(adminProfileViewModel);
         }
         public async Task<IActionResult> EditAdmin(AdminProfileViewmodel adm)
         {
-            var Adminmndr = await _userManager.FindByIdAsync(adm.Id);
-            var Admncon = _context.Admin.Where(x => x.Id == adm.Id).FirstOrDefault();
-            Adminmndr.Email = adm.Email;
-            Admncon.FirstName = adm.FirstName;
-            Admncon.LastName = adm.LastName;
-            Adminmndr.PhoneNumber = adm.PhoneNumber;
-            _context.SaveChanges();
+            var admin = await _adminRepository.GetById(adm.Id);
+
+            admin.IdentityUser.Email = adm.Email;
+            admin.FirstName = adm.FirstName;
+            admin.LastName = adm.LastName;
+            admin.IdentityUser.PhoneNumber = adm.PhoneNumber;
+            await _adminRepository.Update(admin);
+
+            //TODO: Check if the identity user is updated
+
             return RedirectToAction("AdminProfile", adm);
 
         }
         public async Task<IActionResult> EditRest(RestaurantEditView res)
         {
-            var restaurant = await _context.Restaurant.SingleOrDefaultAsync(x => x.Id == res.Id);
+            var restaurant = await _restaurantRepository.GetById(res.Id);
             restaurant.Name = res.Name;
             restaurant.CuisineType = res.Cuisine;
             restaurant.Hotline = res.Hotline;
-            _context.SaveChanges();
-            var adm = await _context.Admin.SingleOrDefaultAsync(x => x.Id == res.AdminId);
-            return RedirectToAction("AdminProfile", adm);
+            await _restaurantRepository.Update(restaurant);
+            var admin = await _adminRepository.GetById(res.AdminId);
+            return RedirectToAction("AdminProfile", admin);
         }
-        public IActionResult Addmnuitm(int id)
+        public IActionResult AddMenuItem(string id)
         {
-            var restu = _context.Restaurant.FirstOrDefault(x => x.Id == id);
-
-            return View(restu);
+            var restaurant = _restaurantRepository.GetById(id);
+            return View(restaurant);
         }
-        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, int restaurantId)
+        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, string restaurantId)
         {
-            MenuItem mnu = new MenuItem
+            MenuItem menuItem = new MenuItem
             {
                 Name = Menu.Name,
                 Category = Menu.Category,
                 Description = Menu.Description,
-                Resturant = await _context.Restaurant.FindAsync(restaurantId)
+                Resturant = await _restaurantRepository.GetById(restaurantId),
             };
+            await _menuItemRepository.Create(menuItem);
 
-            await _context.AddAsync(mnu);
-            await _context.SaveChangesAsync();
-
-            var adm = await _context.Admin.SingleOrDefaultAsync(x => x.RestaurantId == mnu.Resturant.Id);
-            return RedirectToAction("AdminProfile", adm);
+            var admin = await _adminRepository.GetAdminByRestaurantId(restaurantId);
+            return RedirectToAction("AdminProfile", admin);
         }
-        public async Task<IActionResult> Editemnuitm(int id)
+        public async Task<IActionResult> EditMenuItem(string id)
         {
-            var item = await _context.MenuItem.FindAsync(id);
+            var item = await _menuItemRepository.GetById(id);
             if (item == null)
             {
                 return NotFound();
             }
             return View(item);
         }
-        public async Task<IActionResult> SaveEdit(MenuItem Menu)
+        public async Task<IActionResult> SaveEdit(MenuItem itemForEdit)
         {
-            var mnu = await _context.MenuItem.Include(x => x.Resturant).SingleOrDefaultAsync(x => x.Id == Menu.Id);
-            if (mnu != null)
+            var menuItem = await _menuItemRepository.GetById(itemForEdit.Id);
+            if (menuItem != null)
             {
-                mnu.Name = Menu.Name;
-                mnu.Price = Menu.Price;
-                mnu.Category = Menu.Category;
-                mnu.Description = Menu.Description;
-                await _context.SaveChangesAsync();
-                var adm = await _context.Admin.SingleOrDefaultAsync(x => x.RestaurantId == mnu.Resturant.Id);
-                return RedirectToAction("AdminProfile", adm);
+                menuItem.Name = itemForEdit.Name;
+                menuItem.Price = itemForEdit.Price;
+                menuItem.Category = itemForEdit.Category;
+                menuItem.Description = itemForEdit.Description;
+
+                await _menuItemRepository.Update(menuItem);
+                var admin = await _adminRepository.GetAdminByRestaurantId(menuItem.Resturant.Id);
+                return RedirectToAction("AdminProfile", admin);
             }
             else
             {
                 return RedirectToAction("Error");
             }
         }
-        public async Task<IActionResult> Deletitem(int id)
+        public async Task<IActionResult> DeleteMenuItem(string id)
         {
-            var item = await _context.MenuItem.Include(x => x.Resturant).SingleOrDefaultAsync(x => x.Id == id);
-            if (item != null)
-            {
-                _context.MenuItem.Remove(item);
-                await _context.SaveChangesAsync();
-                var adm = await _context.Admin.SingleOrDefaultAsync(x => x.RestaurantId == item.Resturant.Id);
-                return RedirectToAction("AdminProfile", adm);
-            }
-            else
-            {
-                return RedirectToAction("Error");
-            }
+            var menuItem = await _menuItemRepository.GetById(id);
+            await _menuItemRepository.Delete(id);
+            var admin = await _adminRepository.GetAdminByRestaurantId(menuItem.Resturant.Id);
+            return RedirectToAction("AdminProfile", admin);
         }
         public async Task<IActionResult> UserView(string id)
         {
-            var Cususer = await _userManager.FindByIdAsync(id);
+            var customer = await _customerRepository.GetById(id);
+            var customerViewModel = new Customerviewmodel();
 
-            var cutomer = _context.Customer.Where(x => x.Id == id).FirstOrDefault();
-            var addrress = _context.Address.Where(x => x.Id == cutomer.AddressId).FirstOrDefault();
-            Customerviewmodel cusview = new Customerviewmodel();
-            cusview.Id = id;
-            cusview.FirstName = cutomer.FirstName;
-            cusview.LastName = cutomer.LastName;
-            cusview.Email = Cususer.Email;
-            cusview.Phone = Cususer.PhoneNumber;
-            cusview.City = addrress.City;
-            cusview.Street = addrress.Street;
-            cusview.bulding = addrress.Building;
-            cusview.Points = cutomer.Points;
-            cusview.Location = addrress.Location;
-            return View(cusview);
+            customerViewModel.Id = id;
+            customerViewModel.FirstName = customer.FirstName;
+            customerViewModel.LastName = customer.LastName;
+            customerViewModel.Email = customer.IdentityUser.Email;
+            customerViewModel.Phone = customer.IdentityUser.PhoneNumber;
+            customerViewModel.City = customer.Address.City;
+            customerViewModel.Street = customer.Address.Street;
+            customerViewModel.bulding = customer.Address.Building;
+            customerViewModel.Points = customer.Points;
+            customerViewModel.Location = customer.Address.Location;
+
+            return View(customerViewModel);
         }
 
         public async Task<IActionResult> AccountInfo(Customerviewmodel cus)
         {
-            var Cususer = await _userManager.FindByIdAsync(cus.Id);
-            var cutomer = _context.Customer.Where(x => x.Id == cus.Id).FirstOrDefault();
-            cutomer.FirstName = cus.FirstName;
-            cutomer.LastName = cus.LastName;
-            Cususer.Email = cus.Email;
-            Cususer.PhoneNumber = cus.Phone;
-            _context.SaveChanges();
+            var customer = await _customerRepository.GetById(cus.Id);
+
+            customer.FirstName = cus.FirstName;
+            customer.LastName = cus.LastName;
+            customer.IdentityUser.Email = cus.Email;
+            customer.IdentityUser.PhoneNumber = cus.Phone;
+
+            await _customerRepository.Update(customer);
+
             ViewBag.NotificationMessage = "Customer Updated successfully!";
             ViewBag.NotificationType = "success";
 
@@ -178,77 +179,43 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> AddMenuItem(MenuItem Menu)
         {
-            await _context.MenuItem.AddAsync(Menu);
-            await _context.SaveChangesAsync();
+            await _menuItemRepository.Create(Menu);
             return RedirectToAction("AdminProfile");
 
         }
         public async Task<IActionResult> CusAddress(Customerviewmodel cus)
         {
-            var Cususer = await _userManager.FindByIdAsync(cus.Id);
-            var cutomer = _context.Customer.Where(x => x.Id == cus.Id).FirstOrDefault();
-            var addrress = _context.Address.Where(x => x.Id == cutomer.AddressId).FirstOrDefault();
-            addrress.City = addrress.City;
+            var customer = await _customerRepository.GetById(cus.Id);
 
-            addrress.Street = cus.Street;
-            addrress.Building = cus.bulding;
-            addrress.Location = cus.Location;
-            _context.SaveChanges();
+            customer.Address.City = cus.City;
+            customer.Address.Street = cus.Street;
+            customer.Address.Building = cus.bulding;
+            customer.Address.Location = cus.Location;
+
+            await _addressRepository.Update(customer.Address);
+
             return RedirectToAction("UserView", cus);
         }
 
-        /*  public iactionresult addbranch(int id) { 
-           var admin = _context.admin.singleordefault(x=>x.restaurantid == id);
-               viewbag.restid = id;
-              return view(admin);
-          }
-          public iactionresult savebranch(branch brnch,branchmanager brmngr) {
-            branch newbranch = new branch();
-            branchmanager newbranchmngr = new branchmanager();
-              newbranch.restaurant= brnch.restaurant;
-              newbranch.brancharea = brnch.brancharea;
-              newbranch.branchlocation = brnch.branchlocation;
-              newbranch.openinghour = brnch.openinghour;
-              newbranch.closinghour = brnch.closinghour;
-              _context.add(newbranch);
-              _context.savechanges();
-              newbranchmngr.username= brmngr.username;
-              newbranchmngr.password = brmngr.password;
-              newbranchmngr.admin = brmngr.admin;
-              newbranchmngr.branchid = 7;
-              _context.add(newbranchmngr);
-              _context.savechanges();
-              return redirecttoaction("addbranch");
-          }*/
         [HttpGet]
-        public IActionResult AddBranch(int id)
+        public IActionResult AddBranch(string id)
         {
-            var admin = _context.Admin.SingleOrDefault(x => x.RestaurantId == id);
-            //ViewBag.RestId = id;
+            var admin = _adminRepository.GetAdminByRestaurantId(id);
             Response.Cookies.Append("resiid", id.ToString());
-            //int resId = int.Parse(Request.Cookies["resiid"]);
 
             return View(admin);
-            //return Content($"done done done{resId}");
 
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveBranch(AddbranchViewmodel adbr)//Branch brnch, BranchManager BrMngr, int restaurantId, int adminId
         {
-            IdentityUser user = new IdentityUser();
-            user.UserName = adbr.Email;
-            user.Email = adbr.Email;
-            user.PhoneNumber = adbr.phoneNumber;
-
-            int resId = int.Parse(Request.Cookies["resiid"]);
+            //TODO: Check if data not null ffs
 
             // restaurant 
-            Restaurant res = _context.Restaurant.Where(x => x.Id == resId).
-                Include(c => c.Branches).FirstOrDefault();
 
-
-            IdentityResult result = await _userManager.CreateAsync(user, adbr.Password);
+            string resId = Request.Cookies["resiid"] ?? throw new NotFoundException($"No restaurant of cookie {Request.Cookies["resiid"]} id found");
+            Restaurant res = await _restaurantRepository.GetByIdWithMenuItemsAndBranches(resId);
 
             Branch newBranch = new Branch
             {
@@ -264,33 +231,14 @@ namespace Foodies.Controllers
                 }
             };
 
-            //return Content($"done done done{resId}");
-
             res.Branches.Add(newBranch);
 
+            await _branchRepository.Create(newBranch);
 
+            var admin = await _adminRepository.GetAdminByRestaurantId(resId);
 
-            _context.Branch.Add(newBranch);
-            _context.SaveChanges();
+            await _branchManagerService.CreateBranchManager(adbr,admin, newBranch);
 
-            //logged in user
-            //var userId = _userManager.GetUserId(User);
-            var admin = _context.Admin.SingleOrDefault(x => x.RestaurantId == resId);
-
-            BranchManager newBranchMngr = new BranchManager  //adminID
-            {
-                Id = user.Id,
-                AdminId = admin.Id,
-                BranchId = newBranch.BranchId,
-                FirstName = adbr.FirstName,
-                LastName = adbr.LastName,
-                IdentityUser = user,
-
-
-            };
-            _context.BranchManager.Add(newBranchMngr);
-            _context.SaveChanges();
-            //return C
             return RedirectToAction("AdminProfile", admin);
         }
 

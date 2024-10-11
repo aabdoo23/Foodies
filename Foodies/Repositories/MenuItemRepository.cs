@@ -1,9 +1,11 @@
 ﻿using Foodies.Common;
 using Foodies.Data;
+using Foodies.Exceptions;
+using Foodies.Interfaces.Repositories;
 
 namespace Foodies.Repositories
 {
-    public class MenuItemRepository : IBaseRepository<MenuItem>
+    public class MenuItemRepository : IMenuItemRepository
     {
         private readonly FoodiesDbContext _context;
         public MenuItemRepository(FoodiesDbContext context)
@@ -19,11 +21,7 @@ namespace Foodies.Repositories
 
         public async Task<MenuItem> Delete(string id)
         {
-            var menuItem = await _context.MenuItems.FindAsync(id);
-            if (menuItem == null)
-            {
-                return null;
-            }
+            var menuItem = await _context.MenuItems.FindAsync(id) ?? throw new NotFoundException($"MenuItem with ID {id} not found");
             _context.MenuItems.Remove(menuItem);
             await _context.SaveChangesAsync();
             return menuItem;
@@ -36,7 +34,7 @@ namespace Foodies.Repositories
 
         public async Task<MenuItem> GetById(string id)
         {
-            var menuItem = await _context.MenuItems.FirstOrDefaultAsync(x => x.Id == id);
+            var menuItem = await _context.MenuItems.Include(x => x.Resturant).FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"MenuItem with ID {id} not found");
             return menuItem;
         }
 
