@@ -51,6 +51,14 @@
 </header>
 <body>
 
+    @{
+        @foreach (var restaurant in Model)
+        {
+            @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = restaurant.CuisineType, Icon = restaurant.CuisineType, Url = "" })
+        }
+
+
+    }
    <div class="category-bar d-flex justify-content-center">
     <div class="category-item" data-category="Burger">
         <button class="category-button">Burger</button>
@@ -80,7 +88,7 @@
         </div>
         
         @* restaurants *@
-        <div class="restaurant-list">
+        @* <div class="restaurant-list">
         <h1>Restaurants</h1>
         <div class="restaurant-cards">
                 @foreach (var restaurant in Model)
@@ -112,12 +120,12 @@
                 </div>
             </div>
                }
-</div>
+</div> *@
 
-      @*      <div class="restaurant-cards">
+            <div class="restaurant-cards">
                 @foreach (var restaurant in Model)
                 {
-                    <div class="restaurant-card" data-cuisine-type="@restaurant.CuisineType">
+                    <div type = "hidden" class="restaurant-card" data-cuisine-type="@restaurant.CuisineType">
                         @await Component.InvokeAsync("FoodCardViewComponent",
                             new
                             {
@@ -131,11 +139,10 @@
                                 Customer = ViewBag.fav,
                                 Url = $"/Menu/Index?restaurantId={restaurant.Id}",
                             })
-                    </div>
+                                </div>
                 }
-            </div>
-
-    </div>*@
+            
+    </div>
         @* @foreach (var restaurant in Model)
         {
                     <div class="restaurant-card">
