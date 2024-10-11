@@ -26,7 +26,8 @@
             <h1>Sign Up</h1>
             <p>Register to manage your restaurant and connect with customers.</p>
 
-                <form method="post" asp-action="SaveAdminAndResturant" asp-controller="Master" enctype="multipart/form-data">
+            <form method="post" asp-action="SaveAdminAndResturant" asp-controller="Master">
+
                 <div class="form-row">
                     <div class="input-group">
                         <label for="FirstName">First Name</label>
@@ -113,7 +114,7 @@
                     <div class="input-group">
 
                         <label for="file">Upload Restaurant Image:</label>
-                        <input type="file"  name="immg" accept="image/*" required>
+                        <input type="file" id="file" name="file" accept="image/*" required>
                         <br><br>
 
 
