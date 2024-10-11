@@ -117,8 +117,9 @@ namespace Foodies.Controllers
 
             return View();
         }
-        public async Task<IActionResult> Restaurant()
+        public async Task<IActionResult> Restaurant(string id)
         {
+            ViewBag.cusid=id;
             var restaurants = await _context.Restaurant.ToListAsync();
             var userId = _userManager.GetUserId(User);
             Customer customer = await _context.Customer
