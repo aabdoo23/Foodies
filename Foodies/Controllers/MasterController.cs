@@ -12,15 +12,16 @@ namespace Foodies.Controllers
 
         private readonly SignInManager<IdentityUser> _signInManager;
 
-       
+       private readonly ImageUploader _imageUploader;
 
         public MasterController(FoodiesDbContext context,
-            UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+            UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager, ImageUploader imageUploader)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _imageUploader = imageUploader;
         }
 
         public async Task CreateRole()
@@ -130,7 +131,7 @@ namespace Foodies.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin)
+        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin,IFormFile immg)
         {
             if (ModelState.IsValid)
             {
@@ -145,7 +146,7 @@ namespace Foodies.Controllers
                     user.UserName = admin.Email;
                     user.Email = admin.Email;
                     user.PhoneNumber = admin.phoneNumber;
-
+                    string? usrl =await _imageUploader.UploadImageAsync(immg);
 
                     var result = await _userManager.CreateAsync(user, admin.Password);
 
@@ -160,11 +161,13 @@ namespace Foodies.Controllers
                     Restaurant res = new Restaurant
                     {
                         Name = admin.Name,
-                        Photo = admin.Photo,
+                        Photo = usrl,
                         Hotline = admin.Hotline,
                         CuisineType = admin.CuisineType,
                         MaxPrice = admin.MaxPrice,
                         MinPrice = admin.MinPrice,
+                      
+              
 
                     };
                     //custo}mer.Id = user.Id;
@@ -225,11 +228,12 @@ namespace Foodies.Controllers
                         var roles = await _userManager.GetRolesAsync(user);
                         string x = string.Join(", ", roles);
 
-
-                        if (x == "Customer")
+                    //        /CustomerView/index
+                    if (x == "Customer")
                     {
+                                           var cus = _context.Customer.Where(x => x.Id == user.Id);
 
-                        return RedirectToAction("UserView", "Home", new { id = user.Id });
+                        return RedirectToAction("index", "CustomerView", new { id = cus });
                         }
                         else if (x == "Admin")
                         {
