@@ -228,12 +228,12 @@ namespace Foodies.Controllers
                         var roles = await _userManager.GetRolesAsync(user);
                         string x = string.Join(", ", roles);
 
-                    //        /CustomerView/index
+                    //        /menu/restaurant
                     if (x == "Customer")
                     {
-                                           var cus = _context.Customer.Where(x => x.Id == user.Id);
+                         var cus = _context.Customer.Where(x => x.Id == user.Id);
 
-                        return RedirectToAction("index", "CustomerView", new { id = cus });
+                        return RedirectToAction("restaurant", "menu", new { id = cus });
                         }
                         else if (x == "Admin")
                         {
