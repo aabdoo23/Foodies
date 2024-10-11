@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Foodies.Data;
+using Foodies.Interfaces.Repositories;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,27 +8,26 @@ namespace Foodies.Controllers
 {
     public class MenuController : Controller
     {
-        private readonly FoodiesDbContext _context;
-
-        public MenuController(FoodiesDbContext context)
+        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IMenuItemRepository _menuItemRepository;
+        private readonly IRatingRepository _ratingRepository;
+        public MenuController(
+            IRestaurantRepository restaurantRepository,
+            IMenuItemRepository menuItemRepository,
+            IRatingRepository ratingRepository)
         {
-            _context = context;
+            _restaurantRepository = restaurantRepository;
+            _menuItemRepository = menuItemRepository;
+            _ratingRepository = ratingRepository;
         }
 
-        public async Task<IActionResult> Index(int restaurantId, string? category = null)
+        public async Task<IActionResult> Index(string restaurantId, string? category = null)
         {
-            var restaurant = await _context.Restaurant
-                .Include(r => r.Ratings)
-                .FirstOrDefaultAsync(r => r.Id == restaurantId);
+            var restaurant = await _restaurantRepository.GetByIdWithRatings(restaurantId);
 
-            if (restaurant == null)
-            {
-                return NotFound();
-            }
+            if (restaurant == null)return NotFound();
 
-            var menuItems = await _context.MenuItem
-                .Where(m => m.Resturant.Id == restaurantId && (category == null || m.Category == category))
-                .ToListAsync();
+            var menuItems = await _menuItemRepository.GetAllByRestaurantId(restaurantId, category);
 
             var categories = menuItems
                 .Select(m => m.Category)
@@ -47,22 +47,20 @@ namespace Foodies.Controllers
 
         public async Task<IActionResult> Restaurant()
         {
-            var restaurants = await _context.Restaurant.ToListAsync();
+            var restaurants = await _restaurantRepository.GetAll();
             return View(restaurants);
         }
 
-        public async Task<IActionResult> LoadMenuItems(int restaurantId, string? category = null)
+        public async Task<IActionResult> LoadMenuItems(string restaurantId, string? category = null)
         {
-            var menuItems = await _context.MenuItem
-                .Where(m => m.Resturant.Id == restaurantId && (category == null || m.Category == category))
-                .ToListAsync();
+            var menuItems = await _menuItemRepository.GetAllByRestaurantId(restaurantId, category);
 
             return PartialView("_MenuItems", menuItems);
         }
 
-        public async Task<IActionResult> Rate(int restaurantId)
+        public async Task<IActionResult> Rate(string restaurantId)
         {
-            var restaurant = await _context.Restaurant.FindAsync(restaurantId);
+            var restaurant = await _restaurantRepository.GetById(restaurantId);
             if (restaurant == null)
             {
                 return NotFound();
@@ -84,13 +82,12 @@ namespace Foodies.Controllers
             {
                 var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                var existingRating = await _context.Rating
-                    .FirstOrDefaultAsync(r => r.RestaurantId == model.RestaurantId && r.CustomerId == customerId);
+                var existingRating = await _ratingRepository.GetByCustomerIdAndRestaurantId(customerId, model.RestaurantId);
 
                 if (existingRating != null)
                 {
                     existingRating.Rate = model.Rate;
-                    _context.Rating.Update(existingRating);
+                    await _ratingRepository.Update(existingRating);
                 }
                 else
                 {
@@ -100,10 +97,8 @@ namespace Foodies.Controllers
                         Rate = model.Rate,
                         CustomerId = customerId,
                     };
-                    await _context.Rating.AddAsync(rating);
+                    await _ratingRepository.Create(rating);
                 }
-
-                await _context.SaveChangesAsync();
                 return Ok();
             }
 

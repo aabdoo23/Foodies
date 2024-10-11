@@ -32,9 +32,19 @@ namespace Foodies.Repositories
             return await _context.Ratings.ToListAsync();
         }
 
+        public async Task<IEnumerable<Rating>> GetAllByRestaurantId(string restaurantId)
+        {
+            return await _context.Ratings.Where(x => x.RestaurantId == restaurantId).ToListAsync();
+        }
+
         public async Task<Rating> GetById(string id)
         {
             return await _context.Ratings.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Rating with {id} not found");
+        }
+
+        public async Task<Rating> GetByCustomerIdIdAndRestaurantId(string customerId, string restaurantId)
+        {
+            return await _context.Ratings.FirstOrDefaultAsync(x => x.CustomerId == customerId && x.RestaurantId == restaurantId) ?? throw new NotFoundException($"Rating with userId {userId} and restaurantId {restaurantId} not found");
         }
 
         public async Task<Rating> Update(Rating entity)

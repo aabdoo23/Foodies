@@ -57,5 +57,12 @@ namespace Foodies.Repositories
             await _context.SaveChangesAsync();
             return entity;
         }
+
+        public async Task<Restaurant> GetByIdWithRatings(string id)
+        {
+            return await _context.Restaurants
+                .Include(x => x.Ratings)
+                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
+        }
     }
 }

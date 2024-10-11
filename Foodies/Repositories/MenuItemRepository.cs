@@ -45,9 +45,16 @@ namespace Foodies.Repositories
             return entity;
         }
 
-        public async Task<IEnumerable<MenuItem>> GetAllByRestaurantId(string id)
+        public async Task<IEnumerable<MenuItem>> GetAllByRestaurantId(string restaurantId)
         {
-            return await _context.MenuItems.Where(x => x.Resturant.Id == id).ToListAsync();
+            return await _context.MenuItems.Where(x => x.Resturant.Id == restaurantId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<MenuItem>> GetAllByRestaurantId(string restaurantId, string category)
+        {
+            if(category == null || category=="")
+                return await _context.MenuItems.Where(x => x.Resturant.Id == restaurantId).ToListAsync();
+            return await _context.MenuItems.Where(x => x.Resturant.Id == restaurantId && x.Category == category).ToListAsync();
         }
     }
 }
