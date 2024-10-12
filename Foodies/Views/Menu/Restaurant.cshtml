@@ -122,10 +122,12 @@
                }
 </div> *@
 
+        @* <div type = "hidden" class="restaurant-card" data-cuisine-type="@restaurant.CuisineType">                                 </div>
+*@
+
             <div class="restaurant-cards">
                 @foreach (var restaurant in Model)
                 {
-                    <div type = "hidden" class="restaurant-card" data-cuisine-type="@restaurant.CuisineType">
                         @await Component.InvokeAsync("FoodCardViewComponent",
                             new
                             {
@@ -139,20 +141,10 @@
                                 Customer = ViewBag.fav,
                                 Url = $"/Menu/Index?restaurantId={restaurant.Id}",
                             })
-                                </div>
                 }
             
     </div>
-        @* @foreach (var restaurant in Model)
-        {
-                    <div class="restaurant-card">
-                        <img src="@restaurant.Photo" alt="@restaurant.Name" class="restaurant-image" />
-                        <div class="restaurant-info">
-                            <h2 class="restaurant-name">@restaurant.Name</h2>
-                            <a asp-controller="Menu" asp-action="Index" asp-route-restaurantId="@restaurant.Id" class="view-menu-btn">View Menu</a>
-                        </div>
-                    </div>
-        } *@
+        
 
     </div>
 

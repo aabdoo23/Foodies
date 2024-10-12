@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class OrderController : Controller
 {
     private readonly FoodiesDbContext _context;
-    static private int cnt = 0;
+    //static private int cnt = 0;
     private List<MenuItem> myCart = new List<MenuItem>();
     private readonly UserManager<IdentityUser> _userManager;
 
@@ -52,27 +52,16 @@ public class OrderController : Controller
     }
 
 
-    public void Payment(Payment payment) { 
-        
-        //else
-        //{
-        //    //check for address existance
-        //}
-        //_context.Payment.Add(payment);
-        //Response.Cookies.Append("PaymentId", payment.Id.ToString());
-
-        //return Content("payment done done done");
-    }
-
+    
     [HttpPost]
     public IActionResult OrderView(int total, string paymentMethod)
     {
         foreach (var cookie in Request.Cookies)
         {
-            if (int.TryParse(cookie.Value, out int itemId))
+            if (int.TryParse(cookie.Key, out int id))
             {
                 MenuItem menuItem = _context.MenuItem
-                    .Where(x => x.Id == itemId)
+                    .Where(x => x.Id == int.Parse(cookie.Value))
                     .SingleOrDefault();
                 myCart.Add(menuItem);
             }
@@ -185,8 +174,12 @@ public class OrderController : Controller
     {
         CookieOptions options = new CookieOptions();
         options.Expires = DateTimeOffset.Now.AddDays(5);
+        int cnt = 1;
+        bool entered = false;
         //replace key with customer id?
+        
         Response.Cookies.Append((++cnt).ToString(), itemId.ToString(), options);
+                 
         if (itemId == 0)
         {
             return Content("No itemId received");
