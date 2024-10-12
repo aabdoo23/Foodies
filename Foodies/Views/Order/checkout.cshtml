@@ -43,39 +43,68 @@
             <label>Your total points: <input type="text" id="points" value="470" readonly></label>
         </div>
 
-        <div class="payment-section">
-            <p class="section-title">Payment Options</p>
+       <div class="payment-section">
+    <label class="radio-label">
+        <input type="radio" name="payment" value="Card" id="cardPayment"> Card
+    </label>
+
+    @{
+       if (ViewBag.fav?.card == null)
+            {
+            <form action="/Home/UserView" method="post">
+                <button type="submit">Add Card First</button>
+                </form>
+            }
             
-            <label class="radio-label"><input type="radio" name="payment"> Card</label>
+        
+    }
 
-            <label class="radio-label"><input type="radio" name="payment"> Cash</label>
-            <div>
-                <label><input type="checkbox" id="use-points"> Use Your Points</label>
-            </div>
-        </div>
+    <label class="radio-label">
+        <input type="radio" name="payment" value="Cash" id="cashPayment"> Cash
+    </label>
 
-        <div class="order-summary">
-            <p>Sub Total: <span class="price" id="subtotal">@ViewBag.Total EGP</span></p>
-            <p>Discount: <span class="price" id="discount">0 EGP</span></p>
-            <p>Delivery: <span class="price" id="delivery">0 EGP</span></p>
+    <div>
+        <label><input type="checkbox" id="use-points"> Use Your Points</label>
+    </div>
 
-            <p class="total-amount">Total: <span class="price" id="total"> 444.00 EGP</span></p>
-        </div>
+    <div class="order-summary">
+        <p>Sub Total: <span class="price" id="subtotal">@ViewBag.Total EGP</span></p>
+        <p>Discount: <span class="price" id="discount">0 EGP</span></p>
+        <p>Delivery: <span class="price" id="delivery">0 EGP</span></p>
+        <p class="total-amount">Total: <span class="price" id="total">444.00 EGP</span></p>
+    </div>
 
-    <form asp-action="cart" asp-controller="Order" method="post">
+
+    <form asp-action="OrderView" asp-controller="Order" method="post" onsubmit="return createPayment(this);">
         <input type="hidden" name="total" value="@ViewBag.Total" />
+           <input type="hidden" name="paymentMethod" id="paymentMethod"  />
         <button type="submit" class="confirm-btn">View Order</button>
     </form>
-
-    </div>
-  </section>
+</div>
+</section>
 </body>
 </html>
 
 <script>
+function createPayment(form) {
+    // Get the selected payment method
+    const selectedPayment = document.querySelector('input[name="payment"]:checked');
 
+    if (selectedPayment) {
+        // Set the value of the hidden input field to the selected payment method
+        document.getElementById('paymentMethod').value = selectedPayment.value; // This captures "Card" or "Cash"
 
-   
+        // Log the value for debugging
+        console.log("Selected Payment Method:", selectedPayment.value); // This will log "Card" or "Cash"
+
+        // Return true to allow the form to submit
+        return true; 
+    } else {
+        // Prevent form submission and alert the user
+        alert("Please select a payment method.");
+        return false; // Prevent the form from submitting
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     const pointsInput = document.getElementById('points');

@@ -14,7 +14,9 @@
         public int? Quantity { get; set; } = 1;
         public string Description { get; set; }
 
-        public Restaurant Resturant { get; set; } = default!;
+        public virtual Restaurant Resturant { get; set; } = default!;
+        public int ResturantId { get; set; } = default!;
+
 
         public virtual ICollection<Order>? Orders { get; set; }
 

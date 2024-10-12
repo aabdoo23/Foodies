@@ -23,6 +23,12 @@ namespace Foodies.Models
            .WithOne(p => p.BranchManager)
            .HasForeignKey<BranchManager>(o => o.BranchId);
 
+            //one restaurant to many menuitems
+            modelBuilder.Entity<MenuItem>()
+            .HasOne(p => p.Resturant)
+            .WithMany(c => c.MenuItems)
+            .HasForeignKey(p => p.ResturantId);
+
             // one to many payment 
             modelBuilder.Entity<Payment>()
             .HasOne(p => p.card)

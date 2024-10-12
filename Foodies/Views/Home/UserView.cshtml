@@ -14,39 +14,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light py-3">
-        <div class="container">
-            <a class="navbar-brand" href="#">Foodies</a>
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item me-3">
-                        <a class="nav-link" href="#"><i class="fas fa-search"></i></a>
-                    </li>
-                    <li class="nav-item me-3">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="badge bg-danger" id="cart-count">0</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-user"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+   
     <!--user-->
     <div class="container mt-5">
         <div class="row">
@@ -129,27 +97,54 @@
           `,
           'payment-cards': `
             <h3>Add Credit/Depit Card</h3>
-            <form>
-              <div class="mb-3">
-                <label for="card-number" class="form-label">Card Number</label>
-                <input type="text" class="form-control" id="card-number" placeholder="Enter card number" />
-              </div>
-              <div class="mb-3">
-                <label for="card-name" class="form-label">Cardholder Name</label>
-                <input type="text" class="form-control" id="card-name" placeholder="Enter cardholder name" />
-              </div>
-              <div class="mb-3">
-                <label for="expiry-date" class="form-label">Expiry Date</label>
-                <input type="month" class="form-control" id="expiry-date" />
-              </div>
-              <div class="mb-3">
-                <label for="cvv" class="form-label">CVV</label>
-                <input type="text" class="form-control" id="cvv" placeholder="Enter CVV" />
-              </div>
-              <div class="mb-3">
-                <button type="submit" class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #048A81;">Save Changes</button>
-              </div>
-            </form>
+
+@if (ViewBag.NotificationMessage != null)
+{
+<div class="alert alert-@ViewBag.NotificationType">
+        @ViewBag.NotificationMessage
+</div>
+}
+<form action="/Order/AddCard" method="post">
+    <div class="form-group">
+        <label for="CardNumber">Card Number</label>
+        <input type="text" asp-for="CardNumber" name="CardNumber" class="form-control" required />
+        <span asp-validation-for="CardNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ExpiryMonth">Expiry Month</label>
+        <input type="text" asp-for="ExpiryMonth" name="ExpiryMonth" class="form-control" required />
+        <span asp-validation-for="ExpiryMonth" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ExpiryYear">Expiry Year</label>
+        <input type="text" asp-for="ExpiryYear" name="ExpiryYear" class="form-control" required />
+        <span asp-validation-for="ExpiryYear" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="CVC">CVC</label>
+        <input type="text" asp-for="CVC" name="CVC" class="form-control" required />
+        <span asp-validation-for="CVC" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Type">Card Type</label>
+        <input type="hidden" asp-for="Type" name="Type" class="form-control" />
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="CustomerId">Customer ID</label>
+        <input type="hidden" asp-for="CustomerId" name="CustomerId" class="form-control" value="" required />
+        <span asp-validation-for="CustomerId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn">Add Card</button>
+</form>
+
+
           `,
           'address': `
             <h3>Delivery Address</h3>
@@ -355,4 +350,11 @@
             alert.style.display = 'none';
         }
     }, 5000); 
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+
 </script>
