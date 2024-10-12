@@ -23,8 +23,7 @@
             <h1>Sign Up</h1>
             <p>Create an account to order your favorite food</p>
 
-             <form method="post" action="/Master/SaveNewCustomer">
-
+<form method = "post" asp-action="SaveNewCustomer" asp-controller="Master" enctype="multipart/form-data">
                 <div class="input-group">
                     <label>First Name</label>
                     <input type="text"  name="FirstName"  required>
@@ -56,20 +55,21 @@
                     <label>Confirm Password</label>
                     <input type="Password" name="ConfirmPassword" required>
                 </div>
-                @* address *@
 
                  <div class="input-group">
                     <label>City</label>
                     <input type="text" name="City" required>
                 </div>
 
+                <label for="file">Image</label>
+                    <input type="file"  name="immg" accept="image/*" required>
 
 
 
                 <button type="submit" class="btn">Create Account</button>
             </form>
             <div class="redirect-login">
-                <p>Already have an account? <a href="/Master/CustomerLogin"><button class="text-button">Login here</button></a>
+                <p>Already have an account? <a href="/Master/Login"><button class="text-button">Login here</button></a>
             </div>
         </div>
     </div>

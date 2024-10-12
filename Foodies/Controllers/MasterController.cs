@@ -1,3 +1,4 @@
+using Foodies.Models;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +48,7 @@ namespace Foodies.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveNewCustomer(RegisterationViewModel cus)
+        public async Task<IActionResult> SaveNewCustomer(RegisterationViewModel cus, IFormFile immg)
         {
 
             if (ModelState.IsValid)
@@ -63,7 +64,7 @@ namespace Foodies.Controllers
                     user.Email = cus.Email;
                     user.PhoneNumber = cus.phoneNumber;
 
-
+                    string? usrl = await _imageUploader.UploadImageAsync(immg);
                     IdentityResult result = await _userManager.CreateAsync(user, cus.Password);
 
                     Customer customer = new Customer
@@ -71,7 +72,7 @@ namespace Foodies.Controllers
                         Id = user.Id,
                         FirstName = cus.FirstName,
                         LastName = cus.LastName,
-
+                        img = usrl,
 
                         Address = new Address // Initialize Address object
                         {
@@ -102,7 +103,7 @@ namespace Foodies.Controllers
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
                         //return RedirectToAction("Cusolginsignup");
-                        return RedirectToAction("restaurant", "menu");
+                        return RedirectToAction("restaurant", "menu", customer.Id);
 
 
                     }
@@ -243,19 +244,20 @@ namespace Foodies.Controllers
                         .FirstOrDefaultAsync(x => x.Id == user.Id);
 
                          ViewBag.fav = cus;
+                        var cus = _context.Customer.Where(x => x.Id == user.Id);
 
-                        return RedirectToAction("restaurant", "menu", new { id = cus });
-                        }
-                        else if (x == "Admin")
-                        {
-                            return RedirectToAction("AdminProfile", "Home", new { id = user.Id });
-                        }
-                        else
-                        {
-                            ViewBag.NotificationMessage = "Unrecognized role.";
-                            ViewBag.NotificationType = "danger";
-                            return View("Login");
-                        }
+                        return RedirectToAction("restaurant", "menu", new { id = user.Id });
+                    }
+                    else if (x == "Admin")
+                    {
+                        return RedirectToAction("AdminProfile", "Home", new { id = user.Id });
+                    }
+                    else
+                    {
+                        ViewBag.NotificationMessage = "Unrecognized role.";
+                        ViewBag.NotificationType = "danger";
+                        return View("Login");
+                    }
                     }
                     else
                     {
