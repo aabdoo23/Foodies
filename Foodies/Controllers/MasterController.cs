@@ -245,9 +245,9 @@ namespace Foodies.Controllers
                         .FirstOrDefaultAsync(x => x.Id == user.Id);
 
                          ViewBag.fav = cus;
-                        var cus = _context.Customer.Where(x => x.Id == user.Id);
+                        var cust = _context.Customer.Where(x => x.Id == user.Id);
 
-                        return RedirectToAction("restaurant", "menu", new { id = user.Id });
+                        return RedirectToAction("restaurant", "menu");
                     }
                     else if (x == "Admin")
                     {
