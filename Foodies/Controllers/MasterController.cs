@@ -94,12 +94,6 @@ namespace Foodies.Controllers
                         await _userManager.AddToRoleAsync(user, "Customer");
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        Customer cust = await _context.Customer
-                        .Include(c => c.FavouriteRestaurants)
-                        .FirstOrDefaultAsync(x => x.Id == user.Id);
-
-                        ViewBag.fav = cust;
-
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
                         //return RedirectToAction("Cusolginsignup");
@@ -238,16 +232,9 @@ namespace Foodies.Controllers
                     //        /menu/restaurant
                     if (x == "Customer")
                     {
+                        var cus = _context.Customer.Where(x => x.Id == user.Id);
 
-                         //var cus = _context.Customer.Where(x => x.Id == user.Id);
-                         Customer cus = await _context.Customer
-                        .Include(c => c.FavouriteRestaurants)
-                        .FirstOrDefaultAsync(x => x.Id == user.Id);
-
-                         ViewBag.fav = cus;
-                        var cust = _context.Customer.Where(x => x.Id == user.Id);
-
-                        return RedirectToAction("restaurant", "menu");
+                        return RedirectToAction("restaurant", "menu", new { id = user.Id });
                     }
                     else if (x == "Admin")
                     {
@@ -255,9 +242,7 @@ namespace Foodies.Controllers
                     }
                     else
                     {
-                        ViewBag.NotificationMessage = "Unrecognized role.";
-                        ViewBag.NotificationType = "danger";
-                        return View("Login");
+                        return RedirectToAction("Profile", "BranchManager", new { id = user.Id });
                     }
                     }
                     else
@@ -322,4 +307,3 @@ namespace Foodies.Controllers
         */
     }
 }
-

@@ -11,7 +11,7 @@
         public string Category { get; set; }
         public string? img { get; set; }
 
-        public int? Quantity { get; set; } = 1;
+      //  public int? Quantity { get; set; } = 1;
         public string Description { get; set; }
 
         public virtual Restaurant Resturant { get; set; } = default!;

@@ -26,6 +26,7 @@ namespace Foodies.Controllers
             _userManager = userManager;
         }
 
+        List<string> lst=new List<string>();    
         // List Menu Items for the Logged-in Admin's Restaurant
         //public async Task<IActionResult> Admin()
         //{

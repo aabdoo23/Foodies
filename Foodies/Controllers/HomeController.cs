@@ -99,8 +99,7 @@ namespace Foodies.Controllers
                 Name = Menu.Name,
                 Category = Menu.Category,
                 Description = Menu.Description,
-                Price = Menu.Price,
-                img = usrl,
+                img= usrl,
                 Resturant = await _context.Restaurant.FindAsync(restaurantId)
             };
 
@@ -128,7 +127,6 @@ namespace Foodies.Controllers
                 mnu.Price = Menu.Price;
                 mnu.Category = Menu.Category;
                 mnu.Description = Menu.Description;
-                mnu.Resturant = Menu.Resturant;
                 await _context.SaveChangesAsync();
                 var adm = await _context.Admin.SingleOrDefaultAsync(x => x.RestaurantId == mnu.Resturant.Id);
                 return RedirectToAction("AdminProfile", adm);
@@ -197,10 +195,8 @@ namespace Foodies.Controllers
                 return RedirectToAction("Error");
             }
         }
-        public async Task<IActionResult> UserView()
+        public async Task<IActionResult> UserView(string id)
         {
-            var id = _userManager.GetUserId(User);
-
             var Cususer = await _userManager.FindByIdAsync(id);
 
             var cutomer=_context.Customer.Where(x=>x.Id==id).FirstOrDefault();  
@@ -347,6 +343,7 @@ namespace Foodies.Controllers
 
             };
             _context.BranchManager.Add(newBranchMngr);
+            await _userManager.AddToRoleAsync(user, "BranchManager");
             _context.SaveChanges();
             //return C
             return RedirectToAction("AdminProfile", admin);
