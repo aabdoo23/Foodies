@@ -43,30 +43,122 @@
             <label>Your total points: <input type="text" id="points" value="470" readonly></label>
         </div>
 
-        <div class="payment-section">
-            <p class="section-title">Payment Options</p>
-            <label class="radio-label"><input type="radio" name="payment"> Card</label>
-            <label class="radio-label"><input type="radio" name="payment"> Cash</label>
-            <div>
-                <label><input type="checkbox" id="use-points"> Use Your Points</label>
-            </div>
-        </div>
+       <div class="payment-section">
+    <label class="radio-label">
+        <input type="radio" name="payment" value="Card" id="cardPayment"> Card
+    </label>
 
-        <div class="order-summary">
-            <p>Sub Total: <span class="price" id="subtotal">@ViewBag.Total EGP</span></p>
-            <p>Discount: <span class="price" id="discount">0 EGP</span></p>
-            <p>Delivery: <span class="price" id="delivery">0 EGP</span></p>
+    @{
+       if (ViewBag.fav?.card == null)
+            {
+            <form action="/Home/UserView" method="post">
+                <button type="submit">Add Card First</button>
+                </form>
+            }
+            
+        
+    }
 
-            <p class="total-amount">Total: <span class="price" id="total"> 444.00 EGP</span></p>
-        </div>
+    <label class="radio-label">
+        <input type="radio" name="payment" value="Cash" id="cashPayment"> Cash
+    </label>
 
-        <button class="confirm-btn">Confirm Order</button>
+    <div>
+        <label><input type="checkbox" id="use-points"> Use Your Points</label>
     </div>
-  </section>
+
+    <div class="order-summary">
+        <p>Sub Total: <span class="price" id="subtotal">@ViewBag.Total EGP</span></p>
+        <p>Discount: <span class="price" id="discount">0 EGP</span></p>
+        <p>Delivery: <span class="price" id="delivery">0 EGP</span></p>
+        <p class="total-amount">Total: <span class="price" id="total">444.00 EGP</span></p>
+    </div>
+
+
+    <form asp-action="OrderView" asp-controller="Order" method="post" onsubmit="return createPayment(this);">
+        <input type="hidden" name="total" value="@ViewBag.Total" />
+           <input type="hidden" name="paymentMethod" id="paymentMethod"  />
+        <button type="submit" class="confirm-btn">View Order</button>
+    </form>
+</div>
+</section>
 </body>
 </html>
-<<style>
-    
+
+<script>
+function createPayment(form) {
+    // Get the selected payment method
+    const selectedPayment = document.querySelector('input[name="payment"]:checked');
+
+    if (selectedPayment) {
+        // Set the value of the hidden input field to the selected payment method
+        document.getElementById('paymentMethod').value = selectedPayment.value; // This captures "Card" or "Cash"
+
+        // Log the value for debugging
+        console.log("Selected Payment Method:", selectedPayment.value); // This will log "Card" or "Cash"
+
+        // Return true to allow the form to submit
+        return true; 
+    } else {
+        // Prevent form submission and alert the user
+        alert("Please select a payment method.");
+        return false; // Prevent the form from submitting
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const pointsInput = document.getElementById('points');
+    const usePointsCheckbox = document.getElementById('use-points');
+    const subtotalElement = document.getElementById('subtotal');
+    const discountElement = document.getElementById('discount');
+    const totalElement = document.getElementById('total');
+    const delivery = document.getElementById('delivery');
+
+    const SUBTOTAL_AMOUNT = @ViewBag.Total; 
+    const DISCOUNT_PERCENTAGE = 0.10; 
+
+    function updateTotal() {
+        let points = parseInt(pointsInput.value, 10) || 0;
+        let subtotal = SUBTOTAL_AMOUNT;
+        let discount = 0;
+        // let deliver = delivery;
+        if (usePointsCheckbox.checked && points > 0) {
+            discount = points * DISCOUNT_PERCENTAGE;
+        }
+        if (discount > subtotal) {
+            discount = subtotal;
+        }
+        discountElement.textContent = `${discount.toFixed(2)} EGP`;
+        totalElement.textContent = `${(subtotal - discount ).toFixed(2)} EGP`;
+    }
+    usePointsCheckbox.addEventListener('change', updateTotal);
+        pointsInput.addEventListener('input', updateTotal);
+    updateTotal();
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const deliveryOption = document.getElementById('delivery-option');
+    const pickupOption = document.getElementById('pickup-option');
+    const addressSection = document.querySelector('.address-section');
+    const deliveryInfo = document.querySelector('.delivery-info');
+
+    function updateAddressAndArrival() {
+        if (pickupOption.checked) {
+            addressSection.classList.add('pale');
+            deliveryInfo.classList.add('pale');
+        } else {
+            addressSection.classList.remove('pale');
+            deliveryInfo.classList.remove('pale');
+        }
+    }
+    updateAddressAndArrival();
+    deliveryOption.addEventListener('change', updateAddressAndArrival);
+    pickupOption.addEventListener('change', updateAddressAndArrival);
+});
+
+</script>
+
+    <style>
+
 
     /* font-family: 'Poppins', sans-serif; */
 
@@ -365,54 +457,3 @@
 }
 
 </style>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const pointsInput = document.getElementById('points');
-    const usePointsCheckbox = document.getElementById('use-points');
-    const subtotalElement = document.getElementById('subtotal');
-    const discountElement = document.getElementById('discount');
-    const totalElement = document.getElementById('total');
-    const delivery = document.getElementById('delivery');
-
-    const SUBTOTAL_AMOUNT = @ViewBag.Total; 
-    const DISCOUNT_PERCENTAGE = 0.10; 
-
-    function updateTotal() {
-        let points = parseInt(pointsInput.value, 10) || 0;
-        let subtotal = SUBTOTAL_AMOUNT;
-        let discount = 0;
-        // let deliver = delivery;
-        if (usePointsCheckbox.checked && points > 0) {
-            discount = points * DISCOUNT_PERCENTAGE;
-        }
-        if (discount > subtotal) {
-            discount = subtotal;
-        }
-        discountElement.textContent = `${discount.toFixed(2)} EGP`;
-        totalElement.textContent = `${(subtotal - discount ).toFixed(2)} EGP`;
-    }
-    usePointsCheckbox.addEventListener('change', updateTotal);
-        pointsInput.addEventListener('input', updateTotal);
-    updateTotal();
-});
-document.addEventListener('DOMContentLoaded', function() {
-    const deliveryOption = document.getElementById('delivery-option');
-    const pickupOption = document.getElementById('pickup-option');
-    const addressSection = document.querySelector('.address-section');
-    const deliveryInfo = document.querySelector('.delivery-info');
-
-    function updateAddressAndArrival() {
-        if (pickupOption.checked) {
-            addressSection.classList.add('pale');
-            deliveryInfo.classList.add('pale');
-        } else {
-            addressSection.classList.remove('pale');
-            deliveryInfo.classList.remove('pale');
-        }
-    }
-    updateAddressAndArrival();
-    deliveryOption.addEventListener('change', updateAddressAndArrival);
-    pickupOption.addEventListener('change', updateAddressAndArrival);
-});
-
-</script>

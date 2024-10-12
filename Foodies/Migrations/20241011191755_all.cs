@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Foodies.Migrations
 {
     /// <inheritdoc />
-    public partial class favo : Migration
+    public partial class all : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,18 +67,20 @@ namespace Foodies.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payment",
+                name: "Card",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "money", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "DATETIME", nullable: false)
+                    CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpiryMonth = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpiryYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CVC = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Payment", x => x.Id);
+                    table.PrimaryKey("PK_Card", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,6 +235,27 @@ namespace Foodies.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Payment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<decimal>(type: "money", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    cardId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Payment_Card_cardId",
+                        column: x => x.cardId,
+                        principalTable: "Card",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Branch",
                 columns: table => new
                 {
@@ -270,6 +293,7 @@ namespace Foodies.Migrations
                     Price = table.Column<int>(type: "int", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     img = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Quantity = table.Column<int>(type: "int", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ResturantId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -649,6 +673,11 @@ namespace Foodies.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Payment_cardId",
+                table: "Payment",
+                column: "cardId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rating_CustomerId",
                 table: "Rating",
                 column: "CustomerId");
@@ -718,6 +747,9 @@ namespace Foodies.Migrations
 
             migrationBuilder.DropTable(
                 name: "Restaurant");
+
+            migrationBuilder.DropTable(
+                name: "Card");
 
             migrationBuilder.DropTable(
                 name: "Address");

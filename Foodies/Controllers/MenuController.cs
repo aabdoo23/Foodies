@@ -107,12 +107,8 @@ namespace Foodies.Controllers
 
         public async Task<IActionResult> Favourite()
         {
-            var userId = _userManager.GetUserId(User);
-            Customer customer = await _context.Customer
-                .Include(c => c.FavouriteRestaurants)
-                .FirstOrDefaultAsync(x => x.Id == userId);
-
-            ViewBag.fav = customer;
+            //var userId = _userManager.GetUserId(User);
+            
 
 
             return View();

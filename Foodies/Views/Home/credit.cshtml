@@ -1,0 +1,21 @@
+﻿<html>
+	<body>
+        <h3>Add Credit/Depit Card</h3>
+            <form asp-action="ProcessPayment" method="post">
+            <label>Card Number</label>
+            <input type="text" name="CardNumber" />
+
+            <label>Expiry Month</label>
+            <input type="text" name="ExpiryMonth" />
+
+            <label>Expiry Year</label>
+            <input type="text" name="ExpiryYear" />
+
+            <label>CVC</label>
+            <input type="text" name="CVC" />
+
+            <button type="submit">Pay</button>
+        </form>
+
+	</body>
+</html>

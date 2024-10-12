@@ -10,6 +10,10 @@ namespace Foodies.Models
         [Column(TypeName = "DATETIME")]
         public DateTime PaymentDate { get; set; }
         public virtual Order Order { get; set; } = default!;
+
+        public int ?cardId { get; set; }
+        public virtual Card ?card { get; set; }
+
     }
 
 }

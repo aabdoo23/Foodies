@@ -94,6 +94,12 @@ namespace Foodies.Controllers
                         await _userManager.AddToRoleAsync(user, "Customer");
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        Customer cust = await _context.Customer
+                        .Include(c => c.FavouriteRestaurants)
+                        .FirstOrDefaultAsync(x => x.Id == user.Id);
+
+                        ViewBag.fav = cust;
+
                         ViewBag.NotificationMessage = "Customer registered successfully!";
                         ViewBag.NotificationType = "success";
                         //return RedirectToAction("Cusolginsignup");
@@ -232,6 +238,14 @@ namespace Foodies.Controllers
                     //        /menu/restaurant
                     if (x == "Customer")
                     {
+
+                         //var cus = _context.Customer.Where(x => x.Id == user.Id);
+                         Customer cus = await _context.Customer
+                        .Include(c => c.FavouriteRestaurants)
+                        .FirstOrDefaultAsync(x => x.Id == user.Id);
+
+                         ViewBag.fav = cus;
+
                         var cus = _context.Customer.Where(x => x.Id == user.Id);
 
                         return RedirectToAction("restaurant", "menu", new { id = user.Id });

@@ -6,7 +6,7 @@
     
     <div class="food-card-fav">
         @{
-            if (@Model.Customer.FavouriteRestaurants.Count > 0 || @Model.Customer.FavouriteRestaurants == null)
+            if (@Model.Customer.FavouriteRestaurants.Count > 0 || @Model.Customer.FavouriteRestaurants != null)
             {
 
                 foreach (var r in @Model.Customer.FavouriteRestaurants)
@@ -30,8 +30,8 @@
         }
     </div>
 
-    <img class="food-card-img" src="@Model.ImageUrl" alt="food image" 
-    onclick="window.location.href='@Model.Url'"/>
+    @* <img class="food-card-img" src="@Model.ImageUrl" alt="food image" 
+    onclick="window.location.href='@Model.Url'"/> *@
 
            <p  class="food-card-text-title" 
            onclick="window.location.href='@Model.Url'">@Model.Title</p>

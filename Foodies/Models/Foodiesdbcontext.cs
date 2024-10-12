@@ -23,6 +23,25 @@ namespace Foodies.Models
            .WithOne(p => p.BranchManager)
            .HasForeignKey<BranchManager>(o => o.BranchId);
 
+            //one restaurant to many menuitems
+            modelBuilder.Entity<MenuItem>()
+            .HasOne(p => p.Resturant)
+            .WithMany(c => c.MenuItems)
+            .HasForeignKey(p => p.ResturantId);
+
+            // one to many payment 
+            modelBuilder.Entity<Payment>()
+            .HasOne(p => p.card)
+            .WithMany(c => c.payments)
+            .HasForeignKey(p => p.cardId);
+
+            //one to one card customer 
+            modelBuilder.Entity<Card>()
+            .HasOne(o => o.customer)
+           .WithOne(p => p.card)
+           .HasForeignKey<Card>(o => o.CustomerId);
+
+
             modelBuilder.Entity<Customer>()
             .HasOne(o => o.Address)
            .WithOne(p => p.Customer)
@@ -102,6 +121,7 @@ namespace Foodies.Models
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<BranchManager> BranchManager { get; set; }
+        public virtual DbSet<Card> Card { get; set; }
 
         public virtual DbSet<Address> Address { get; set; }
 
