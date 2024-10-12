@@ -238,6 +238,7 @@ namespace Foodies.Controllers
                     //        /menu/restaurant
                     if (x == "Customer")
                     {
+
                          //var cus = _context.Customer.Where(x => x.Id == user.Id);
                          Customer cus = await _context.Customer
                         .Include(c => c.FavouriteRestaurants)

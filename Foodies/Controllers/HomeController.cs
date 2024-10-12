@@ -100,7 +100,6 @@ namespace Foodies.Controllers
                 Category = Menu.Category,
                 Description = Menu.Description,
                 Price = Menu.Price,
-                img= usrl,
                 Resturant = await _context.Restaurant.FindAsync(restaurantId)
             };
 
