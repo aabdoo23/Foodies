@@ -1,6 +1,7 @@
 ﻿@model Restaurant
  <br /> <br /> <br /> <br /> <br />
-<form asp-action="SaveAddmnu" method="post">
+    <form method = "post" asp-action="SaveAddmnu" asp-controller="Home" enctype="multipart/form-data">
+
     <input type="hidden" name="restaurantId" value="@Model.Id" />
     <div>
         <label for="Name">Enter Name</label>
@@ -14,6 +15,10 @@
 
         <label for="Description">Enter Description</label>
         <input type="text" name="Description" class="form-control" required />
+
+        <label for="file">Upload Image:</label>
+        <input type="file"  name="immg" accept="image/*" required>
+
     </div>
 
     <br />

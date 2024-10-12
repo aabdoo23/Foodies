@@ -18,17 +18,15 @@ namespace Foodies.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-      
-
-
-
-        public HomeController(FoodiesDbContext context, ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> baseUser, RoleManager<IdentityRole> roleManager)
+        private readonly ImageUploader _imageUploader;  
+        public HomeController(FoodiesDbContext context, ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> baseUser, RoleManager<IdentityRole> roleManager, ImageUploader imageUploader)
         {
             _context = context;
             _logger = logger;
             _roleManager = roleManager;
             _userManager = baseUser;
             _signInManager = signInManager;
+            _imageUploader = imageUploader;
 
         }
         public IActionResult CustomerView()
@@ -52,7 +50,9 @@ namespace Foodies.Controllers
             Admine.LastName= Admncon.LastName;
             Admine.PhoneNumber = Adminmndr.PhoneNumber;
             Admine.Resturantid = Admncon.RestaurantId;
-   
+            Admine.img = restaurant.Photo;
+
+
 
             ViewBag.Rest = restaurant; 
 
@@ -91,14 +91,19 @@ namespace Foodies.Controllers
 
             return View(restu);
         }
-        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, int restaurantId)
+        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, int restaurantId, IFormFile immg)
         {
+            string? usrl = await _imageUploader.UploadImageAsync(immg);
             MenuItem mnu = new MenuItem
             {
                 Name = Menu.Name,
                 Category = Menu.Category,
                 Description = Menu.Description,
+
                 Price = Menu.Price,
+
+                img= usrl,
+
                 Resturant = await _context.Restaurant.FindAsync(restaurantId)
             };
 
@@ -214,6 +219,7 @@ namespace Foodies.Controllers
             cusview.bulding = addrress.Building;
             cusview.Points= cutomer.Points;
             cusview.Location = addrress.Location;
+            cusview.img= cutomer.img;
             return View(cusview);
         }
         
