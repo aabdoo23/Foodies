@@ -4,20 +4,49 @@ using CreditCardValidator;
 using Foodies.Models;
 using Foodies.Migrations;
 using System.Collections.Generic;
+using Foodies.Controllers;
+using Microsoft.Identity.Client;
+using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 public class OrderController : Controller
 {
     private readonly FoodiesDbContext _context;
     //static private int cnt = 0;
     private List<MenuItem> myCart = new List<MenuItem>();
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly GeminiController _geminiController;
 
 
-    public OrderController(FoodiesDbContext context ,UserManager<IdentityUser> userManager)
+    public OrderController(FoodiesDbContext context ,UserManager<IdentityUser> userManager,
+        GeminiController geminiController)
     {
         _context = context;
         _userManager = userManager;
+        _geminiController = geminiController;
     }
 
+    public async Task<int> getNearestBranch(int resId)
+    {
+        List<double> closest= new List<double>();
+        int branchId=1;
+        double val = double.MaxValue;
+        var userId = _userManager.GetUserId(User);
+        Customer customer = await _context.Customer.Where(x => x.Id == userId).Include(a=>a.Address).FirstOrDefaultAsync();
+        Restaurant rest = _context.Restaurant.Where(x => x.Id == resId).Include(b => b.Branches).FirstOrDefault();
+        foreach (var b in rest.Branches)
+        {
+            string result = await _geminiController.Generate($"distance%20between%20{b.Address.Location}%20and%20{customer.Address.Location}%20in%20km%20short%20answer");
+            string numericPart = Regex.Match(result, @"\d+(\.\d+)?").Value;
+            double dist = double.Parse(numericPart);
+            if(val > dist)
+            {
+                val = dist;
+                branchId = b.BranchId;
+            }
+        }
+        return branchId;
+    }
+    
     [HttpPost]
     public async Task< IActionResult> AddCard(Card card)
     {
@@ -115,14 +144,13 @@ public class OrderController : Controller
 
         ////order.Branch
         //order.Branch = 
-        Restaurant rest = _context.Restaurant.Where(x => x.Id == int.Parse(Request.Cookies["restId"]))
-            .Include(b => b.Branches).SingleOrDefault();
+        int restID = int.Parse(Request.Cookies["restId"]);
+        //Restaurant rest = _context.Restaurant.Where(x => x.Id == int.Parse(Request.Cookies["restId"]))
+        //    .Include(b => b.Branches).SingleOrDefault();
         //return Content($"{rest.Branches[0]} hoho");
-
-        Branch branch = rest.Branches[0];
+        int branchID = await getNearestBranch(restID);
+        Branch branch = _context.Branch.Where(x=> x.BranchId == branchID).SingleOrDefault();
         order.Branch = branch;
-
-
 
         foreach (var cookie in Request.Cookies)
         {
@@ -169,6 +197,8 @@ public class OrderController : Controller
         return View();
     }
     
+
+  
     //Cart
     public IActionResult addCart(int itemId)
     {

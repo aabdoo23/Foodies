@@ -15,6 +15,10 @@ namespace Foodies.Models
         public int? PaymentId { get; set; } // Foreign key added
         public virtual List<MenuItem> Items { get; set; }
 
+
+    
+
+        //public int BranchId { get; set; } // Foreign key added
         public virtual Branch Branch { get; set; }
 
 

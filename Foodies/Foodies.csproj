@@ -12,6 +12,7 @@
     <PackageReference Include="CreditCardValidator" Version="3.0.1" />
     <PackageReference Include="FirebaseAdmin" Version="3.0.1" />
     <PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
@@ -27,6 +28,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="System.Net.Requests" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Views\NewFolder1\" />
+    <Folder Include="Views\NewFolder\" />
     <Folder Include="wwwroot\Image\" />
     <Folder Include="wwwroot\assets\images\order_history\" />
     <Folder Include="Views\BranchManager\" />
