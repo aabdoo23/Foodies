@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check API Key</title>
+</head>
+<body>
+    <h1>Checking API Key...</h1>
+    <div id="result"></div>
+
+    <script>
+        const apiKey = 'AIzaSyC4zv8SAzsKS3GzcSreWRg73Bt_NOpuRYw';  // Replace with your API key
+        const apiUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=Seattle&destinations=San+Francisco&key=AIzaSyC4zv8SAzsKS3GzcSreWRg73Bt_NOpuRYw`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                if (data.status === "OK") {
+                    resultDiv.textContent = "API key is valid!";
+                } else {
+                    resultDiv.textContent = `API error: ${data.error_message}`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.message}`;
+            });
+    </script>
+</body>
+</html>

@@ -12,5 +12,7 @@
         public string? Street { get; set; }
         public string? bulding { get; set; }
         public string? Location { get; set; }
+        public string? img { get; set; }
+
     }
 }

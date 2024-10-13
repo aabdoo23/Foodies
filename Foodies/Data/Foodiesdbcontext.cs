@@ -23,6 +23,25 @@ namespace Foodies.Data
            .WithOne(p => p.BranchManager)
            .HasForeignKey<BranchManager>(o => o.BranchId);
 
+            //one restaurant to many menuitems
+            modelBuilder.Entity<MenuItem>()
+            .HasOne(p => p.Resturant)
+            .WithMany(c => c.MenuItems)
+            .HasForeignKey(p => p.ResturantId);
+
+            // one to many payment 
+            modelBuilder.Entity<Payment>()
+            .HasOne(p => p.card)
+            .WithMany(c => c.payments)
+            .HasForeignKey(p => p.cardId);
+
+            //one to one card customer 
+            modelBuilder.Entity<Card>()
+            .HasOne(o => o.customer)
+           .WithOne(p => p.card)
+           .HasForeignKey<Card>(o => o.CustomerId);
+
+
             modelBuilder.Entity<Customer>()
             .HasOne(o => o.Address)
            .WithOne(p => p.Customer)
@@ -78,7 +97,16 @@ namespace Foodies.Data
             //.HasMany(o => o.Items)
             //.WithMany(mi => mi.Orders)
             //.UsingEntity(j => j.ToTable("OrderMenuItems"));
-
+            
+            //many to many
+            modelBuilder.Entity<Customer>()
+            .HasMany(c => c.FavouriteRestaurants)
+            .WithMany(r => r.FavouriteCustomers)
+            .UsingEntity<Dictionary<string, object>>(
+                "Favourites",
+                r => r.HasOne<Restaurant>().WithMany().HasForeignKey("RestaurantId"),
+                c => c.HasOne<Customer>().WithMany().HasForeignKey("CustomerId")
+            );
             base.OnModelCreating(modelBuilder);
         }
 
@@ -93,6 +121,7 @@ namespace Foodies.Data
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<BranchManager> BranchManagers { get; set; }
+        public virtual DbSet<Card> Cards { get; set; }
 
         public virtual DbSet<Address> Addresses { get; set; }
 

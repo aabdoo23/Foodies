@@ -2,20 +2,85 @@
 @model FoodCardViewModel
 
 
-<div class="food-card" onclick="window.location.href='@Model.Url'">
+<div class="food-card" >
     
     <div class="food-card-fav">
-        <i class="bi bi-heart"></i>  
+        @{
+            if (@Model.Customer.FavouriteRestaurants != null && @Model.Customer.FavouriteRestaurants.Count > 0  )
+            {
+
+                foreach (var r in @Model.Customer.FavouriteRestaurants)
+                {
+                    if(r.Id == Model.Id)
+                    {
+                        <i class="bi bi-heart-fill" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+                        break;
+                    }
+                    else
+                    {
+                        <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+                        break;
+                    }
+                }
+            }
+            else
+            {
+             <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+            }
+        }
     </div>
 
-    <img class="food-card-img" src="@Model.ImageUrl" alt="food image" />
+    @* <img class="food-card-img" src="@Model.ImageUrl" alt="food image" 
+    onclick="window.location.href='@Model.Url'"/> *@
 
-           <p  class="food-card-text-title">@Model.Title</p>
+           <p  class="food-card-text-title" 
+           onclick="window.location.href='@Model.Url'">@Model.Title</p>
 
         
         
 
 </div>
+
+<script>
+    function addToFavourites(resId) {
+        var button = document.getElementById("fav-" + resId);
+        
+        if (button.classList.contains("bi-heart")) {
+            button.classList.remove("bi-heart");
+            console.log("hello");
+            button.classList.add("bi-heart-fill");
+
+            $.ajax({
+                url: '/menu/addToFav', 
+                type: 'post', 
+                data: { resId: resId },
+                success: function(response) {
+                    alert('added to fav');
+                },
+                error: function(err) {
+                    console.error('Error adding to fav', err);
+                }
+            });
+        }
+        else {
+            button.classList.remove("bi-heart-fill");
+            button.classList.add("bi-heart");
+            $.ajax({
+                url: '/menu/removeFav', 
+                type: 'post', 
+                data: { resId: resId },
+                success: function(response) {
+                    alert('rem from fav');
+                },
+                error: function(err) {
+                    console.error('Error rem  fav', err);
+                }
+            });
+        }
+
+
+    }
+</script>
 <style>
     /*food category card*/
     .faIcon {
@@ -74,18 +139,22 @@
         border:none;
         
     }
-    .bi-heart{
+    .bi-heart, .bi-heart-fill{
         font-size: 1.9rem;
-        color: var(--black);
         z-index: 2;
         border-raduis: 14px;
         
     }
-    
-    .bi-heart:hover {
+    .bi-heart{
+        color:  var(--black);
+    }
+    .bi-heart-fill{
+       color:  red;
+    }
+    .bi-heart:hover , .bi-heart-fill:hover{
     transform: scale(1.05); /* Slightly scale up the box */
     
-    color: rgba(255, 100, 0, 0.9); /* Red shade on hover (with 30% opacity) */
+    color: rgba(255, 100, 50, 0.9); /* Red shade on hover (with 30% opacity) */
 
 }    
     /*Text*/

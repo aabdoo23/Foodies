@@ -1,0 +1,305 @@
+﻿
+ @model Order
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Cart</title>
+     <link rel="stylesheet" href="~/css/Main.css"> 
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" /> *@
+    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> *@
+    @* <script src="script.js" defer></script> *@
+</head>
+<body>
+  <nav>
+
+    <div class="nav-icons">
+        <i class="user-icon">👤</i>
+        <i class="search-icon">🔍</i>
+        <i class="cart-icon">🛒 Cart (<span id="cart-count">3</span>)</i>
+        <i class="menu-icon">☰</i>
+    </div>
+  </nav>
+
+  <section class="cart-section">
+       <section class="order-details-section">
+        <h2>Order Details 📝</h2>
+        <div class="order-details">
+            <div class="customer-info">
+                <p><strong>Customer:</strong>@Model.Customer.FirstName @Model.Customer.LastName</p>
+<p><strong>Order Date:</strong> @Model.OrderDate</p>  
+<p>
+                   @* <strong>Status:</strong>
+                    <select id="order-status" onchange="editOrderStatus()">
+                        <option value="Delivered">Delivered</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Canceled">Canceled</option>
+                    </select>*@
+                <form action="/BranchManager/Changestate/@Model.Id" method="get">
+    <label for="order-status">Order Status:</label>
+    <select id="order-status" name="state" onchange="editOrderStatus()">
+        <option value="Delivered">Delivered</option>
+        <option value="Pending">Pending</option>
+        <option value="Canceled">Canceled</option>
+    </select>
+    <input type="submit" value="Submit" />
+</form>
+
+                </p>
+            </div>
+      <div class="cart-items">
+
+
+            
+                @foreach (var item in Model.Items)
+                {
+                    @if (item != null)
+                    {
+                             <div class="cart-item" data-price="@item.Price" 
+                                           data-item-id="@item.Id">
+                                <img src="@item.img" alt="@item.Name" loading="lazy">
+                              <div class="item-details">
+                                  <p class="item-name">@item.Name</p>
+                                  <p class="restaurant">Restaurant: KFC</p>
+                              </div>
+                                      <div class="item-price">@item.Price</div>
+                              <div class="item-quantity">
+                                  <button class="decrease-btn">-</button>
+                                  <span class="quantity">1</span>
+                                  <button class="increase-btn">+</button>
+                              </div>
+                                      <i class="fa-solid fa-trash delicon"  ></i>
+                          </div>
+                    }
+                }
+            
+          
+
+
+
+
+
+
+
+
+
+      </div>
+      <div class="special-instructions">
+        <p class="special-instructions-title">📋 Special Instructions (Optional)</p>
+        <input type="text" class="special-input" placeholder="Enter your instructions...">
+    </div>
+
+      <div class="checkout-summary">
+          <div class="subtotal">
+              <p>Sub Total</p>
+              <p id="subtotal">400EGP</p>
+          </div>
+          <div class="delivery">
+              <p>Delivery</p>
+              <p>20EGP</p>
+          </div>
+          <div class="total">
+              <p>Total</p>
+              <p id="total">420EGP</p>
+          </div>
+      </div>
+
+     
+  </section>
+
+</body>
+</html>
+<style>
+
+
+
+
+
+.nav-icons i {
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+
+#empty{
+    color:red;
+    text-align: center;
+    font-size: 20px;
+    font-weight:bold;
+}
+.cart-section {
+    /* margin-top: 300px; */
+    max-width: 800px;
+    border-radius: 15px;
+    margin: 60px auto;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.cart-items , .checkout-buttons, .checkout-summary{
+
+    padding: 25px 30px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.item-details {
+    flex-grow: 1;
+    padding-left: 15px;
+}
+
+.item-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.restaurant {
+    font-size: 14px;
+    color: gray;
+}
+
+.item-price {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+}
+
+.item-quantity button {
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    padding: 4px 10px;
+    cursor: pointer;
+}
+
+.item-quantity button:hover,
+.remove-item:hover {
+    background-color: rgba(46, 191, 165, 0.6);
+}
+
+.remove-item.delicon:hover {
+    background-color: rgba(255, 69, 58, 0.1);
+    color: red;
+}
+
+.item-quantity span {
+    margin: 0 10px;
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.remove-item:hover{
+    color:#c82020
+}
+
+
+.checkout-summary {
+    font-size: 18px;
+}
+
+.checkout-summary div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkout-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkout-buttons button{
+    font-size: 15px;
+}
+
+.delicon{
+    margin-left: 7px;
+    margin-bottom: 3px;
+}
+
+.delicon:hover {
+    color: #c82020;
+}
+.item-price {
+    margin-right: 5px;
+}
+
+.remove-item.delicon:hover {
+    background-color: rgba(255, 69, 58, 0.1);
+    color: red;
+}
+
+
+
+.special-instructions {
+    padding: 10px 30px;
+
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+}
+
+.special-input {
+    display: none; 
+    padding: 18px 7px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    border-radius: 14px;
+    font-size:13px;
+}
+
+.special-instructions .special-input {
+    display: block;
+}
+
+
+.special-instructions:hover .special-input {
+    display: block; 
+}
+
+.special-input:hover {
+    border: 1px solid #4CAF50; 
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.menu-icon:hover{
+    color: white;
+}
+</style>

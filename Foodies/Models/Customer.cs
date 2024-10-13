@@ -6,6 +6,8 @@
         public int Points { get; set; } = 0;
         public string AddressId { get; set; }
         public virtual Address Address { get; set; }
+        public virtual Card card { get; set; }
+
         [NotMapped]
         public virtual List<Restaurant>? FavouriteRestaurants { get; set; }
         public virtual List<Order>? Orders { get; set; }

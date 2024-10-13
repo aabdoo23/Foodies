@@ -1,0 +1,52 @@
+﻿@model string
+
+<form method="get" action="/Home/changepasso">
+	<br /><br /><br /><br /><br />
+    @if (ViewBag.NotificationMessage != null)
+    {
+                                        <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
+            @ViewBag.NotificationMessage
+                                        </div>
+    }
+    <br />
+
+	<input type="hidden" class="form-control" name="id" value="@Model" required />
+     <label  class="form-label">Old password</label>
+	<input type="text" class="form-control" name="oldpas"  required />
+         <label  class="form-label">Old password</label>
+
+	<input type="text" class="form-control" name="Newpass" required />
+    <br />
+  <button type="submit"  class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #3e1ba6;">Chang passowrd</button>
+
+</form>
+<style>
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
+ <script>
+    setTimeout(function () {
+        var alert = document.querySelector('.alert');
+        if (alert) {
+            alert.style.display = 'none';
+        }
+    }, 5000); 
+</script>

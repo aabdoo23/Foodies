@@ -14,19 +14,22 @@ namespace Foodies.Controllers
         private readonly ICustomerService _customerService;
         private readonly IAdminService _adminService;
         private readonly IRestaurantRepository _restaurantRepository;
+        private readonly ImageUploader _imageUploader;
 
         public MasterController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ICustomerService customerService,
             IAdminService adminService,
-            IRestaurantRepository repository)
+            IRestaurantRepository repository,
+            ImageUploader imageUploader)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _customerService = customerService;
             _adminService = adminService;
             _restaurantRepository = repository;
+            _imageUploader = imageUploader;
         }
 
         public IActionResult view()
@@ -41,10 +44,11 @@ namespace Foodies.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveNewCustomer(RegistrationViewModel cus)
+        public async Task<IActionResult> SaveNewCustomer(RegistrationViewModel cus, IFormFile immg)
         {
             if (ModelState.IsValid)
             {
+                //TODO: Edit function to handle img
                 var result = await _customerService.CreateCustomer(cus);
                 if (result != null)
                 {
@@ -70,7 +74,7 @@ namespace Foodies.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AdminSignUp(AdminRegisterViewModel admin)
+        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin, IFormFile immg)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +121,8 @@ namespace Foodies.Controllers
                 ViewBag.NotificationType = "danger";
             }
 
-            return View(admin);
+            return View("AdminSignUp", admin);
+
         }
 
         public IActionResult Login()
@@ -139,7 +144,7 @@ namespace Foodies.Controllers
 
                     if (x == "Customer")
                     {
-                        return RedirectToAction("UserView", "Home", new { id = user.Id });
+                        return RedirectToAction("restaurant", "menu");
                     }
                     else if (x == "Admin")
                     {
@@ -147,26 +152,26 @@ namespace Foodies.Controllers
                     }
                     else
                     {
-                        ViewBag.NotificationMessage = "Unrecognized role.";
-                        ViewBag.NotificationType = "danger";
-                        return View("Login");
+                        return RedirectToAction("Profile", "BranchManager", new { id = user.Id });
                     }
                 }
                 else
                 {
-                    ViewBag.NotificationMessage = "Login failed. Incorrect password.";
+                    ViewBag.NotificationMessage = "Unrecognized role.";
                     ViewBag.NotificationType = "danger";
                     return View("Login");
                 }
             }
             else
             {
-                ViewBag.NotificationMessage = "User not found.";
+                ViewBag.NotificationMessage = "Login failed. Incorrect password.";
                 ViewBag.NotificationType = "danger";
                 return View("Login");
             }
-
+            
+            
         }
+
+
     }
 }
-

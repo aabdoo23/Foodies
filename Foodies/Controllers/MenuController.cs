@@ -1,7 +1,9 @@
 ﻿using Foodies.Interfaces.Repositories;
 using Foodies.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Foodies.Controllers
 {
@@ -44,9 +46,29 @@ namespace Foodies.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> Restaurant()
+        public async Task<IActionResult> Favourite()
         {
+            var userId = _userManager.GetUserId(User);
+            Customer customer = await _context.Customer
+                .Include(c => c.FavouriteRestaurants)
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            ViewBag.fav = customer;
+
+            return View();
+        }
+        public async Task<IActionResult> Restaurant(string id)
+        {
+            ViewBag.cusid=id;
             var restaurants = await _restaurantRepository.GetAll();
+            
+            var userId = _userManager.GetUserId(User);
+            Customer customer = await _context.Customer
+                .Include(c => c.FavouriteRestaurants)
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            ViewBag.fav = customer;
+
             return View(restaurants);
         }
 

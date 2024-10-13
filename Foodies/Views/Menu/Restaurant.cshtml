@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<Restaurant>
 
+
 <html>
     <header>
             <title>Restaurant List</title>
                 <link rel="stylesheet" href="~/css/restaurant.css">
-                @* <link rel="stylesheet" href="~/css/Navbar.css"> *@
+    @* <link rel="stylesheet" href="~/css/Navbar.css"> *@
                 <link rel="stylesheet" href="~/css/Main.css">
-                
 
-@* <nav class="navbar navbar-expand-lg">
+
+    @* <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">
@@ -49,76 +50,105 @@
 
 </header>
 <body>
-    @* components of food categories *@
-    <div class="category-bar d-flex justify-content-center">
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Burger", Icon = "burger", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Pizza", Icon = "pizza-slice", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Desserts", Icon = "ice-cream", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Drinks", Icon = "glass-whiskey", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Salads", Icon = "leaf", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Seafood", Icon = "shrimp", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Chicken", Icon = "drumstick-bite", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Beef", Icon = "bone", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Vegan", Icon = "carrot", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Sushi", Icon = "fish", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Pasta", Icon = "utensils", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Chinese", Icon = "dragon", Url = "" })
-        @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = "Indian", Icon = "pepper-hot", Url = "" })
+
+    @{
+        @foreach (var restaurant in Model)
+        {
+            @await Component.InvokeAsync("CategoryCardViewComponent", new { Text = restaurant.CuisineType, Icon = restaurant.CuisineType, Url = "" })
+        }
 
 
-
+    }
+   <div class="category-bar d-flex justify-content-center">
+    <div class="category-item" data-category="Burger">
+        <button class="category-button">Burger</button>
     </div>
+    <div class="category-item" data-category="Pizza">
+        <button class="category-button">Pizza</button>
+    </div>
+    <div class="category-item" data-category="Desserts">
+        <button class="category-button">Desserts</button>
+    </div>
+    <div class="category-item" data-category="Drinks">
+        <button class="category-button">Drinks</button>
+    </div>
+    <!-- Add more categories similarly -->
+</div>
+
 
     <div class="home-section">
         <div class="home-section-top">
             <div class="home-section-title">Recommended</div>
             <div class="home-section-top-right">
                 @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "0 L.E - 300 L.E", Icon = "filter", Url = "" })
+                @await Component.InvokeAsync("RedButtonViewComponent", new { Text = "User Profile", Icon = "pepper-hot", Url = $"/Home/UserView/{(@ViewBag.cusid)}" })
+              
 
             </div>
         </div>
-
+        
         @* restaurants *@
-        <div class="restaurant-list">
+        @* <div class="restaurant-list">
         <h1>Restaurants</h1>
-            <div class="restaurant-cards">
-    @foreach (var restaurant in Model)
-    {
-        @await Component.InvokeAsync("FoodCardViewComponent",
-                 new
-                 {
-                     Title = restaurant.Name,
-                     Hotline = restaurant.Hotline,
-                     CuisineType = restaurant.CuisineType,
-                     MinPrice = restaurant.MinPrice,
-                     MaxPrice = restaurant.MaxPrice,
-                     ImageUrl = restaurant.Photo,
-                     Url = $"/Menu/Index?restaurantId={restaurant.Id}",
-                 })
-        <div class="rating-container">
-            <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">Rate Restaurant</button>
-            <div class="rating-input" style="display: none;">
-                <input type="number" min="1" max="5" step="0.1" placeholder="Rate (1-5)" class="form-control" />
-                <button class="btn btn-primary submit-rating" data-restaurant-id="@restaurant.Id">Submit</button>
+        <div class="restaurant-cards">
+                @foreach (var restaurant in Model)
+                {
+                    @await Component.InvokeAsync("FoodCardViewComponent",
+                                 new
+                                 {
+                                     Id = restaurant.Id,
+                                     Title = restaurant.Name,
+                                     Hotline = restaurant.Hotline,
+                                     CuisineType = restaurant.CuisineType,
+                                     MinPrice = restaurant.MinPrice,
+                                     MaxPrice = restaurant.MaxPrice,
+                                     ImageUrl = restaurant.Photo,
+                                     Customer = ViewBag.fav,
+                                     Url = $"/Menu/Index?restaurantId={restaurant.Id}"
+                                 }
+                             )
+
+            <div class="rating-container">
+                <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">
+                    Rate Restaurant
+                </button>
+                <div class="rating-input" style="display: none;">
+                    <input type="number" min="1" max="5" step="0.1" placeholder="Rate (1-5)" class="form-control" />
+                    <button class="btn btn-primary submit-rating" data-restaurant-id="@restaurant.Id">
+                        Submit
+                    </button>
+                </div>
             </div>
-        </div>
-    }
-</div>
+               }
+</div> *@
 
+        @* <div type = "hidden" class="restaurant-card" data-cuisine-type="@restaurant.CuisineType">                                 </div>
+*@
+
+            <div class="restaurant-cards">
+                @foreach (var restaurant in Model)
+                {
+                        @await Component.InvokeAsync("FoodCardViewComponent",
+                            new
+                            {
+                                Id = restaurant.Id,
+                                Title = restaurant.Name,
+                                Hotline = restaurant.Hotline,
+                                CuisineType = restaurant.CuisineType,
+                                MinPrice = restaurant.MinPrice,
+                                MaxPrice = restaurant.MaxPrice,
+                                ImageUrl = restaurant.Photo,
+                                Customer = ViewBag.fav,
+                                Url = $"/Menu/Index?restaurantId={restaurant.Id}",
+                            })
+                }
+            
+    </div>
+        
 
     </div>
-        @* @foreach (var restaurant in Model)
-        {
-                    <div class="restaurant-card">
-                        <img src="@restaurant.Photo" alt="@restaurant.Name" class="restaurant-image" />
-                        <div class="restaurant-info">
-                            <h2 class="restaurant-name">@restaurant.Name</h2>
-                            <a asp-controller="Menu" asp-action="Index" asp-route-restaurantId="@restaurant.Id" class="view-menu-btn">View Menu</a>
-                        </div>
-                    </div>
-        } *@
 
-    </div>
+
     <script src="~/js/rate.js"></script>
 </body>
 
@@ -133,7 +163,7 @@
     color:white;
     }
 
-    
+
     .navbar-brand {
         font-size: 1.5em;
         color: var(--primary-color);
@@ -168,7 +198,7 @@
         padding: 10px;
         border-bottom: 1px solid #e5e5e5;
         overflow-x: auto;
-        
+
     }
 
     /*Search*/
@@ -290,3 +320,20 @@
 
 
 
+     <script>
+            document.querySelectorAll('.category-item button').forEach(item => {
+                item.addEventListener('click', function(event) {
+                    event.preventDefault();  // Prevent the page from refreshing
+                    var selectedCategory = this.closest('.category-item').getAttribute('data-category');
+                    var restaurantCards = document.querySelectorAll('.restaurant-card');
+                    restaurantCards.forEach(card => {
+                        var cuisineType = card.getAttribute('data-cuisine-type');
+                        if (cuisineType === selectedCategory || selectedCategory === 'All') {
+                            card.style.display = 'block'; 
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        </script>

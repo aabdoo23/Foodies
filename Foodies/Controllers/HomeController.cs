@@ -2,6 +2,7 @@ using Foodies.Exceptions;
 using Foodies.Interfaces.Repositories;
 using Foodies.Interfaces.Services;
 using Foodies.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Foodies.Controllers
@@ -16,6 +17,10 @@ namespace Foodies.Controllers
         private readonly ICustomerRepository _customerRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IBranchManagerService _branchManagerService;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ImageUploader _imageUploader;
+
         public HomeController(ILogger<HomeController> logger,
             IAdminRepository adminRepository,
             IRestaurantRepository restaurantRepository,
@@ -23,7 +28,10 @@ namespace Foodies.Controllers
             IMenuItemRepository menuItemRepository,
             ICustomerRepository customerRepository,
             IAddressRepository addressRepository,
-            IBranchManagerService branchManagerService)
+            IBranchManagerService branchManagerService,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            ImageUploader imageUploader)
         {
             _logger = logger;
             _adminRepository = adminRepository;
@@ -33,6 +41,9 @@ namespace Foodies.Controllers
             _customerRepository = customerRepository;
             _addressRepository = addressRepository;
             _branchManagerService = branchManagerService;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _imageUploader = imageUploader;
         }
         public IActionResult CustomerView()
         {
@@ -61,7 +72,7 @@ namespace Foodies.Controllers
         public async Task<IActionResult> EditAdmin(AdminProfileViewmodel adm)
         {
             var admin = await _adminRepository.GetById(adm.Id);
-
+            
             admin.IdentityUser.Email = adm.Email;
             admin.FirstName = adm.FirstName;
             admin.LastName = adm.LastName;
@@ -89,14 +100,17 @@ namespace Foodies.Controllers
             var restaurant = await _restaurantRepository.GetById(id);
             return View(restaurant);
         }
-        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, string restaurantId)
+        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, string restaurantId, IFormFile immg)
         {
+            string? usrl = await _imageUploader.UploadImageAsync(immg);
             MenuItem menuItem = new MenuItem
             {
                 Name = Menu.Name,
                 Category = Menu.Category,
                 Description = Menu.Description,
                 Resturant = await _restaurantRepository.GetById(restaurantId),
+                img=usrl,
+                Price = Menu.Price
             };
             await _menuItemRepository.Create(menuItem);
 
@@ -131,6 +145,53 @@ namespace Foodies.Controllers
                 return RedirectToAction("Error");
             }
         }
+
+        public async Task<IActionResult> DeletAdmin(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id); // Find the user by their ID
+            var result = await _userManager.DeleteAsync(user);
+            return RedirectToAction("view", "Master");//Master/view
+        }
+        public IActionResult changepass(string id)
+        {
+
+            return View("changepass", id);
+        }
+
+        public async Task<IActionResult> changepasso(string oldpas, string Newpass, string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, oldpas, false, false);
+            //if (result.Succeeded)
+            //{
+            //    user.PasswordHash = Newpass;
+            //    _context.SaveChanges();
+            //    return RedirectToAction("AdminProfile",user);
+            //}
+            if (result.Succeeded)
+            {
+                // Change the password and hash it
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var passwordChangeResult = await _userManager.ResetPasswordAsync(user, token, Newpass);
+
+                if (passwordChangeResult.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, false); 
+                    return RedirectToAction("view", "Master");
+                }
+                else
+                {
+                    ViewBag.NotificationMessage = "The New Password invalid";
+                    ViewBag.NotificationType = "danger";
+                    return View("changepass", id);
+                }
+            }
+            ViewBag.NotificationMessage = "Worng old Password";
+            ViewBag.NotificationType = "danger";
+            return View("changepass",id);
+        }
+
+        
         public async Task<IActionResult> DeleteMenuItem(string id)
         {
             var menuItem = await _menuItemRepository.GetById(id);
@@ -138,8 +199,11 @@ namespace Foodies.Controllers
             var admin = await _adminRepository.GetAdminByRestaurantId(menuItem.Resturant.Id);
             return RedirectToAction("AdminProfile", admin);
         }
-        public async Task<IActionResult> UserView(string id)
+        public async Task<IActionResult> UserView()
         {
+            //todo get user id from userManager   
+            var id = _userManager.GetUserId(User);
+
             var customer = await _customerRepository.GetById(id);
             var customerViewModel = new CustomerViewModel();
 

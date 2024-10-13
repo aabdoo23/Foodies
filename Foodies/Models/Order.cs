@@ -12,9 +12,9 @@ namespace Foodies.Models
 
         public virtual Customer Customer { get; set; } = default!;
    
-        public virtual Payment Payment { get; set; } = default!;
+        public virtual Payment? Payment { get; set; } = default!;
 
-        public string PaymentId { get; set; } // Foreign key added
+        public string? PaymentId { get; set; } // Foreign key added
         public virtual List<MenuItem> Items { get; set; }
 
         public virtual Branch Branch { get; set; }
