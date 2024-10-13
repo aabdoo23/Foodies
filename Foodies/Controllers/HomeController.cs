@@ -1,13 +1,8 @@
 using Foodies.Exceptions;
 using Foodies.Interfaces.Repositories;
 using Foodies.Interfaces.Services;
-using Foodies.Models;
-using Foodies.Repositories;
 using Foodies.ViewModels;
-using Foodies.ViewModels.Components;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Foodies.Controllers
 {
@@ -49,7 +44,7 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> AdminProfile(string id)
         {
-            var admin= await _adminRepository.GetById(id);
+            var admin = await _adminRepository.GetById(id);
             var restaurant = await _restaurantRepository.GetByIdWithMenuItems(admin.RestaurantId);
             AdminProfileViewmodel adminProfileViewModel = new AdminProfileViewmodel();
             //Admine.Id = new { id = Adminmndr.Id }
@@ -146,7 +141,7 @@ namespace Foodies.Controllers
         public async Task<IActionResult> UserView(string id)
         {
             var customer = await _customerRepository.GetById(id);
-            var customerViewModel = new Customerviewmodel();
+            var customerViewModel = new CustomerViewModel();
 
             customerViewModel.Id = id;
             customerViewModel.FirstName = customer.FirstName;
@@ -162,7 +157,7 @@ namespace Foodies.Controllers
             return View(customerViewModel);
         }
 
-        public async Task<IActionResult> AccountInfo(Customerviewmodel cus)
+        public async Task<IActionResult> AccountInfo(CustomerViewModel cus)
         {
             var customer = await _customerRepository.GetById(cus.Id);
 
@@ -185,7 +180,7 @@ namespace Foodies.Controllers
             return RedirectToAction("AdminProfile");
 
         }
-        public async Task<IActionResult> CusAddress(Customerviewmodel cus)
+        public async Task<IActionResult> CusAddress(CustomerViewModel cus)
         {
             var customer = await _customerRepository.GetById(cus.Id);
 
@@ -240,7 +235,7 @@ namespace Foodies.Controllers
 
             var admin = await _adminRepository.GetAdminByRestaurantId(resId);
 
-            await _branchManagerService.CreateBranchManager(adbr,admin, newBranch);
+            await _branchManagerService.CreateBranchManager(adbr, admin, newBranch);
 
             return RedirectToAction("AdminProfile", admin);
         }

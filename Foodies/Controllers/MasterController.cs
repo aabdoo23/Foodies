@@ -9,11 +9,11 @@ namespace Foodies.Controllers
     public class MasterController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+
         private readonly ICustomerService _customerService;
         private readonly IAdminService _adminService;
         private readonly IRestaurantRepository _restaurantRepository;
-
-        private readonly SignInManager<IdentityUser> _signInManager;
 
         public MasterController(
             UserManager<IdentityUser> userManager,
