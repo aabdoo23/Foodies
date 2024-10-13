@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Foodies.Data;
+using Foodies.Interfaces.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CreditCardValidator;
 using Foodies.Models;
@@ -186,9 +188,9 @@ public class OrderController : Controller
         }
 
 
-        // Output the cookie list along with the itemId for testing purposes
-        return Content("The is");
-    }
+            // Output the cookie list along with the itemId for testing purposes
+            return Content("The is");
+        }
 
 
     public IActionResult removeCart(int itemId, bool? dec)
@@ -209,17 +211,17 @@ public class OrderController : Controller
                     break;
                 }
 
+                }
             }
+
+            // Output the cookie list along with the itemId for testing purposes
+            return Content("The is decrease");
         }
 
-        // Output the cookie list along with the itemId for testing purposes
-        return Content("The is decrease");
-    }
-
-    public IActionResult History()
-    {
-        return View();
-    }
+        public IActionResult History()
+        {
+            return View();
+        }
 
     //view cart
     public IActionResult cart()
@@ -251,6 +253,7 @@ public class OrderController : Controller
     }
 
 
+    }
 }
 
 

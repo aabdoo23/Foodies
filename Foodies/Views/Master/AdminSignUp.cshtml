@@ -4,11 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< Updated upstream
-     <link rel="stylesheet" href="~/css/Main.css"> 
-=======
      <link rel="stylesheet" href="css/Main.css"> 
->>>>>>> Stashed changes
 
     <title>Sign Up - Foodies</title>
 </head>
@@ -27,6 +23,7 @@
             <p>Register to manage your restaurant and connect with customers.</p>
 
                 <form method="post" asp-action="SaveAdminAndResturant" asp-controller="Master" enctype="multipart/form-data">
+
                 <div class="form-row">
                     <div class="input-group">
                         <label for="FirstName">First Name</label>
@@ -109,7 +106,7 @@
 
                 </div>
 
-                 <div class="form-row">
+                 @* <div class="form-row">
                     <div class="input-group">
 
                         <label for="file">Upload Restaurant Image:</label>
@@ -121,7 +118,7 @@
 
 
 
-                  </div>
+                  </div> *@
 
                         <button type="submit" class="btn">Create Account</button>
 </form>

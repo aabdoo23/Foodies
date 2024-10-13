@@ -1,6 +1,6 @@
-﻿namespace Foodies.ViewModels.Components
+﻿namespace Foodies.ViewModels
 {
-    public class Customerviewmodel
+    public class CustomerViewModel
     {            // id flname num img email points adres-3
         public string Id { get; set; }
         public string FirstName { get; set; }

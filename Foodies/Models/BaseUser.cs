@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Foodies.Common;
+using Microsoft.AspNetCore.Identity;
 
 namespace Foodies.Models
 {
-    public  class BaseUser 
+    public  class BaseUser : BaseEntity
     {
-        [Key]
-        public string Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string? img { get; set; }
