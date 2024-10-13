@@ -8,6 +8,7 @@ using Foodies.Controllers;
 using Microsoft.Identity.Client;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.CodeAnalysis.Operations;
 public class OrderController : Controller
 {
     private readonly FoodiesDbContext _context;
@@ -44,9 +45,25 @@ public class OrderController : Controller
                 branchId = b.BranchId;
             }
         }
+        Response.Cookies.Append("distance", val.ToString());
         return branchId;
     }
-    
+    public async Task<int> getTimeNearestBranch(int branchId)
+    {
+        
+        var userId = _userManager.GetUserId(User);
+        Branch b = _context.Branch.Where(x => x.BranchId == branchId).SingleOrDefault();
+        int time = 0;
+        Customer customer = await _context.Customer.Where(x => x.Id == userId).Include(a => a.Address).FirstOrDefaultAsync();
+        
+        string result = await _geminiController.Generate($"time%20driving%20between%20{b.Address.Location}%20and%20{customer.Address.Location}%20in%20min%20short%20answer");
+        string numericPart = Regex.Match(result, @"\d+(\.\d+)?").Value;
+        time = int.Parse(numericPart);
+           
+        
+        return time;
+    }
+
     [HttpPost]
     public async Task< IActionResult> AddCard(Card card)
     {
