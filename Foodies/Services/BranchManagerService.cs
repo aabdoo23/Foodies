@@ -32,7 +32,7 @@ namespace Foodies.Services
             IdentityUser user = new IdentityUser();
             user.UserName = viewModel.Email;
             user.Email = viewModel.Email;
-            user.PhoneNumber = viewModel.phoneNumber;
+            user.PhoneNumber = viewModel.PhoneNumber;
 
             IdentityResult result = await _userManager.CreateAsync(user, viewModel.Password);
             if (result.Succeeded)

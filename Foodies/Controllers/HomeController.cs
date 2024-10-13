@@ -63,7 +63,7 @@ namespace Foodies.Controllers
             adminProfileViewModel.Email = admin.IdentityUser.Email;
             adminProfileViewModel.FirstName = admin.FirstName;
             adminProfileViewModel.LastName = admin.LastName;
-            adminProfileViewModel.Phone = admin.IdentityUser.PhoneNumber;
+            adminProfileViewModel.PhoneNumber = admin.IdentityUser.PhoneNumber;
             adminProfileViewModel.Resturant = restaurant;
             adminProfileViewModel.Branch = await _branchRepository.GetAllBrancheshByRestaurantId(admin.RestaurantId);
 
@@ -100,16 +100,16 @@ namespace Foodies.Controllers
             var restaurant = await _restaurantRepository.GetById(id);
             return View(restaurant);
         }
-        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, string restaurantId, IFormFile immg)
+        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, string restaurantId) //, IFormFile immg
         {
-            string? usrl = await _imageUploader.UploadImageAsync(immg);
+            //string? usrl = await _imageUploader.UploadImageAsync(immg);
             MenuItem menuItem = new MenuItem
             {
                 Name = Menu.Name,
                 Category = Menu.Category,
                 Description = Menu.Description,
                 Resturant = await _restaurantRepository.GetById(restaurantId),
-                img=usrl,
+                //img=usrl,
                 Price = Menu.Price
             };
             await _menuItemRepository.Create(menuItem);

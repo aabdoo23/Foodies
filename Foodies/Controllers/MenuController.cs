@@ -3,7 +3,6 @@ using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 
 namespace Foodies.Controllers
 {
@@ -12,14 +11,20 @@ namespace Foodies.Controllers
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IMenuItemRepository _menuItemRepository;
         private readonly IRatingRepository _ratingRepository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly UserManager<IdentityUser> _userManager;
         public MenuController(
             IRestaurantRepository restaurantRepository,
             IMenuItemRepository menuItemRepository,
-            IRatingRepository ratingRepository)
+            IRatingRepository ratingRepository,
+            ICustomerRepository customerRepository,
+            UserManager<IdentityUser> userManager)
         {
             _restaurantRepository = restaurantRepository;
             _menuItemRepository = menuItemRepository;
             _ratingRepository = ratingRepository;
+            _customerRepository = customerRepository;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(string restaurantId, string? category = null)
@@ -49,9 +54,7 @@ namespace Foodies.Controllers
         public async Task<IActionResult> Favourite()
         {
             var userId = _userManager.GetUserId(User);
-            Customer customer = await _context.Customer
-                .Include(c => c.FavouriteRestaurants)
-                .FirstOrDefaultAsync(x => x.Id == userId);
+            Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
 
             ViewBag.fav = customer;
 
@@ -59,13 +62,12 @@ namespace Foodies.Controllers
         }
         public async Task<IActionResult> Restaurant(string id)
         {
-            ViewBag.cusid=id;
+            ViewBag.cusid = id;
             var restaurants = await _restaurantRepository.GetAll();
-            
+
             var userId = _userManager.GetUserId(User);
-            Customer customer = await _context.Customer
-                .Include(c => c.FavouriteRestaurants)
-                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
 
             ViewBag.fav = customer;
 

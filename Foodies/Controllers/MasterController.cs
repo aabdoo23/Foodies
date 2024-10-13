@@ -1,5 +1,6 @@
 using Foodies.Interfaces.Repositories;
 using Foodies.Interfaces.Services;
+using Foodies.Models;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ namespace Foodies.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveNewCustomer(RegistrationViewModel cus, IFormFile immg)
+        public async Task<IActionResult> SaveNewCustomer(RegistrationViewModel cus)
         {
             if (ModelState.IsValid)
             {
@@ -55,18 +56,20 @@ namespace Foodies.Controllers
                     await _signInManager.SignInAsync(result.IdentityUser, isPersistent: false);
                     ViewBag.NotificationMessage = "Customer registered successfully!";
                     ViewBag.NotificationType = "success";
+                    return RedirectToAction("restaurant", "menu", result.Id);
                 }
                 else
                 {
                     ViewBag.NotificationType = "danger";
+                    return View("UserSignUp");
                 }
             }
             else
             {
                 ViewBag.NotificationMessage = "There are missing data.";
                 ViewBag.NotificationType = "danger";
+                return View("UserSignUp");
             }
-            return View("UserSignUp");
         }
 
         public IActionResult AdminSignUp()
@@ -74,7 +77,7 @@ namespace Foodies.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin, IFormFile immg)
+        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin) // TODO: Add file upload again after fixing the image uploader
         {
             if (ModelState.IsValid)
             {

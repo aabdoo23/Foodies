@@ -13,7 +13,7 @@ namespace Foodies.Models
         public string Description { get; set; }
 
         public virtual Restaurant Resturant { get; set; } = default!;
-        public int ResturantId { get; set; } = default!;
+        public string ResturantId { get; set; } = default!;
 
 
         public virtual ICollection<Order>? Orders { get; set; }

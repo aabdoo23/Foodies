@@ -3,9 +3,8 @@ using Foodies.Interfaces.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CreditCardValidator;
-using Foodies.Models;
-using Foodies.Migrations;
-using System.Collections.Generic;
+
+namespace Foodies.Controllers;
 public class OrderController : Controller
 {
     private readonly FoodiesDbContext _context;
@@ -14,14 +13,14 @@ public class OrderController : Controller
     private readonly UserManager<IdentityUser> _userManager;
 
 
-    public OrderController(FoodiesDbContext context ,UserManager<IdentityUser> userManager)
+    public OrderController(FoodiesDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
         _userManager = userManager;
     }
 
     [HttpPost]
-    public async Task< IActionResult> AddCard(Card card)
+    public async Task<IActionResult> AddCard(Card card)
     {
         // Check if the card number is null or empty
         if (card.CardNumber == null)
@@ -29,7 +28,7 @@ public class OrderController : Controller
             return BadRequest(new { success = false, message = "Card number is required." });
         }
         var userId = _userManager.GetUserId(User);
-        Customer customer = await _context.Customer.Where(x => x.Id == userId).FirstOrDefaultAsync();
+        Customer customer = await _context.Customers.Where(x => x.Id == userId).FirstOrDefaultAsync();
         var creditCardDetector = new CreditCardDetector(card.CardNumber);
 
         if (creditCardDetector.IsValid())
@@ -39,8 +38,8 @@ public class OrderController : Controller
             card.Type = cardType;
             card.customer = customer;
             customer.card = card;
-            _context.Card.Add(card);
-            
+            _context.Cards.Add(card);
+
             Response.Cookies.Append("CardId", card.Id.ToString());
             _context.SaveChanges();
             return RedirectToAction("UserView", "Home");
@@ -54,19 +53,17 @@ public class OrderController : Controller
     }
 
 
-    
+
     [HttpPost]
     public IActionResult OrderView(int total, string paymentMethod)
     {
         foreach (var cookie in Request.Cookies)
         {
-            if (int.TryParse(cookie.Key, out int id))
-            {
-                MenuItem menuItem = _context.MenuItem
-                    .Where(x => x.Id == int.Parse(cookie.Value))
-                    .SingleOrDefault();
-                myCart.Add(menuItem);
-            }
+
+            MenuItem menuItem = _context.MenuItems
+                .Where(x => x.Id == cookie.Value)
+                .SingleOrDefault();
+            myCart.Add(menuItem);
         }
         Response.Cookies.Append("paymentmethod", paymentMethod);
         //return Content($"{paymentMethod}fef{total}");
@@ -86,15 +83,15 @@ public class OrderController : Controller
 
         ////Customer
         var userId = _userManager.GetUserId(User);
-        Customer Cust = _context.Customer.Where(x => x.Id == userId)
-            .Include(o=> o.Orders)
+        Customer Cust = _context.Customers.Where(x => x.Id == userId)
+            .Include(o => o.Orders)
             .SingleOrDefault();
 
         order.Customer = Cust;
 
 
 
-        
+
 
         //payment
         Payment payment = new Payment
@@ -107,9 +104,9 @@ public class OrderController : Controller
         //not tested yet
         if (payment.PaymentMethod == "Card")
         {
-            int cardId = int.Parse(Request.Cookies["CardId"]);
+            string cardId = Request.Cookies["CardId"];
 
-            Card card = _context.Card.Where(x => x.CustomerId == userId).Include(p => p.payments).SingleOrDefault();
+            Card card = _context.Cards.Where(x => x.CustomerId == userId).Include(p => p.payments).SingleOrDefault();
             payment.card = card;
             card.payments.Add(payment);
         }
@@ -117,7 +114,7 @@ public class OrderController : Controller
 
         ////order.Branch
         //order.Branch = 
-        Restaurant rest = _context.Restaurant.Where(x => x.Id == int.Parse(Request.Cookies["restId"]))
+        Restaurant rest = _context.Restaurants.Where(x => x.Id == Request.Cookies["restId"])
             .Include(b => b.Branches).SingleOrDefault();
         //return Content($"{rest.Branches[0]} hoho");
 
@@ -128,20 +125,18 @@ public class OrderController : Controller
 
         foreach (var cookie in Request.Cookies)
         {
-            if (int.TryParse(cookie.Key, out int id))
-            {
-                MenuItem item = _context.MenuItem.Where(x => x.Id == int.Parse(cookie.Value)).Include(o => o.Orders).SingleOrDefault();
 
-                myCart.Add(item);
-                Response.Cookies.Delete(cookie.Key);
-            }
+            MenuItem item = _context.MenuItems.Where(x => x.Id == cookie.Value).Include(o => o.Orders).SingleOrDefault();
+
+            myCart.Add(item);
+            Response.Cookies.Delete(cookie.Key);
 
 
         }
         // last add order in menuitem model
         //empty cart
         order.Items = new List<MenuItem>(myCart);
-        
+
         foreach (var item in myCart)
         {
             //return Content($"{item.Id} hoho");
@@ -150,12 +145,12 @@ public class OrderController : Controller
 
         }
 
-        
+
         Cust.Orders.Add(order);
         branch.Orders.Add(order);
-        _context.Order.Add(order);
+        _context.Orders.Add(order);
         _context.SaveChanges();
-        
+
         myCart.Clear();
 
         return Content($"{order.Id} hoho");
@@ -170,39 +165,39 @@ public class OrderController : Controller
         //return Content($"noura{ViewBag.Total}");
         return View();
     }
-    
+
     //Cart
-    public IActionResult addCart(int itemId)
+    public IActionResult addCart(string itemId)
     {
         CookieOptions options = new CookieOptions();
         options.Expires = DateTimeOffset.Now.AddDays(5);
         int cnt = 1;
         bool entered = false;
         //replace key with customer id?
-        
+
         Response.Cookies.Append((++cnt).ToString(), itemId.ToString(), options);
-                 
-        if (itemId == 0)
+
+        if (itemId == "")
         {
             return Content("No itemId received");
         }
 
 
-            // Output the cookie list along with the itemId for testing purposes
-            return Content("The is");
-        }
+        // Output the cookie list along with the itemId for testing purposes
+        return Content("The is");
+    }
 
 
-    public IActionResult removeCart(int itemId, bool? dec)
+    public IActionResult removeCart(string itemId, bool? dec)
     {
         foreach (var cookie in Request.Cookies)
         {
             // Check if the cookie value matches the value to remove
-            if (cookie.Value == itemId.ToString() && int.TryParse(cookie.Key, out int id))
+            if (cookie.Value == itemId.ToString())
             {
                 // Remove the cookie by its key
                 Response.Cookies.Delete(cookie.Key);
-                MenuItem menuItem = _context.MenuItem
+                MenuItem menuItem = _context.MenuItems
                     .Where(x => x.Id == itemId)
                     .SingleOrDefault();
                 myCart.Remove(menuItem);
@@ -211,50 +206,43 @@ public class OrderController : Controller
                     break;
                 }
 
-                }
             }
-
-            // Output the cookie list along with the itemId for testing purposes
-            return Content("The is decrease");
         }
 
-        public IActionResult History()
-        {
-            return View();
-        }
+        // Output the cookie list along with the itemId for testing purposes
+        return Content("The is decrease");
+    }
+
+    public IActionResult History()
+    {
+        return View();
+    }
 
     //view cart
     public IActionResult cart()
     {
         foreach (var cookie in Request.Cookies)
         {
-            if (int.TryParse(cookie.Key, out int id))
+
+            MenuItem menuItem = _context.MenuItems
+                .Where(x => x.Id == cookie.Value).Include(r => r.Resturant)
+                .SingleOrDefault();
+            myCart.Add(menuItem);
+            if (menuItem == null)
             {
-                MenuItem menuItem = _context.MenuItem
-                    .Where(x => x.Id == int.Parse(cookie.Value)).Include(r=>r.Resturant)
-                    .SingleOrDefault();
-                myCart.Add(menuItem);
-                if(menuItem == null)
-                {
-                    return Content($"{cookie.Value}");
-                }
-                Response.Cookies.Append("restId", $"{menuItem.ResturantId}");
+                return Content($"{cookie.Value}");
             }
-            //else
-            //{
-            //    Response.Cookies.Delete(cookie.Key);
-            //}
+            Response.Cookies.Append("restId", $"{menuItem.ResturantId}");
         }
-        
-            return View(myCart);
-
-
-        
-    }
-
+        //else
+        //{
+        //    Response.Cookies.Delete(cookie.Key);
+        //}
+        return View(myCart);
 
     }
 }
+
 
 
 

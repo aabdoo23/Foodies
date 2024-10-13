@@ -16,7 +16,7 @@ namespace Foodies.Models
 
         public string? PaymentId { get; set; } // Foreign key added
         public virtual List<MenuItem> Items { get; set; }
-
+        public string BranchId { get; set; }
         public virtual Branch Branch { get; set; }
 
 

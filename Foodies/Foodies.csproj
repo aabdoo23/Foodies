@@ -48,7 +48,6 @@
     <None Include="wwwroot\images\foodies.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\Image\" />
     <Folder Include="wwwroot\assets\images\order_history\" />
     <Folder Include="Views\BranchManager\" />

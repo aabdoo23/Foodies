@@ -27,8 +27,8 @@ namespace Foodies.Migrations
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
+                    b.Property<string>("RestaurantId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CustomerId", "RestaurantId");
 
@@ -167,7 +167,7 @@ namespace Foodies.Migrations
                     b.HasIndex("CustomerId")
                         .IsUnique();
 
-                    b.ToTable("Card");
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("Foodies.Models.Chat", b =>
@@ -219,8 +219,12 @@ namespace Foodies.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("ResturantId")
-                        .HasColumnType("int");
+                    b.Property<string>("ResturantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("img")
                         .HasColumnType("nvarchar(max)");
@@ -284,7 +288,6 @@ namespace Foodies.Migrations
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("PaymentId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("State")
@@ -304,7 +307,8 @@ namespace Foodies.Migrations
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("PaymentId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[PaymentId] IS NOT NULL");
 
                     b.ToTable("Orders");
                 });
@@ -326,6 +330,12 @@ namespace Foodies.Migrations
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("cardId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -748,7 +758,9 @@ namespace Foodies.Migrations
                 {
                     b.HasOne("Foodies.Models.Restaurant", "Resturant")
                         .WithMany("MenuItems")
-                        .HasForeignKey("ResturantId");
+                        .HasForeignKey("ResturantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Resturant");
                 });
@@ -776,9 +788,7 @@ namespace Foodies.Migrations
 
                     b.HasOne("Foodies.Models.Payment", "Payment")
                         .WithOne("Order")
-                        .HasForeignKey("Foodies.Models.Order", "PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Foodies.Models.Order", "PaymentId");
 
                     b.Navigation("Branch");
 

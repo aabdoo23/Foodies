@@ -1,27 +1,29 @@
-﻿using Foodies.Models;
+﻿using Foodies.Data;
+using Foodies.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Foodies.Controllers
 {
     public class BranchManagerController : Controller
     {
-        private readonly FoodiesDbContext _context;
         private readonly ILogger<BranchManagerController> _logger;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IBranchManagerRepository _branchManagerRepository;
 
-        public BranchManagerController(FoodiesDbContext context, ILogger<BranchManagerController> logger)
+        public BranchManagerController(ILogger<BranchManagerController> logger,
+            IOrderRepository orderRepository,
+            IBranchManagerRepository branchManagerRepository)
         {
-            _context = context;
             _logger = logger;
+            _orderRepository = orderRepository;
+            _branchManagerRepository = branchManagerRepository;
         }
 
-        public IActionResult OrderList(int id)
+        public async Task<IActionResult> OrderList(string branchId)
         {
-           
-            var oredr = _context.Order.Where(x => x.Branch.BranchId == id).Include(x => x.Items).ToList();
-            
-            return View(oredr as IEnumerable<Order>);
+            var allOrdersForBranch = await _orderRepository.GetOrdersByBranchIdWithItems(branchId);
+
+            return View(allOrdersForBranch);
         }
         #region no
         //public async Task<IActionResult> OrderList()
@@ -37,20 +39,18 @@ namespace Foodies.Controllers
         //    return View(orders);
         //}
         #endregion
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
-            var order = await _context.Order.Include(o => o.Customer).Include(c=>c.Items).FirstOrDefaultAsync(o => o.Id == id);
-       
+            var order = await _orderRepository.GetById(id);
+
             return View(order);
         }
-        public async Task<IActionResult> Changestate(int id, string state)
+        public async Task<IActionResult> ChangeState(string id, string state)
         {
-            var order = _context.Order.Include(x=>x.Branch).SingleOrDefault(x => x.Id == id);
-            int idd=order.Branch.BranchId;
+            var order = await _orderRepository.GetByIdWithBranchIncluded(id);
             order.State = state;
-            _context.SaveChanges();
-            return RedirectToAction("OrderList", new { id = order.Branch.BranchId });
-            //9384883023
+            await _orderRepository.Update(order);
+            return RedirectToAction("OrderList", new { id = order.Branch.Id });
         }
         #region
         //public async Task<IActionResult> Details(int id)
@@ -68,69 +68,67 @@ namespace Foodies.Controllers
         //    return View(order);
         //}
         #endregion
-        public async Task<IActionResult> Profile(string id)//.SingleOrDefault(x => x.Id == id)
+        public async Task<IActionResult> Profile(string id)
         {
-           
-            var branchmanager = await _context.BranchManager.Include(b => b.Branch).ThenInclude(r => r.Restaurant).SingleOrDefaultAsync(x => x.Id == id);
-            ViewBag.restaurant = branchmanager.Branch.Restaurant;
+            var branchmanager = await _branchManagerRepository.GetByIdWithBranchAndRestaurantIncluded(id);
             return View(branchmanager);
         }
 
         #region updet from admin
         // POST: /BranchManager/UpdateInfo
-    //    [HttpPost]
-    //public IActionResult UpdateInfo(BranchManager manager)
-    //{
-    //    var branchManager = _context.BranchManager.SingleOrDefault(x => x.Id == manager.Id);
+        //    [HttpPost]
+        //public IActionResult UpdateInfo(BranchManager manager)
+        //{
+        //    var branchManager = _context.BranchManager.SingleOrDefault(x => x.Id == manager.Id);
 
-    //    if (branchManager != null)
-    //    {
-    //        //branchManager.Username = manager.Username;
-    //        //branchManager.Password = manager.Password;
+        //    if (branchManager != null)
+        //    {
+        //        //branchManager.Username = manager.Username;
+        //        //branchManager.Password = manager.Password;
 
-    //        _context.SaveChanges();
-    //        ViewBag.NotificationMessage = "Account details updated successfully!";
-    //        ViewBag.NotificationType = "success";
-    //    }
-    //    else
-    //    {
-    //        ViewBag.NotificationMessage = "Branch manager not found!";
-    //        ViewBag.NotificationType = "error";
-    //    }
+        //        _context.SaveChanges();
+        //        ViewBag.NotificationMessage = "Account details updated successfully!";
+        //        ViewBag.NotificationType = "success";
+        //    }
+        //    else
+        //    {
+        //        ViewBag.NotificationMessage = "Branch manager not found!";
+        //        ViewBag.NotificationType = "error";
+        //    }
 
-    //    return RedirectToAction("Profile", new { id = manager.Id });
-    //}
+        //    return RedirectToAction("Profile", new { id = manager.Id });
+        //}
 
-    //// POST: /BranchManager/UpdateBranch
-    //[HttpPost]
-    //public IActionResult UpdateBranch(int id, Branch branch)
-    //{
-    //    var existingBranch = _context.Branch.Include(b => b.Restaurant).SingleOrDefault(x => x.BranchId == id);
+        //// POST: /BranchManager/UpdateBranch
+        //[HttpPost]
+        //public IActionResult UpdateBranch(int id, Branch branch)
+        //{
+        //    var existingBranch = _context.Branch.Include(b => b.Restaurant).SingleOrDefault(x => x.BranchId == id);
 
-    //    if (existingBranch != null)
-    //    {
-    //        //existingBranch.BranchArea = branch.BranchArea;
-    //        //existingBranch.BranchLocation = branch.BranchLocation;
-    //        existingBranch.OpeningHour = branch.OpeningHour;
-    //        existingBranch.ClosingHour = branch.ClosingHour;
+        //    if (existingBranch != null)
+        //    {
+        //        //existingBranch.BranchArea = branch.BranchArea;
+        //        //existingBranch.BranchLocation = branch.BranchLocation;
+        //        existingBranch.OpeningHour = branch.OpeningHour;
+        //        existingBranch.ClosingHour = branch.ClosingHour;
 
-    //        _context.SaveChanges();
-    //        ViewBag.NotificationMessage = "Branch details updated successfully!";
-    //        ViewBag.NotificationType = "success";
-    //    }
-    //    else
-    //    {
-    //        ViewBag.NotificationMessage = "Branch not found!";
-    //        ViewBag.NotificationType = "error";
-    //    }
+        //        _context.SaveChanges();
+        //        ViewBag.NotificationMessage = "Branch details updated successfully!";
+        //        ViewBag.NotificationType = "success";
+        //    }
+        //    else
+        //    {
+        //        ViewBag.NotificationMessage = "Branch not found!";
+        //        ViewBag.NotificationType = "error";
+        //    }
 
-    //    return RedirectToAction("Profile", new { id = existingBranch.BranchManager.Id });
-    //   }
-    //    private int GetCurrentBranchManagerId()
-    //    {
-    //        //log in??
-    //        return 1;
-    //    }
+        //    return RedirectToAction("Profile", new { id = existingBranch.BranchManager.Id });
+        //   }
+        //    private int GetCurrentBranchManagerId()
+        //    {
+        //        //log in??
+        //        return 1;
+        //    }
 
         #endregion
 

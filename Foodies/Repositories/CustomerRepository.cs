@@ -34,8 +34,19 @@ namespace Foodies.Repositories
 
         public async Task<Customer> GetById(string id)
         {
-            var customer = await _context.Customers.Include(x => x.IdentityUser).Include(x=>x.Address).FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"BranchManager with ID {id} not found");
+            var customer = await _context.Customers
+                .Include(x => x.IdentityUser)
+                .Include(x=>x.Address)
+                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Customer with ID {id} not found");
             return customer;
+        }
+
+        public async Task<Customer> GetByIdWithFavouriteRestaurants(string? userId)
+        {
+            return await _context.Customers
+                .Include(x=>x.IdentityUser)
+                .Include(c => c.FavouriteRestaurants)
+                .FirstOrDefaultAsync(x => x.Id == userId) ?? throw new NotFoundException($"Customer with ID {userId} not found");
         }
 
         public async Task<Customer> Update(Customer entity)

@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Foodies.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
-    public partial class refactoringshit : Migration
-========
-    public partial class all : Migration
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
+    public partial class yaRab : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,13 +19,9 @@ namespace Foodies.Migrations
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Building = table.Column<string>(type: "nvarchar(max)", nullable: true),
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-========
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true)
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
                 },
                 constraints: table =>
                 {
@@ -76,51 +68,10 @@ namespace Foodies.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
-                name: "Payments",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "money", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Restaurants",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-========
-                name: "Card",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpiryMonth = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpiryYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CVC = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Card", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Restaurant",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Hotline = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -271,32 +222,7 @@ namespace Foodies.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
                 name: "Branches",
-========
-                name: "Payment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "money", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                    cardId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payment_Card_cardId",
-                        column: x => x.cardId,
-                        principalTable: "Card",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Branch",
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -332,9 +258,8 @@ namespace Foodies.Migrations
                     Price = table.Column<int>(type: "int", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     img = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Quantity = table.Column<int>(type: "int", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ResturantId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ResturantId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -345,7 +270,8 @@ namespace Foodies.Migrations
                         name: "FK_MenuItems_Restaurants_ResturantId",
                         column: x => x.ResturantId,
                         principalTable: "Restaurants",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -429,35 +355,31 @@ namespace Foodies.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
-                name: "Chats",
-========
-                name: "Favourites",
+                name: "Cards",
                 columns: table => new
                 {
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RestaurantId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpiryMonth = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpiryYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CVC = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Favourites", x => new { x.CustomerId, x.RestaurantId });
+                    table.PrimaryKey("PK_Cards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Favourites_Customers_CustomerId",
+                        name: "FK_Cards_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Favourites_Restaurant_RestaurantId",
-                        column: x => x.RestaurantId,
-                        principalTable: "Restaurant",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
+                name: "Chats",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -482,6 +404,102 @@ namespace Foodies.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Favourites",
+                columns: table => new
+                {
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RestaurantId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Favourites", x => new { x.CustomerId, x.RestaurantId });
+                    table.ForeignKey(
+                        name: "FK_Favourites_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Favourites_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ratings",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RestaurantId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Rate = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ratings_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Ratings_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Payments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<decimal>(type: "money", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    cardId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Payments_Cards_cardId",
+                        column: x => x.cardId,
+                        principalTable: "Cards",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isCustomerSender = table.Column<bool>(type: "bit", nullable: false),
+                    ChatId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -490,7 +508,7 @@ namespace Foodies.Migrations
                     TotalPrice = table.Column<decimal>(type: "money", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PaymentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PaymentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     BranchId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -514,69 +532,6 @@ namespace Foodies.Migrations
                         name: "FK_Orders_Payments_PaymentId",
                         column: x => x.PaymentId,
                         principalTable: "Payments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ratings",
-                columns: table => new
-                {
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RestaurantId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Rate = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-========
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RestaurantId = table.Column<int>(type: "int", nullable: false),
-                    Rate = table.Column<decimal>(type: "decimal(5,2)", nullable: true)
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ratings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Ratings_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Ratings_Restaurants_RestaurantId",
-                        column: x => x.RestaurantId,
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
-                        principalTable: "Restaurants",
-========
-                        principalTable: "Restaurant",
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isCustomerSender = table.Column<bool>(type: "bit", nullable: false),
-                    ChatId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Messages_Chats_ChatId",
-                        column: x => x.ChatId,
-                        principalTable: "Chats",
                         principalColumn: "Id");
                 });
 
@@ -679,6 +634,12 @@ namespace Foodies.Migrations
                 filter: "[BranchId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cards_CustomerId",
+                table: "Cards",
+                column: "CustomerId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Chats_CustomerId",
                 table: "Chats",
                 column: "CustomerId");
@@ -696,19 +657,11 @@ namespace Foodies.Migrations
                 filter: "[AddressId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
-========
                 name: "IX_Favourites_RestaurantId",
                 table: "Favourites",
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItem_ResturantId",
-                table: "MenuItem",
-                column: "ResturantId");
-
-            migrationBuilder.CreateIndex(
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
                 name: "IX_MenuItemOrder_OrdersId",
                 table: "MenuItemOrder",
                 column: "OrdersId");
@@ -737,21 +690,17 @@ namespace Foodies.Migrations
                 name: "IX_Orders_PaymentId",
                 table: "Orders",
                 column: "PaymentId",
-                unique: true);
+                unique: true,
+                filter: "[PaymentId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
-                name: "IX_Ratings_CustomerId",
-                table: "Ratings",
-========
-                name: "IX_Payment_cardId",
-                table: "Payment",
+                name: "IX_Payments_cardId",
+                table: "Payments",
                 column: "cardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rating_CustomerId",
-                table: "Rating",
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
+                name: "IX_Ratings_CustomerId",
+                table: "Ratings",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
@@ -779,14 +728,10 @@ namespace Foodies.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
                 name: "BranchManagers");
-========
-                name: "BranchManager");
 
             migrationBuilder.DropTable(
                 name: "Favourites");
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
 
             migrationBuilder.DropTable(
                 name: "MenuItemOrder");
@@ -795,11 +740,7 @@ namespace Foodies.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
                 name: "Ratings");
-========
-                name: "Rating");
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -823,20 +764,16 @@ namespace Foodies.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "Customers");
-
-            migrationBuilder.DropTable(
                 name: "Restaurants");
 
             migrationBuilder.DropTable(
-<<<<<<<< HEAD:Foodies/Migrations/20241011231210_refactoring shit.cs
-                name: "Addresses");
-========
-                name: "Card");
+                name: "Cards");
 
             migrationBuilder.DropTable(
-                name: "Address");
->>>>>>>> master:Foodies/Migrations/20241011191755_all.cs
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "BaseUser");
