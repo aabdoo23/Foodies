@@ -20,7 +20,7 @@ namespace Foodies.Services
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task<Admin> CreateAdmin(AdminRegisterViewModel viewModel)
+        public async Task<Admin> CreateAdmin(AdminRegisterViewModel viewModel, Restaurant restaurant)
         {
             var existingAdmin = await _userManager.FindByEmailAsync(viewModel.Email);
             if (existingAdmin != null)
@@ -43,6 +43,8 @@ namespace Foodies.Services
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
                     IdentityUser = user,
+                    RestaurantId = restaurant.Id,
+                    Restaurant = restaurant,
                 };
                 await _adminRepository.Create(admin);
                 return admin;

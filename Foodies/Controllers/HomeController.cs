@@ -88,9 +88,10 @@ namespace Foodies.Controllers
             var admin = await _adminRepository.GetById(res.AdminId);
             return RedirectToAction("AdminProfile", admin);
         }
-        public IActionResult AddMenuItem(string id)
+        [HttpGet]
+        public async Task<IActionResult> AddMenuItem(string id)
         {
-            var restaurant = _restaurantRepository.GetById(id);
+            var restaurant = await _restaurantRepository.GetById(id);
             return View(restaurant);
         }
         public async Task<IActionResult> SaveAddmnu(MenuItem Menu, string restaurantId)
@@ -177,6 +178,7 @@ namespace Foodies.Controllers
 
             return RedirectToAction("UserView", cus);
         }
+        [HttpPost]
         public async Task<IActionResult> AddMenuItem(MenuItem Menu)
         {
             await _menuItemRepository.Create(Menu);
@@ -198,9 +200,9 @@ namespace Foodies.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddBranch(string id)
+        public async Task<IActionResult> AddBranch(string id)
         {
-            var admin = _adminRepository.GetAdminByRestaurantId(id);
+            var admin = await _adminRepository.GetAdminByRestaurantId(id);
             Response.Cookies.Append("resiid", id.ToString());
 
             return View(admin);

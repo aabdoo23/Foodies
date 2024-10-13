@@ -74,29 +74,42 @@ namespace Foodies.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _adminService.CreateAdmin(admin);
-                if (result != null)
+                Restaurant res = new Restaurant
                 {
-                    await _signInManager.SignInAsync(result.IdentityUser, isPersistent: false);
-                    Restaurant res = new Restaurant
+                    Name = admin.Name,
+                    Photo = admin.Photo,
+                    Hotline = admin.Hotline,
+                    CuisineType = admin.CuisineType,
+                    MaxPrice = admin.MaxPrice,
+                    MinPrice = admin.MinPrice
+                };
+                var restaurantResult = await _restaurantRepository.Create(res);
+                if (restaurantResult != null)
+                {
+                    var result = await _adminService.CreateAdmin(admin, restaurantResult);
+                    if (result != null)
                     {
-                        Name = admin.Name,
-                        Photo = admin.Photo,
-                        Hotline = admin.Hotline,
-                        CuisineType = admin.CuisineType,
-                        MaxPrice = admin.MaxPrice,
-                        MinPrice = admin.MinPrice,
-                    };
-                    res.RestaurantAdmin = result;
-                    await _restaurantRepository.Create(res);
-                    ViewBag.NotificationMessage = "Customer registered successfully!";
-                    ViewBag.NotificationType = "success";
-                    return RedirectToAction("AdminProfile", "Home", new { id = result.Id });
+                        await _signInManager.SignInAsync(result.IdentityUser, isPersistent: false);
+
+                        res.RestaurantAdmin = result;
+                        await _restaurantRepository.Update(res);
+
+                        ViewBag.NotificationMessage = "Admin registered successfully!";
+                        ViewBag.NotificationType = "success";
+                        return RedirectToAction("AdminProfile", "Home", new { id = result.Id });
+                    }
+                    else
+                    {
+                        ViewBag.NotificationType = "danger";
+                    }
+
                 }
                 else
                 {
+                    ViewBag.NotificationMessage = "Restaurant registration failed.";
                     ViewBag.NotificationType = "danger";
                 }
+
             }
             else
             {

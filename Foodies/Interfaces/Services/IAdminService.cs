@@ -4,6 +4,6 @@ namespace Foodies.Interfaces.Services
 {
     public interface IAdminService
     {
-        public Task<Admin> CreateAdmin(AdminRegisterViewModel viewModel);
+        public Task<Admin> CreateAdmin(AdminRegisterViewModel viewModel, Restaurant restaurant);
     }
 }

@@ -15,7 +15,7 @@ namespace Foodies.Models
         //200 - 1400
         public virtual List<Branch>? Branches { get; set; }
 
-        public virtual Admin RestaurantAdmin { get; set; }
+        public virtual Admin? RestaurantAdmin { get; set; }
 
         // Calculate the average rating
         [NotMapped]

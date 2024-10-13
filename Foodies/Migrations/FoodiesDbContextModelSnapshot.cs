@@ -893,8 +893,7 @@ namespace Foodies.Migrations
 
                     b.Navigation("Ratings");
 
-                    b.Navigation("RestaurantAdmin")
-                        .IsRequired();
+                    b.Navigation("RestaurantAdmin");
                 });
 
             modelBuilder.Entity("Foodies.Models.Admin", b =>
