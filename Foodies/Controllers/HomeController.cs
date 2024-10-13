@@ -29,14 +29,7 @@ namespace Foodies.Controllers
             _imageUploader = imageUploader;
 
         }
-        public IActionResult CustomerView()
-        {
-            return View();
-        }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+  
         public async Task<IActionResult> AdminProfile(string id)
         {
             var Adminmndr = await _userManager.FindByIdAsync(id);
