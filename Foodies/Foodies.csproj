@@ -52,9 +52,7 @@
     <None Include="wwwroot\images\foodies.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="Views\NewFolder1\" />
-    <Folder Include="Views\NewFolder\" />
+
     <Folder Include="wwwroot\Image\" />
     <Folder Include="wwwroot\assets\images\order_history\" />
     <Folder Include="Views\BranchManager\" />

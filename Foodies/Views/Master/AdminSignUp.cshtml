@@ -1,14 +1,13 @@
 ﻿<!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< Updated upstream
-     <link rel="stylesheet" href="~/css/Main.css"> 
-=======
-     <link rel="stylesheet" href="css/Main.css"> 
->>>>>>> Stashed changes
+    <<<<<<< Updated upstream
+    <link rel="stylesheet" href="~/css/Main.css">
+    =======
+    <link rel="stylesheet" href="css/Main.css">
+    >>>>>>> Stashed changes
 
     <title>Sign Up - Foodies</title>
 </head>
@@ -18,19 +17,19 @@
     <div class="content">
         @if (ViewBag.NotificationMessage != null)
         {
-                                <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
+            <div class="alert @(ViewBag.NotificationType == "success" ? "alert-success" : "alert-danger")">
                 @ViewBag.NotificationMessage
-                                </div>
+            </div>
         }
         <div class="signup-form">
             <h1>Sign Up</h1>
             <p>Register to manage your restaurant and connect with customers.</p>
 
-                <form method="post" asp-action="SaveAdminAndResturant" asp-controller="Master" enctype="multipart/form-data">
+            <form method="post" asp-action="SaveAdminAndResturant" asp-controller="Master" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="input-group">
                         <label for="FirstName">First Name</label>
-                        <input type="text"  name="FirstName" required>
+                        <input type="text" name="FirstName" required>
                     </div>
 
                     <div class="input-group">
@@ -45,14 +44,14 @@
                         <input type="email" name="Email" required>
                     </div>
 
-                     <div class="input-group">
+                    <div class="input-group">
                         <label for="AdminNumber">Phone Number</label>
                         <input type="tel" name="PhoneNumber" required pattern="[0-9]{11}" placeholder="Enter 11-digit number">
                     </div>
                 </div>
 
 
-                     <div class="form-row">
+                <div class="form-row">
                     <div class="input-group">
                         <label for="AdminPassword">Password</label>
                         <input type="password" name="Password" required>
@@ -74,57 +73,55 @@
                         <input type="tel" name="Hotline" required>
                     </div>
 
-                     <div class="input-group">
+                    <div class="input-group">
                         <label for="min-price">Minimum Price</label>
-                        <input type="number"  name="MinPrice" value="0">
-                    </div> 
-
-
-                <div class="form-row">
-                    <div class="input-group">
-                        <label for="max-price">Maximum Price</label>
-                        <input type="number" name="MaxPrice" required>
-                    </div> 
-                    <div class="input-group">
-                        <label for="cusine-type">Cuisine Type</label>
-                        <select  class="input-group" name="CuisineType">
-                       <option value="" disabled selected>Select cuisine type</option>
-                       <option value="burger">Burger</option>
-  <option value="pizza">Pizza</option>
-  <option value="desserts">Desserts</option>
-  <option value="drinks">Drinks</option>
-  <option value="salads">Salads</option>
-  <option value="seafood">Seafood</option>
-  <option value="chicken">Chicken</option>
-  <option value="beef">Beef</option>
-  <option value="vegan">Vegan</option>
-  <option value="sushi">Sushi</option>
-  <option value="pasta">Pasta</option>
-  <option value="chinese">Chinese</option>
-  <option value="indian">Indian</option>
-</select>
-
+                        <input type="number" name="MinPrice" value="0">
                     </div>
-                </div>
+
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="max-price">Maximum Price</label>
+                            <input type="number" name="MaxPrice" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="cusine-type">Cuisine Type</label>
+                            <select class="input-group" name="CuisineType">
+                                <option value="" disabled selected>Select cuisine type</option>
+                                <option value="burger">Burger</option>
+                                <option value="pizza">Pizza</option>
+                                <option value="desserts">Desserts</option>
+                                <option value="drinks">Drinks</option>
+                                <option value="salads">Salads</option>
+                                <option value="seafood">Seafood</option>
+                                <option value="chicken">Chicken</option>
+                                <option value="beef">Beef</option>
+                                <option value="vegan">Vegan</option>
+                                <option value="sushi">Sushi</option>
+                                <option value="pasta">Pasta</option>
+                                <option value="chinese">Chinese</option>
+                                <option value="indian">Indian</option>
+                            </select>
+
+                        </div>
+                    </div>
 
                 </div>
 
-                 <div class="form-row">
+                @* <div class="form-row">
                     <div class="input-group">
 
                         <label for="file">Upload Restaurant Image:</label>
-                        <input type="file"  name="immg" accept="image/*" required>
+                        <input type="file" name="immg" accept="image/*" required>
                         <br><br>
 
 
                     </div>
 
+                </div> *@
 
-
-                  </div>
-
-                        <button type="submit" class="btn">Create Account</button>
-</form>
+                <button type="submit" class="btn">Create Account</button>
+            </form>
             <div class="redirect-login">
                 <p>Already have an account? <a href="@Url.Action("Login", "Master")">Login here</a></p>
 
@@ -135,123 +132,121 @@
 </body>
 </html>
 <style>
-.content {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-top: 90px;
-}
+    .content {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin-top: 90px;
+    }
 
-.signup-form {
-    background-color: white;
-    padding: 10px 40px;
-    border-radius: 17px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto; /* To ensure the form itself is centered */
-}
+    .signup-form {
+        background-color: white;
+        padding: 10px 40px;
+        border-radius: 17px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto; /* To ensure the form itself is centered */
+    }
 
-.signup-form h1 {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: #D35269;
-    margin-bottom: 20px;
-}
+        .signup-form h1 {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            color: #D35269;
+            margin-bottom: 20px;
+        }
 
-.signup-form p {
-    font-family: Arial, sans-serif;
-    color: black;
-    font-size: 16px;
-}
+        .signup-form p {
+            font-family: Arial, sans-serif;
+            color: black;
+            font-size: 16px;
+        }
 
-.signup-form form {
-    display: flex;
-    flex-direction: column;
-}
+        .signup-form form {
+            display: flex;
+            flex-direction: column;
+        }
 
-.form-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 15px;
-}
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 15px;
+    }
 
-.input-group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
+    .input-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
 
-.input-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-}
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
 
-.input-group input {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 17px !important; /* Force the radius to apply to all sides */
-    width: 100%;
-}
+        .input-group input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 17px !important; /* Force the radius to apply to all sides */
+            width: 100%;
+        }
 
-/* Center the button */
-.btn {
-    
-    cursor: pointer;
-    margin: 0 auto; /* Center the button */
-    display: block;
-    text-align: center;
-}
+    /* Center the button */
+    .btn {
+        cursor: pointer;
+        margin: 0 auto; /* Center the button */
+        display: block;
+        text-align: center;
+    }
 
-.redirect-login {
-    margin-top: 20px;
-    font-size: 14px;
-}
+    .redirect-login {
+        margin-top: 20px;
+        font-size: 14px;
+    }
 
-.redirect-login a {
-    color: #D35269;
-    text-decoration: none;
-}
+        .redirect-login a {
+            color: #D35269;
+            text-decoration: none;
+        }
 
-.redirect-login a:hover {
-    text-decoration: underline;
-}
+            .redirect-login a:hover {
+                text-decoration: underline;
+            }
 
 
-.btn, .btn-second  {
-
-    border: none;
-    cursor: pointer;
-    border-radius: 30px;
-    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
-    font-weight: bold;
-
-}
-.btn-second {
-    background-color: #2ebfa5;
-    color: white;
-    padding: 10px 30px;
-}
-.btn {
-
-    background-color: #d35269;
-    color: white;
-    padding: 15px 60px;
-}
-    .btn:hover, .btn-second:hover {
-        background-color: black; /* Darker shade of blue for hover */
-        color: #d35269;
+    .btn, .btn-second {
+        border: none;
+        cursor: pointer;
+        border-radius: 30px;
+        font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
         font-weight: bold;
     }
-  
+
+    .btn-second {
+        background-color: #2ebfa5;
+        color: white;
+        padding: 10px 30px;
+    }
+
+    .btn {
+        background-color: #d35269;
+        color: white;
+        padding: 15px 60px;
+    }
+
+        .btn:hover, .btn-second:hover {
+            background-color: black; /* Darker shade of blue for hover */
+            color: #d35269;
+            font-weight: bold;
+        }
 </style>
-  <script>
+<script>
     setTimeout(function () {
         var alert = document.querySelector('.alert');
         if (alert) {
             alert.style.display = 'none';
         }
-    }, 5000); 
+    }, 5000);
 </script>

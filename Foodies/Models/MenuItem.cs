@@ -1,11 +1,9 @@
-﻿namespace Foodies.Models
+﻿using Foodies.Common;
+
+namespace Foodies.Models
 {
-    public class MenuItem
+    public class MenuItem : BaseEntity
     {
-
-
-        [Key]
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Price { get; set; }
         public string Category { get; set; }
@@ -15,7 +13,7 @@
         public string Description { get; set; }
 
         public virtual Restaurant Resturant { get; set; } = default!;
-        public int ResturantId { get; set; } = default!;
+        public string ResturantId { get; set; } = default!;
 
 
         public virtual ICollection<Order>? Orders { get; set; }

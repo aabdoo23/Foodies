@@ -1,8 +1,9 @@
+using Foodies.Common;
+
 namespace Foodies.Models
 {
-    public class Restaurant
+    public class Restaurant: BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string? Photo { get; set; }
         public string Hotline { get; set; }
@@ -14,9 +15,7 @@ namespace Foodies.Models
         //200 - 1400
         public virtual List<Branch>? Branches { get; set; }
         public virtual List<Customer>? FavouriteCustomers { get; set; }
-
-
-        public virtual Admin RestaurantAdmin { get; set; }
+        public virtual Admin? RestaurantAdmin { get; set; }
 
         // Calculate the average rating
         [NotMapped]

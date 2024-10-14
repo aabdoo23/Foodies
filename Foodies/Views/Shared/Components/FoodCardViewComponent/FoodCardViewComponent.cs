@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 [ViewComponent(Name = "FoodCardViewComponent")]
 public class FoodCardViewComponent : ViewComponent
 {
-    public IViewComponentResult Invoke(Customer customer, int id, string title, string rating, string imageUrl, string url)
+    public IViewComponentResult Invoke(Customer customer, string id, string title, string rating, string imageUrl, string url)
     {
         // Create a new view model and populate it with the provided data
         var viewModel = new FoodCardViewModel

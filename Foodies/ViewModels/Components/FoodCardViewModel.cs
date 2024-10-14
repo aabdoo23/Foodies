@@ -9,7 +9,7 @@ namespace Foodies.ViewModels.Components
         public string Price { get; set; }
         public string Rating { get; set; }
         public string Url { get; set; }
-        public int Id { get; set; }
+        public string Id { get; set; }
         //public List<Restaurant>? fav { get; set; }
         public Customer Customer { get; set; }  
 
