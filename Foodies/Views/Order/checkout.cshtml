@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model Branch
+<!DOCTYPE html>
 <html lang="en">
 <head>
     
@@ -24,23 +25,26 @@
 
         <div class="map-container">
 
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3456.192364094608!2d30.939254082238524!3d29.973901210393183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145857502afd5499%3A0x4beb6b963d88d58!2sBazooka%20fried%20chicken!5e0!3m2!1sen!2seg!4v1726173538604!5m2!1sen!2seg" width="300" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d27633.020490424507!2d31.21213911910255!3d30.03319804456864!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x14584754954bd3b1%3A0xe50b87f6c3d4f5ab!2sKaram%20El%20Sham%20-%20Faisal%20Branch%2C%20King%20Faisal%20Street%2C%20Al%20Omraneyah%20Al%20Gharbeyah%2C%20El%20Omraniya!3m2!1d30.008318799999998!2d31.1872649!4m5!1s0x145846d0b807627d%3A0xb2a6ce4702edc3da!2sFaculty%20of%20Computers%20and%20Artificial%20Intelligence%20-%20Cairo%20University%2C%20Al%20Mdars%2C%20Ad%20Doqi%2C%20Dokki%2C%20Giza%20Governorate%203750210!3m2!1d30.031329399999997!2d31.2107191!5e0!3m2!1sen!2seg!4v1728832023873!5m2!1sen!2seg" 
+            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
 
         <div class="address-section">
-            <p>Your Address    <p class="shoytmrg">6th of October - 4th District</p>      <a href="#" class="change-link">Change</a>     </p>
+            <p>Your Address    <p class="shoytmrg"></p>  @ViewBag.fav.Address.City
+             @Model.Address.Location 
+             @ViewBag.distance
+            <a href="#" class="change-link">Change</a>     </p>
 
         </div>
 
         <div class="delivery-info">
             <i class="fa-solid fa-car"></i>
-            <p>Arriving in approx. <strong> mins</strong></p>
+            <p>Arriving in approx. <strong>@ViewBag.time </strong></p>
         </div>
     </div>
 
     <div class="right-section">
         <div class="points">
-            <label>Your total points: <input type="text" id="points" value="470" readonly></label>
+            <label>Your total points: @ViewBag.fav.Points<input type="text" id="points" value="470" readonly></label>
         </div>
 
        <div class="payment-section">
