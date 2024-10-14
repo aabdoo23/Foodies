@@ -301,6 +301,7 @@ namespace Foodies.Controllers
 
             await _branchManagerService.CreateBranchManager(adbr, admin, newBranch);
 
+
             return RedirectToAction("AdminProfile", admin);
         }
 

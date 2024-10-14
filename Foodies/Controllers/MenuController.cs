@@ -71,6 +71,7 @@ namespace Foodies.Controllers
 
             ViewBag.fav = customer;
 
+            //return Content($"{ViewBag.fav.FavouriteRestaurants}");
             return View(restaurants);
         }
 

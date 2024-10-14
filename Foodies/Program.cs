@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 using Microsoft.Extensions.FileProviders;
 using Firebase.Storage;
+using System.Configuration;
+using Foodies.Controllers;
 
 
 namespace Foodies
@@ -43,11 +45,9 @@ namespace Foodies
 
             builder.Services.AddRazorPages();
 
-            //RoleManager<IdentityRole> roleManager;
-            //IdentityResult result =  UserRoles.CreateRole(roleManager, "Admin");
+            builder.Services.AddHttpClient<MapService>();
 
-            //UserRoles.CreateRole(roleManager,"Admin");
-
+            builder.Services.AddControllers(); // Ensure you have this
 
             var app = builder.Build();
 

@@ -66,11 +66,29 @@
         <label class="form-label">confirm</label>
         <input type="password" name="Password" class="form-control" required />
     </div>
+
+    <div class="mb-3">
+        <label>Street:</label>
+        <input type="text" name="Street"class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Building:</label>
+        <input type="text" name="Building" class="form-control"/>
+    </div>
+
+    <div class="mb-3">
+        <label>Location:</label>
+        <input type="text" name="Location" class="form-control"/>
+    </div>
         <input type="hidden" name="restaurantId" value="@ViewBag.RestId" />
 
      <div class="mb-3">
         <label class="form-label">City</label>
         <input type="text" name="City" class="form-control" required />
+
+
+
         <input type="submit" value="Add" class="btn btn-secondary" />
     </div>
 
