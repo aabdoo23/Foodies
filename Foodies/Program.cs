@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 using Microsoft.Extensions.FileProviders;
 using Firebase.Storage;
-using GeminiTextGenerator.Controllers;
 using System.Configuration;
 using Foodies.Controllers;
 
@@ -47,10 +46,6 @@ namespace Foodies
 
             builder.Services.AddHttpClient<MapService>();
 
-            builder.Services.AddHttpClient<GeminiService>();
-            //builder.Services.Configure<GeminiController>(builder.Configuration.GetSection("Gemini"));
-
-            builder.Services.AddScoped<GeminiService>(); // Register the GeminiService
             builder.Services.AddControllers(); // Ensure you have this
 
             var app = builder.Build();
