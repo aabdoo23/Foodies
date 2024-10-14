@@ -15,6 +15,8 @@ using Newtonsoft.Json.Linq;
 using SerpApi;
 using System.Collections;
 using FirebaseAdmin.Messaging;
+using Azure;
+using GoogleApi.Entities.Maps.Common;
 public class OrderController : Controller
 {
     private readonly FoodiesDbContext _context;
@@ -32,50 +34,161 @@ public class OrderController : Controller
         _userManager = userManager;
         _mapService = mapService;
     }
-    public async Task<string> Generate(string prompt)
+
+
+    public (double latitude, double longitude)? ExtractCoordinates(string url)
     {
-        //var result = await _geminiService.GenerateContentAsync(prompt);
-        return "s";
-    }
-    public async Task<int> getNearestBranch(int resId)
-    {
-        List<double> closest= new List<double>();
-        int branchId=1;
-        double val = double.MaxValue;
-        var userId = _userManager.GetUserId(User);
-        Customer customer = await _context.Customer.Where(x => x.Id == userId).Include(a=>a.Address).FirstOrDefaultAsync();
-        Restaurant rest = await _context.Restaurant.Where(x => x.Id == resId).Include(b => b.Branches).ThenInclude(b => b.Address).FirstOrDefaultAsync();
-        foreach (var b in rest.Branches)
+        string pattern = @"@(-?\d+\.\d+),(-?\d+\.\d+)";
+        Response.Cookies.Append("url", url);
+        Match match = Regex.Match(url, pattern);
+
+        if (match.Success)
         {
-            string result = await Generate($"distance%20between%20{b.Address.Location}%20and%20{customer.Address.Location}%20in%20km%20short%20answer");
-            double dist = double.Parse(result.Split(' ')[0]);
-            if (val > dist)
-            {
-                val = dist;
-                branchId = b.BranchId;
-            }
+            double latitude = double.Parse(match.Groups[1].Value);
+            double longitude = double.Parse(match.Groups[2].Value);
+            return (latitude, longitude);
         }
-        Response.Cookies.Append("distance", val.ToString());
-        return branchId;
+
+        return null;
     }
-    public async Task<int> getTimeNearestBranch(int branchId)
+    //
+
+    //resolve make it longer link
+    //use logt and lat function
+    //put it in final function
+    public async Task<JObject> GetDistanceTime(double l1, double g1, double l2, double g2)
     {
-        
-        var userId = _userManager.GetUserId(User);
-        Branch b = await _context.Branch.Where(x => x.BranchId == branchId).FirstOrDefaultAsync();
-        int time = 0;
-        Customer customer = await _context.Customer.Where(x => x.Id == userId).Include(a => a.Address).FirstOrDefaultAsync();
-        
-        string result = await Generate($"time%20driving%20between%20{b.Address.Location}%20and%20{customer.Address.Location}%20in%20min%20short%20answer");
-        string numberString = new string(result.TakeWhile(char.IsDigit).ToArray());
-        time = int.Parse(numberString);
-        
-        
-        return  time;
+        String apiKey = "5c2a1476c0e97f202c537b7e0459338cb9792efca2e0b763809c278a810abe74";
+        Hashtable ht = new Hashtable();
+        ht.Add("engine", "google_maps_directions");
+        ht.Add("start_coords", $"{l1}, {g1}");
+        ht.Add("end_coords", $"{l2}, {g2}");
+
+        GoogleSearch search = new GoogleSearch(ht, apiKey);
+        JObject data = search.GetJson();
+        var directions = data["directions"];
+        if (directions != null && directions.HasValues)
+        {
+
+            var firstDirection = directions[0];
+
+                // Extract travel data
+
+
+                // Extract travel data
+                var distance = firstDirection["formatted_distance"]?.ToString();
+                var time = firstDirection["formatted_duration"]?.ToString();
+
+
+                // Return JSON object with distance and time as strings
+                return JObject.FromObject(new { distance = distance, time = time });
+            
+            }
+        return null;
     }
 
+
+    public async Task<int> proceedDistanceTime(int resId)
+    {
+        var userId = _userManager.GetUserId(User);
+        Customer customer = await _context.Customer.Where(x => x.Id == userId).Include(a => a.Address).FirstOrDefaultAsync();
+        
+        Restaurant rest = await _context.Restaurant.Where(x => x.Id == resId).Include(b => b.Branches).ThenInclude(b => b.Address).FirstOrDefaultAsync();
+
+        
+        //double Bdist =double.MaxValue;
+        //int Btime = int.MaxValue;
+        
+        //int branchID = rest.Branches[0].BranchId;
+
+        Dictionary<int, (string dist, string time)> data = new Dictionary<int, (string, string)>();
+
+        var coordinateCustomer = ExtractCoordinates(customer.Address.Location);
+
+        foreach (var b in rest.Branches)
+        {
+            //string destination = await _mapService.ResolveGoogleMapsLink(b.Address.Location);
+            var coordinateBranch = ExtractCoordinates(b.Address.Location);
+
+            //string location = await _mapService.ResolveGoogleMapsLink(customer.Address.Location);
+            //if (Request.Cookies["distance"]!=null && double.Parse(Request.Cookies["distance"]) < dist )
+            //{
+            //    dist = double.Parse(Request.Cookies["distance"]);
+            //    branchID = b.BranchId;
+            //}
+             var result = await GetDistanceTime(coordinateCustomer.Value.latitude, coordinateCustomer.Value.longitude,coordinateBranch.Value.latitude, coordinateBranch.Value.longitude );
+            //Response.Cookies.Append("br", result["distance"].ToString());
+
+            if (result["distance"] != null && result["time"] != null)
+            {
+
+                data[b.BranchId] = (result["distance"].ToString(), result["time"].ToString());    // Population, Area in km²
+
+            }
+
+        }
+
+        //logic for sorting
+        List<int> timeList = new List<int>();
+        Dictionary<int, (string dist, int time)> data2 = new Dictionary<int, (string, int)>();
+        bool entered = false;
+        foreach (var t in data)
+        {
+            var sp = t.Value.time.Split(' ');
+            if (sp[1] == "min" || sp[1] == "mins")
+            {
+                data2[t.Key] = (t.Value.dist,int.Parse(sp[0]));
+                entered = true;
+            }
+            if (sp[1] == "hr" || sp[1] == "hrs")
+            {
+                data2[t.Key] = (t.Value.dist, int.Parse(sp[0])*60 );
+                entered = true;
+            }
+        }
+        var sorted = data2.OrderBy(d => d.Value.time);
+        var distanceList = sorted.Select(d => $"{d.Key}:{d.Value.time}:{d.Value.dist}").ToList();
+        string distanceString = string.Join(",", distanceList);
+
+        Response.Cookies.Append("uu", distanceString);
+        Response.Cookies.Append("time", sorted.First().Value.time.ToString());
+
+        Response.Cookies.Append("distance", sorted.First().Value.dist.ToString());
+
+
+        return sorted.First().Key;
+    }
+
+
     [HttpPost]
-    public async Task< IActionResult> AddCard(Card card)
+    public async Task<IActionResult> checkout(int total)
+    {
+        ViewBag.Total = total.ToString();
+        int restID = int.Parse(Request.Cookies["restId"]);
+        //Response.Cookies.Append("distance", $"{double.MaxValue}");
+        //Response.Cookies.Append("time", $"{int.MaxValue}");
+
+        var userId = _userManager.GetUserId(User);
+        Customer customer = await _context.Customer.Where(x => x.Id == userId).Include(a => a.Address).FirstOrDefaultAsync();
+        ViewBag.fav = customer;
+
+        int branchID =await  proceedDistanceTime(restID);
+        Branch branch = await _context.Branch
+            .Where(x => x.BranchId == branchID)
+            .Include(a => a.Address).FirstOrDefaultAsync();
+
+        Response.Cookies.Append("bID", branch.BranchId.ToString());
+
+        ViewBag.distance = Request.Cookies["distance"];
+        ViewBag.time = Request.Cookies["time"];
+
+        return View(branch);
+    }
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> AddCard(Card card)
     {
         // Check if the card number is null or empty
         if (card.CardNumber == null)
@@ -94,7 +207,7 @@ public class OrderController : Controller
             card.customer = customer;
             customer.card = card;
             await _context.Card.AddAsync(card);
-            
+
             Response.Cookies.Append("CardId", card.Id.ToString());
             await _context.SaveChangesAsync();
             return RedirectToAction("UserView", "Home");
@@ -106,133 +219,8 @@ public class OrderController : Controller
         return RedirectToAction("UserView", "Home");
 
     }
-   
-
-    public (double latitude, double longitude)? ExtractCoordinates(string url)
-    {
-        string pattern = @"@(-?\d+\.\d+),(-?\d+\.\d+)";
-        Match match = Regex.Match(url, pattern);
-
-        if (match.Success)
-        {
-            double latitude = double.Parse(match.Groups[1].Value);
-            double longitude = double.Parse(match.Groups[2].Value);
-            return (latitude, longitude);
-        }
-
-        return null;
-    }
-    //
-
-    //[HttpGet]
-    //resolve make it longer link
-    //use logt and lat function
-    //put it in final function
-    public async Task<IActionResult> test()
-    {
-        // Resolve the first location (Karam el Sham)
-        //string location = await _mapService.ResolveGoogleMapsLink("https://maps.app.goo.gl/LdcBPFoKVhUztVd96");
-
-        //// Extract coordinates from the first location
-        //var coordinates = ExtractCoordinates(location);
-
-        //// Resolve the second location (Campus)
-        //string destination = await _mapService.ResolveGoogleMapsLink("https://maps.app.goo.gl/NrDkdkFg1FwEejmU6");
-
-        //// Extract coordinates from the second location
-        //var coordinates2 = ExtractCoordinates(destination);
-
-        //// Check if both sets of coordinates are valid
-        //if (coordinates.HasValue && coordinates2.HasValue)
-        //{
-
-        // Get the total distance between the two coordinates
-        //string totalDistance = await _mapService.GetTotalDistanceAsync(
-        //    30.3017, -97.7408,
-        //    40.3017, -87.7408
-        //);
-
-        String apiKey = "5c2a1476c0e97f202c537b7e0459338cb9792efca2e0b763809c278a810abe74";
-        Hashtable ht = new Hashtable();
-        ht.Add("engine", "google_maps_directions");
-        ht.Add("start_coords", "30.01711724128, 31.18670409319749");
-        ht.Add("end_coords", "30.058726995198423, 31.240605762125483");
-
-            GoogleSearch search = new GoogleSearch(ht, apiKey);
-            JObject data = search.GetJson();
-            var directions = data["directions"];
-        if (directions != null && directions.HasValues)
-        {
-            // Access the first direction (if multiple exist)
-            var firstDirection = directions[0];
-
-            // Now, check if the "trips" array exists in the first direction
-            var trips = firstDirection["trips"] as JArray;
-
-            if (trips != null && trips.HasValues)
-            {
-                var firstTrip = trips[0];
-
-                // Extract travel data
-                var travelMode = firstTrip["travel_mode"]?.ToString();
-                var title = firstTrip["title"]?.ToString();
-                var distance = firstTrip["distance"]?.ToString();
-                var duration = firstTrip["duration"]?.ToString();
-
-                // Return the extracted information as part of the response
-                return Content($"Travel Mode: {travelMode}, Title: {title}, Distance: {distance}, Duration: {duration}");
-            }
-            else
-            {
-                return Content("No trips found in the first direction.");
-            }
-        }
-        else
-        {
-            return Content("No directions found.");
-        }
-        //}
-        //return Content("no if");
 
 
-
-    
-        //catch (SerpApiSearchException ex)
-        //{
-        //    Console.WriteLine("Exception:");
-        //    Console.WriteLine(ex.ToString());
-
-        //}
-        //}
-
-        //// Return error message if either set of coordinates is invalid
-        //return Content("Invalid URL or coordinates not found.");
-    }
-
-
-    [HttpPost]
-    public async Task<IActionResult> checkout(int total)
-    {
-        ViewBag.Total = total.ToString();
-        int restID = int.Parse(Request.Cookies["restId"]);
-        int branchID = await getNearestBranch(restID);
-
-        var userId = _userManager.GetUserId(User);
-        Customer customer = await _context.Customer.Where(x => x.Id == userId).Include(a => a.Address).FirstOrDefaultAsync();
-
-        ViewBag.fav = customer;
-        Branch branch = await _context.Branch
-            .Where(x => x.BranchId == branchID)
-            .Include(a => a.Address).FirstOrDefaultAsync();
-
-        ViewBag.distance = Request.Cookies["distance"];
-        ViewBag.time = await getTimeNearestBranch(branchID);
-
-        return View(branch);
-    }
-
-    
-    
     [HttpPost]
     public async Task<IActionResult> OrderView(int total, string paymentMethod)
     {
@@ -299,8 +287,8 @@ public class OrderController : Controller
         //Restaurant rest = _context.Restaurant.Where(x => x.Id == int.Parse(Request.Cookies["restId"]))
         //    .Include(b => b.Branches).SingleOrDefault();
         //return Content($"{rest.Branches[0]} hoho");
-        int branchID = await getNearestBranch(restID);
-        Branch branch = await _context.Branch.Where(x=> x.BranchId == branchID).SingleOrDefaultAsync();
+        int branchID = int.Parse(Request.Cookies["bID"]);
+        Branch branch = await _context.Branch.Where(x=> x.BranchId == 1).SingleOrDefaultAsync();
         order.Branch = branch;
 
         foreach (var cookie in Request.Cookies)

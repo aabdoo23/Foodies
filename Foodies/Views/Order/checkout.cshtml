@@ -30,20 +30,21 @@
 
         <div class="address-section">
             <p>Your Address    <p class="shoytmrg"></p>  @ViewBag.fav.Address.City
-            @ViewBag.fav.Address.Location  @Model.Address.Location
+             @Model.Address.Location 
+             @ViewBag.distance miles
             <a href="#" class="change-link">Change</a>     </p>
 
         </div>
 
         <div class="delivery-info">
             <i class="fa-solid fa-car"></i>
-            <p>Arriving in approx. <strong>@ViewBag.time mins</strong></p>
+            <p>Arriving in approx. <strong>@ViewBag.time </strong></p>
         </div>
     </div>
 
     <div class="right-section">
         <div class="points">
-            <label>Your total points: @ViewBag.distance<input type="text" id="points" value="470" readonly></label>
+            <label>Your total points: @ViewBag.fav.Points<input type="text" id="points" value="470" readonly></label>
         </div>
 
        <div class="payment-section">
