@@ -32,6 +32,7 @@
   <ItemGroup>
     <Content Remove="wwwroot\foodies.png" />
     <Content Remove="wwwroot\Image\" />
+    <Content Remove="wwwroot\js\sefr.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Views\Authentication\LogIn.cshtml">
@@ -42,10 +43,14 @@
     <None Remove="Views\BranchManager\" />
   </ItemGroup>
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\sefr.js" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="wwwroot\foodies.png" />
     <None Include="wwwroot\images\food.png" />
     <None Include="wwwroot\images\foodies logo.png" />
     <None Include="wwwroot\images\foodies.png" />
+    <None Include="wwwroot\js\sefr.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />

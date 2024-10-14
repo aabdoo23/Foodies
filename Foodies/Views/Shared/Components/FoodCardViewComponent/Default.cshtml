@@ -3,29 +3,29 @@
 
 
 <div class="food-card" >
-    
+
     <div class="food-card-fav">
         @{
-            if (@Model.Customer.FavouriteRestaurants.Count > 0 || @Model.Customer.FavouriteRestaurants != null)
+            if (@Model?.Customer?.FavouriteRestaurants != null && @Model?.Customer?.FavouriteRestaurants.Count > 0)
             {
 
                 foreach (var r in @Model.Customer.FavouriteRestaurants)
                 {
-                    if(r.Id == Model.Id)
+                    if (r.Id == Model.Id)
                     {
-                        <i class="bi bi-heart-fill" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+                                        <i class="bi bi-heart-fill" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
                         break;
                     }
                     else
                     {
-                        <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+                                        <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
                         break;
                     }
                 }
             }
             else
             {
-             <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+                     <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
             }
         }
     </div>
@@ -36,15 +36,15 @@
            <p  class="food-card-text-title" 
            onclick="window.location.href='@Model.Url'">@Model.Title</p>
 
-        
-        
+
+
 
 </div>
 
 <script>
     function addToFavourites(resId) {
         var button = document.getElementById("fav-" + resId);
-        
+
         if (button.classList.contains("bi-heart")) {
             button.classList.remove("bi-heart");
             console.log("hello");
@@ -123,11 +123,11 @@
          z-index: 1; 
     }
 
-    
+
 
     /*icon facourite*/
     .food-card-fav {
-        
+
         /* margin: -1em 20px; */
         /* margin-right:40px; */
         display: flex;
@@ -137,13 +137,13 @@
         padding-top:0.1rem;
         text-align: right;
         border:none;
-        
+
     }
     .bi-heart, .bi-heart-fill{
         font-size: 1.9rem;
         z-index: 2;
         border-raduis: 14px;
-        
+
     }
     .bi-heart{
         color:  var(--black);
@@ -153,7 +153,7 @@
     }
     .bi-heart:hover , .bi-heart-fill:hover{
     transform: scale(1.05); /* Slightly scale up the box */
-    
+
     color: rgba(255, 100, 50, 0.9); /* Red shade on hover (with 30% opacity) */
 
 }    
@@ -168,13 +168,13 @@
 }
 
 
- 
-   
+
+
 
    /*  .food-card-footer {
         display: flex;
         align-items: center;
-      
+
         position: absolute;
         bottom: 0;
         width: 100%;
@@ -188,7 +188,7 @@
         margin: 0 10px;
     }
  */
-   
+
 
     /*Hover*/
     .food-card:hover {

@@ -197,7 +197,7 @@ namespace Foodies.Controllers
 
             var Cususer = await _userManager.FindByIdAsync(id);
 
-            var cutomer=_context.Customer.Where(x=>x.Id==id).FirstOrDefault();  
+            var cutomer=_context.Customer.Include(x=>x.Orders).Where(x=>x.Id==id).FirstOrDefault();  
             var addrress=_context.Address.Where(x=>x.Id==cutomer.AddressId).FirstOrDefault();
             Customerviewmodel cusview = new Customerviewmodel();
             cusview.Id = id;
@@ -211,6 +211,8 @@ namespace Foodies.Controllers
             cusview.Points= cutomer.Points;
             cusview.Location = addrress.Location;
             cusview.img= cutomer.img;
+            var oredr = _context.Order.Include(x => x.Items).Where(x=>x.Customer.Id==id).ToList();
+            ViewBag.orders= oredr;
             return View(cusview);
         }
         

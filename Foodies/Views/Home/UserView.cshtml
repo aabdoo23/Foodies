@@ -173,7 +173,7 @@
             <div id="order-history" class="order-history">
                   <h3>Order History</h3>
 
-                  <!-- Order #1 -->
+              @*    <!-- Order #1 -->
                   <div class="order-item">
                   <div class="order-details">
                     <h4>Order #1</h4>
@@ -186,9 +186,28 @@
                     <img src="burger.png" alt="Order Photo" class="order-photo">
                     <button class="reorder-btn">Reorder</button>
                   </div>
+                  </div>*@
+            @{
+                int con = 0;
+            }
+            @foreach (var i in ViewBag.orders)
+            {
+                 <div class="order-item">
+                  <div class="order-details">
+                    <h4>Order #@con</h4>
+                    <p>Date: @i.OrderDate</p>
+                    <p>Restaurant: </p>
+                    <p>Description: 4x 200gm sandwiches with 4 small fries and 4 drinks</p>
+                    <p>Total Price: @i.TotalPrice EGP</p>
                   </div>
+                  <div class="order-actions">
+                    <img src="burger.png" alt="Order Photo" class="order-photo">
+                  </div>
+                     </div>
+                     
+            }
 
-                  <!-- Order #2 -->
+             @*     <!-- Order #2 -->
                 <div class="order-item">
                   <div class="order-details">
                     <h4>Order #2</h4>
@@ -201,7 +220,7 @@
                     <img src="pizza.png" alt="Order Photo" class="order-photo">
                     <button class="reorder-btn">Reorder</button>
                   </div>
-                </div>
+                </div>*@
 
                   <!-- Pagination (if needed) -->
                   <div class="pagination">
