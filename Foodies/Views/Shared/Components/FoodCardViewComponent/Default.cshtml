@@ -6,7 +6,7 @@
     
     <div class="food-card-fav">
         @{
-            if (@Model.Customer.FavouriteRestaurants != null && @Model.Customer.FavouriteRestaurants.Count > 0  )
+            if (@Model?.Customer?.FavouriteRestaurants != null && @Model?.Customer?.FavouriteRestaurants.Count > 0  )
             {
 
                 foreach (var r in @Model.Customer.FavouriteRestaurants)

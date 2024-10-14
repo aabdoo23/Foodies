@@ -9,6 +9,7 @@ using Microsoft.Extensions.FileProviders;
 using Firebase.Storage;
 using GeminiTextGenerator.Controllers;
 using System.Configuration;
+using Foodies.Controllers;
 
 
 namespace Foodies
@@ -44,14 +45,12 @@ namespace Foodies
 
             builder.Services.AddRazorPages();
 
-            //RoleManager<IdentityRole> roleManager;
-            //IdentityResult result =  UserRoles.CreateRole(roleManager, "Admin");
+            builder.Services.AddHttpClient<MapService>();
 
-            //UserRoles.CreateRole(roleManager,"Admin");
-
-            
             builder.Services.AddHttpClient<GeminiService>();
-            //builder.Services.Configure<GeminiOptions>(Configuration.GetSection("Gemini"));
+            //builder.Services.Configure<GeminiController>(builder.Configuration.GetSection("Gemini"));
+
+            builder.Services.AddScoped<GeminiService>(); // Register the GeminiService
             builder.Services.AddControllers(); // Ensure you have this
 
             var app = builder.Build();

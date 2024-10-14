@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,6 +18,8 @@ namespace GeminiTextGenerator.Controllers
             _httpClient.BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent");
         }
 
+        
+        
         public async Task<string> GenerateContentAsync(string prompt)
         {
             var request = new

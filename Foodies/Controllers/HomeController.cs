@@ -343,6 +343,8 @@ namespace Foodies.Controllers
                 BranchId = newBranch.BranchId,
                 FirstName= adbr.FirstName,  
                 LastName= adbr.LastName,
+
+
                 IdentityUser = user,
 
 
