@@ -32,6 +32,7 @@ namespace Foodies.Controllers
             var restaurant = await _restaurantRepository.GetByIdWithRatings(restaurantId);
 
             if (restaurant == null) return NotFound();
+            Response.Cookies.Append("r", restaurantId);
 
             var menuItems = await _menuItemRepository.GetAllByRestaurantId(restaurantId, category);
 

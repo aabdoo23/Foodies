@@ -11,6 +11,7 @@ using Azure;
 using GoogleApi.Entities.Maps.Common;
 using Foodies.Interfaces.Repositories;
 using Foodies.Repositories;
+using System.Collections.Generic;
 public class OrderController : Controller
 {
     //private readonly FoodiesDbContext _context;
@@ -95,12 +96,12 @@ public class OrderController : Controller
     }
 
 
-    public async Task<string> proceedDistanceTime(int resId)
+    public async Task<string> proceedDistanceTime(string resId)
     {
         var userId = _userManager.GetUserId(User);
         Customer customer = await _customerRepository.GetById(userId);
         
-        Restaurant rest = await _restaurantRepository.GetByIdWithBranchesIncludeAddress(userId);
+        Restaurant rest = await _restaurantRepository.GetByIdWithBranchesIncludeAddress(resId);
 
         Dictionary<string, (string dist, string time)> data = new Dictionary<string, (string, string)>();
 
@@ -115,7 +116,7 @@ public class OrderController : Controller
             var coordinateBranch = ExtractCoordinates(b.Address.Location);
 
             var result = await GetDistanceTime(coordinateCustomer.Value.latitude, coordinateCustomer.Value.longitude,coordinateBranch.Value.latitude, coordinateBranch.Value.longitude );
-            //Response.Cookies.Append("br", result["distance"].ToString());
+            Response.Cookies.Append($"br{b.Id}", $"{coordinateBranch.Value.latitude}{coordinateBranch.Value.longitude}");
 
             if (result["distance"] != null && result["time"] != null)
             {
@@ -127,21 +128,17 @@ public class OrderController : Controller
         }
 
         //logic for sorting
-        List<int> timeList = new List<int>();
         Dictionary<string, (string dist, int time)> data2 = new Dictionary<string, (string, int)>();
-        bool entered = false;
         foreach (var t in data)
         {
             var sp = t.Value.time.Split(' ');
             if (sp[1] == "min" || sp[1] == "mins")
             {
                 data2[t.Key] = (t.Value.dist,int.Parse(sp[0]));
-                entered = true;
             }
             if (sp[1] == "hr" || sp[1] == "hrs")
             {
                 data2[t.Key] = (t.Value.dist, int.Parse(sp[0])*60 );
-                entered = true;
             }
         }
         var sorted = data2.OrderBy(d => d.Value.time);
@@ -156,7 +153,7 @@ public class OrderController : Controller
         Response.Cookies.Append("distance", sorted.First().Value.dist);
 
 
-        return sorted.First().Key;
+        return $"{sorted.First().Key}:{data[sorted.First().Key].time}:{sorted.First().Value.dist}";
     }
 
 
@@ -164,18 +161,21 @@ public class OrderController : Controller
     public async Task<IActionResult> checkout(int total)
     {
         ViewBag.Total = total.ToString();
-        int restID = int.Parse(Request.Cookies["restId"]);
+        string restID = Request.Cookies["restId"];
 
         var userId = _userManager.GetUserId(User);
         Customer customer = await _customerRepository.GetById(userId);
         ViewBag.fav = customer;
 
-        string branchID =await  proceedDistanceTime(restID);
+        
+        string data = await proceedDistanceTime(restID);
+        var arrayData = data.Split(':');
+        string branchID = arrayData[0];
         Branch branch = await _branchRepository.GetById(branchID);
 
         Response.Cookies.Append("bID", branch.Id);
-        ViewBag.distance = Request.Cookies["distance"];
-        ViewBag.time = Request.Cookies["time"];
+        ViewBag.distance = arrayData[2];
+        ViewBag.time = arrayData[1];
 
         return View(branch);
     }
@@ -259,7 +259,7 @@ public class OrderController : Controller
         //not tested yet
         if (payment.PaymentMethod == "Card")
         {
-            int cardId = int.Parse(Request.Cookies["CardId"]);
+            string cardId =Request.Cookies["CardId"];
 
             Card card = await _cardRepository.GetCardByCustomerId(userId);
             payment.card = card;
@@ -267,7 +267,7 @@ public class OrderController : Controller
         }
         order.Payment = payment;
 
-        int restID = int.Parse(Request.Cookies["restId"]);
+        string restID = Request.Cookies["restId"];
         
         string branchID = Request.Cookies["bID"];
         Branch branch = await _branchRepository.GetByIdIcludeOrders(branchID);
