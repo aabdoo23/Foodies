@@ -11,8 +11,8 @@
                 <p>Price: @item.Price LE</p>
             </div>
             <div class="add-to-cart">
-                <button id = "cart-@item.Id" class="fa fa-shopping-cart" onclick="addToCart(@item.Id)"></button>
-               <button class="" onclick="remCart(@item.Id)"></button>
+                <button id = "cart-@item.Id" class="fa fa-shopping-cart" onclick="addToCart('@item.Id')"></button>
+               <button class="" onclick="remCart('@item.Id')"></button>
 
 
 
@@ -30,11 +30,11 @@
     
     function addToCart(itemId) {
             var button = document.getElementById("cart-" + itemId);
-
+             console.log("hello");
             if (button.classList.contains("fa-shopping-cart")) {
                 button.classList.remove("fa-shopping-cart");
                 button.classList.add("fa-check");
-                
+               
                 $.ajax({
                     url: '/Order/addCart', 
                     type: 'GET', 

@@ -1,9 +1,9 @@
+using Foodies.Common;
+
 namespace Foodies.Models
 {
-    public class Payment
+    public class Payment: BaseEntity
     {
-
-        public int Id { get; set; }
         public string PaymentMethod { get; set; }
         [Column(TypeName = "money")]
         public decimal Amount { get; set; }
@@ -11,7 +11,7 @@ namespace Foodies.Models
         public DateTime PaymentDate { get; set; }
         public virtual Order Order { get; set; } = default!;
 
-        public int ?cardId { get; set; }
+        public string ?cardId { get; set; }
         public virtual Card ?card { get; set; }
 
     }

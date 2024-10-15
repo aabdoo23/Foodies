@@ -1,6 +1,6 @@
 ﻿<html>
     <header>
-            <title>Restaurant List</title>
+            <title>Favourite List</title>
                 <link rel="stylesheet" href="~/css/restaurant.css">
     @* <link rel="stylesheet" href="~/css/Navbar.css"> *@
                 <link rel="stylesheet" href="~/css/Main.css">
@@ -13,22 +13,26 @@
         <div class="restaurant-list">
         <div class="btn"><h1>Your Favourites</h1></div>
             <div class="restaurant-cards">
-            @foreach (var restaurant in ViewBag.fav.FavouriteRestaurants)
-                {
-
-                    @await Component.InvokeAsync("FoodCardViewComponent",new
+            @{
+                if(ViewBag?.fav?.FavouriteRestaurants!= null){
+                    foreach (var restaurant in ViewBag.fav.FavouriteRestaurants)
                     {
-                        Id = restaurant.Id,
-                        Title = restaurant.Name,
-                        Hotline = restaurant.Hotline,
-                        CuisineType = restaurant.CuisineType,
-                        MinPrice = restaurant.MinPrice,
-                        MaxPrice = restaurant.MaxPrice,
-                        ImageUrl = restaurant.Photo,
-                        Customer = ViewBag.fav,
 
-                        Url = $"/Menu/Index?restaurantId={restaurant.Id}",
-                    })
+                            @await Component.InvokeAsync("FoodCardViewComponent",new
+                            {
+                                Id = restaurant.Id,
+                                Title = restaurant.Name,
+                                Hotline = restaurant.Hotline,
+                                CuisineType = restaurant.CuisineType,
+                                MinPrice = restaurant.MinPrice,
+                                MaxPrice = restaurant.MaxPrice,
+                                ImageUrl = restaurant.Photo,
+                                Customer = ViewBag.fav,
+
+                                Url = $"/Menu/Index?restaurantId={restaurant.Id}",
+                            })
+                        
+                    
             <div class="rating-container">
                 <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">Rate Restaurant</button>
                 <div class="rating-input" style="display: none;">
@@ -36,6 +40,8 @@
                     <button class="btn btn-primary submit-rating" data-restaurant-id="@restaurant.Id">Submit</button>
                 </div>
             </div>
+                    }
+                }
                 }
 </div>
 

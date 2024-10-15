@@ -1,25 +1,152 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CreditCardValidator;
-using Foodies.Models;
-using Foodies.Migrations;
+using System.Text.RegularExpressions;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using SerpApi;
+using System.Collections;
+using FirebaseAdmin.Messaging;
+using Azure;
+using GoogleApi.Entities.Maps.Common;
+using Foodies.Interfaces.Repositories;
+using Foodies.Repositories;
 using System.Collections.Generic;
 public class OrderController : Controller
 {
-    private readonly FoodiesDbContext _context;
-    static private int cnt = 0;
+    //private readonly FoodiesDbContext _context;
+    //static private int cnt = 0;
     private List<MenuItem> myCart = new List<MenuItem>();
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly IRestaurantRepository _restaurantRepository;
+    private readonly IMenuItemRepository _menuItemRepository;
+    private readonly IOrderRepository _orderRepository;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly IBranchRepository _branchRepository;
+    private readonly ICardRepository _cardRepository;
+
+    private readonly MapService _mapService;
 
 
-    public OrderController(FoodiesDbContext context ,UserManager<IdentityUser> userManager)
+    public OrderController(
+        UserManager<IdentityUser> userManager,
+        IRestaurantRepository restaurantRepository,
+        IMenuItemRepository menuItemRepository,
+        ICustomerRepository customerRepository,
+        IBranchRepository branchRepository,
+        IOrderRepository orderRepository,
+        ICardRepository cardRepository,
+
+        MapService mapService)
     {
-        _context = context;
+        _restaurantRepository = restaurantRepository;
+        _menuItemRepository = menuItemRepository;
         _userManager = userManager;
+        _mapService = mapService;
+        _customerRepository = customerRepository;
+        _branchRepository = branchRepository;
+        _cardRepository = cardRepository;
+        _orderRepository = orderRepository;
     }
 
+
+    
+    //
+
+    //resolve make it longer link
+    //use logt and lat function
+    //put it in final function
+   
+
+
+    public async Task<string> proceedDistanceTime(string resId)
+    {
+        var userId = _userManager.GetUserId(User);
+        Customer customer = await _customerRepository.GetById(userId);
+        
+        Restaurant rest = await _restaurantRepository.GetByIdWithBranchesIncludeAddress(resId);
+
+        Dictionary<string, (string dist, string time)> data = new Dictionary<string, (string, string)>();
+
+        var coordinateCustomer = _mapService.ExtractCoordinates(customer.Address.Location);
+
+        foreach (var b in rest.Branches)
+        {
+            //resolved url too many requests 409
+            //string destination = await _mapService.ResolveGoogleMapsLink(b.Address.Location);
+            //string location = await _mapService.ResolveGoogleMapsLink(customer.Address.Location);
+
+            var coordinateBranch = _mapService.ExtractCoordinates(b.Address.Location);
+
+            var result = await _mapService.GetDistanceTime(coordinateCustomer.Value.latitude, coordinateCustomer.Value.longitude,coordinateBranch.Value.latitude, coordinateBranch.Value.longitude );
+            Response.Cookies.Append($"br{b.Id}", $"{coordinateBranch.Value.latitude}{coordinateBranch.Value.longitude}");
+
+            if (result["distance"] != null && result["time"] != null)
+            {
+
+                data[b.Id] = (result["distance"].ToString(), result["time"].ToString());    // Population, Area in km²
+
+            }
+
+        }
+
+        //logic for sorting
+        Dictionary<string, (string dist, int time)> data2 = new Dictionary<string, (string, int)>();
+        foreach (var t in data)
+        {
+            var sp = t.Value.time.Split(' ');
+            if (sp[1] == "min" || sp[1] == "mins")
+            {
+                data2[t.Key] = (t.Value.dist,int.Parse(sp[0]));
+            }
+            if (sp[1] == "hr" || sp[1] == "hrs")
+            {
+                data2[t.Key] = (t.Value.dist, int.Parse(sp[0])*60 );
+            }
+        }
+        var sorted = data2.OrderBy(d => d.Value.time);
+        var distanceList = sorted.Select(d => $"{d.Key}:{d.Value.time}:{d.Value.dist}").ToList();
+        string distanceString = string.Join(",", distanceList);
+
+        //for debugging purposes -dont delete it
+        Response.Cookies.Append("uu", distanceString);
+
+
+        Response.Cookies.Append("time", data[sorted.First().Key].time);
+        Response.Cookies.Append("distance", sorted.First().Value.dist);
+
+
+        return $"{sorted.First().Key}:{data[sorted.First().Key].time}:{sorted.First().Value.dist}";
+    }
+
+
     [HttpPost]
-    public async Task< IActionResult> AddCard(Card card)
+    public async Task<IActionResult> checkout(int total)
+    {
+        ViewBag.Total = total.ToString();
+        string restID = Request.Cookies["restId"];
+
+        var userId = _userManager.GetUserId(User);
+        Customer customer = await _customerRepository.GetById(userId);
+        ViewBag.fav = customer;
+
+        
+        string data = await proceedDistanceTime(restID);
+        var arrayData = data.Split(':');
+        string branchID = arrayData[0];
+        Branch branch = await _branchRepository.GetById(branchID);
+
+        Response.Cookies.Append("bID", branch.Id);
+        ViewBag.distance = arrayData[2];
+        ViewBag.time = arrayData[1];
+
+        return View(branch);
+    }
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> AddCard(Card card)
     {
         // Check if the card number is null or empty
         if (card.CardNumber == null)
@@ -27,7 +154,7 @@ public class OrderController : Controller
             return BadRequest(new { success = false, message = "Card number is required." });
         }
         var userId = _userManager.GetUserId(User);
-        Customer customer = await _context.Customer.Where(x => x.Id == userId).FirstOrDefaultAsync();
+        Customer customer = await _customerRepository.GetById(userId);
         var creditCardDetector = new CreditCardDetector(card.CardNumber);
 
         if (creditCardDetector.IsValid())
@@ -37,10 +164,9 @@ public class OrderController : Controller
             card.Type = cardType;
             card.customer = customer;
             customer.card = card;
-            _context.Card.Add(card);
-            
-            Response.Cookies.Append("CardId", card.Id.ToString());
-            _context.SaveChanges();
+            await _cardRepository.Create(card);
+
+            Response.Cookies.Append("CardId", card.Id);
             return RedirectToAction("UserView", "Home");
             //return Content($"{card.CardNumber} fofo");
         }
@@ -52,39 +178,24 @@ public class OrderController : Controller
     }
 
 
-    public void Payment(Payment payment) { 
-        
-        //else
-        //{
-        //    //check for address existance
-        //}
-        //_context.Payment.Add(payment);
-        //Response.Cookies.Append("PaymentId", payment.Id.ToString());
-
-        //return Content("payment done done done");
-    }
-
     [HttpPost]
-    public IActionResult OrderView(int total, string paymentMethod)
+    public async Task<IActionResult> OrderView(int total, string paymentMethod)
     {
         foreach (var cookie in Request.Cookies)
         {
-            if (int.TryParse(cookie.Value, out int itemId))
+            if (int.TryParse(cookie.Key, out int id))
             {
-                MenuItem menuItem = _context.MenuItem
-                    .Where(x => x.Id == itemId)
-                    .SingleOrDefault();
+                MenuItem menuItem = await _menuItemRepository.GetById(cookie.Value);
                 myCart.Add(menuItem);
             }
         }
         Response.Cookies.Append("paymentmethod", paymentMethod);
-        //return Content($"{paymentMethod}fef{total}");
         return View(myCart);
     }
 
     //checkout
     [HttpPost]
-    public async Task<IActionResult> order(int total, string paymentMethod)
+    public async Task<IActionResult> order(int total)
     {
         ////id , State , total , date, paymentid , customerid, branch id
         Order order = new Order();
@@ -95,15 +206,9 @@ public class OrderController : Controller
 
         ////Customer
         var userId = _userManager.GetUserId(User);
-        Customer Cust = _context.Customer.Where(x => x.Id == userId)
-            .Include(o=> o.Orders)
-            .SingleOrDefault();
-
+        Customer Cust = await _customerRepository.GetByIdIncludeOrders(userId);
         order.Customer = Cust;
 
-
-
-        
 
         //payment
         Payment payment = new Payment
@@ -113,33 +218,29 @@ public class OrderController : Controller
             Amount = total,
             Order = order
         };
+
         //not tested yet
         if (payment.PaymentMethod == "Card")
         {
-            int cardId = int.Parse(Request.Cookies["CardId"]);
+            string cardId = Request.Cookies["CardId"];
 
-            Card card = _context.Card.Where(x => x.CustomerId == userId).Include(p => p.payments).SingleOrDefault();
+            Card card = await _cardRepository.GetCardByCustomerId(userId);
             payment.card = card;
             card.payments.Add(payment);
         }
         order.Payment = payment;
 
-        ////order.Branch
-        //order.Branch = 
-        Restaurant rest = _context.Restaurant.Where(x => x.Id == int.Parse(Request.Cookies["restId"]))
-            .Include(b => b.Branches).SingleOrDefault();
-        //return Content($"{rest.Branches[0]} hoho");
+        //string restID = Request.Cookies["restId"];
 
-        Branch branch = rest.Branches[0];
+        string branchID = Request.Cookies["bID"];
+        Branch branch = await _branchRepository.GetByIdIcludeOrders(branchID);
         order.Branch = branch;
-
-
 
         foreach (var cookie in Request.Cookies)
         {
             if (int.TryParse(cookie.Key, out int id))
             {
-                MenuItem item = _context.MenuItem.Where(x => x.Id == int.Parse(cookie.Value)).Include(o => o.Orders).SingleOrDefault();
+                MenuItem item = await _menuItemRepository.GetByIdWithOrders(cookie.Value);
 
                 myCart.Add(item);
                 Response.Cookies.Delete(cookie.Key);
@@ -150,7 +251,7 @@ public class OrderController : Controller
         // last add order in menuitem model
         //empty cart
         order.Items = new List<MenuItem>(myCart);
-        
+
         foreach (var item in myCart)
         {
             //return Content($"{item.Id} hoho");
@@ -159,35 +260,35 @@ public class OrderController : Controller
 
         }
 
-        
+
         Cust.Orders.Add(order);
         branch.Orders.Add(order);
-        _context.Order.Add(order);
-        _context.SaveChanges();
-        
+        payment.Order = order;
+        Cust.Points+= 100;
+    
+        await _orderRepository.Create(order);
         myCart.Clear();
 
-        return Content($"{order.Id} hoho");
+        return RedirectToAction("restaurant", "menu");
 
 
     }
 
-    [HttpPost]
-    public IActionResult checkout(int total)
-    {
-        ViewBag.Total = total.ToString();
-        //return Content($"noura{ViewBag.Total}");
-        return View();
-    }
     
+
+  
     //Cart
-    public IActionResult addCart(int itemId)
+    public async Task<IActionResult> addCart(string itemId)
     {
         CookieOptions options = new CookieOptions();
         options.Expires = DateTimeOffset.Now.AddDays(5);
+        int cnt = 1;
+        //bool entered = false;
         //replace key with customer id?
+        
         Response.Cookies.Append((++cnt).ToString(), itemId.ToString(), options);
-        if (itemId == 0)
+                 
+        if (itemId == null)
         {
             return Content("No itemId received");
         }
@@ -198,7 +299,7 @@ public class OrderController : Controller
     }
 
 
-    public IActionResult removeCart(int itemId, bool? dec)
+    public async Task<IActionResult> removeCart(string itemId, bool? dec)
     {
         foreach (var cookie in Request.Cookies)
         {
@@ -207,9 +308,7 @@ public class OrderController : Controller
             {
                 // Remove the cookie by its key
                 Response.Cookies.Delete(cookie.Key);
-                MenuItem menuItem = _context.MenuItem
-                    .Where(x => x.Id == itemId)
-                    .SingleOrDefault();
+                MenuItem menuItem = await _menuItemRepository.GetById(itemId.ToString());
                 myCart.Remove(menuItem);
                 if (dec == true)
                 {
@@ -229,15 +328,13 @@ public class OrderController : Controller
     }
 
     //view cart
-    public IActionResult cart()
+    public async Task<IActionResult> cart()
     {
         foreach (var cookie in Request.Cookies)
         {
             if (int.TryParse(cookie.Key, out int id))
             {
-                MenuItem menuItem = _context.MenuItem
-                    .Where(x => x.Id == int.Parse(cookie.Value)).Include(r=>r.Resturant)
-                    .SingleOrDefault();
+                MenuItem menuItem = await _menuItemRepository.GetById(cookie.Value);
                 myCart.Add(menuItem);
                 if(menuItem == null)
                 {
@@ -245,16 +342,10 @@ public class OrderController : Controller
                 }
                 Response.Cookies.Append("restId", $"{menuItem.ResturantId}");
             }
-            //else
-            //{
-            //    Response.Cookies.Delete(cookie.Key);
-            //}
         }
         
             return View(myCart);
 
-
-        
     }
 
 

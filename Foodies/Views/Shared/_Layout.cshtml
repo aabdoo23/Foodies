@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,6 +17,7 @@
     @* navbar stylesheet *@
     <link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true"/>
         @* <link rel="stylesheet" href="css/Main.css" asp-append-version="true" /> *@
+    
 
 
 
@@ -19,22 +25,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <!-- Navbar -->
-    <div class="navbar">
-        <div>
-            @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
-        </div>
-        <div class="nav-links">
-            <a href="~/menu/restaurant">Home</a>
-            <a href="~/Order/cart">🛒 Cart</a>
-            <a href="~/menu/Favourite">Favourites</a>
-            <a href="~/Home/UserView">Profile</a>
+    
 
-        </div>
-    </div>
 
-    </header>
+    @{
+        if (User.IsInRole("Customer"))
+        {
+            await Html.RenderPartialAsync("CustomerNavbar");
+        }
+        else
+        {                     <!-- Start Navbar -->
+            <div class="navbar">
+                <div>
+                    @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
+                </div>
+                <div class="nav-links">
+                    <a href="~/Master/view" style="color: #D35269">Home</a>
+                    <a href="#">Services</a>
+                    <a href="#">About us</a>
+                </div>
+            </div>
+        }
+    }
+
+
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()

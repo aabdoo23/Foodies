@@ -1,12 +1,16 @@
-
-using Foodies.Models;
-using Microsoft.EntityFrameworkCore;
-
+using Foodies.Common;
+using Foodies.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 using Microsoft.Extensions.FileProviders;
 using Firebase.Storage;
+using System.Configuration;
+using Foodies.Controllers;
+using Microsoft.AspNetCore.Identity;
+
+SignInManager<IdentityUser> SignInManager;
+UserManager<IdentityUser> UserManager;
 
 
 namespace Foodies
@@ -18,8 +22,11 @@ namespace Foodies
             var builder = WebApplication.CreateBuilder(args);
 
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //inject custome made repos and services
+            builder.Services.AddRepositories();
+            builder.Services.AddServiceInjection();
 
             builder.Services.AddDbContext<FoodiesDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -42,11 +49,9 @@ namespace Foodies
 
             builder.Services.AddRazorPages();
 
-            //RoleManager<IdentityRole> roleManager;
-            //IdentityResult result =  UserRoles.CreateRole(roleManager, "Admin");
+            builder.Services.AddHttpClient<MapService>();
 
-            //UserRoles.CreateRole(roleManager,"Admin");
-
+            builder.Services.AddControllers(); // Ensure you have this
 
             var app = builder.Build();
 
@@ -80,9 +85,10 @@ namespace Foodies
             app.MapControllerRoute(
                 name: "default",
 
+            
+            
+             pattern: "{controller=Master}/{action=Main}/{id?}");
 
-            //pattern: "{controller=Home}/{action=CustomerView}");
-            pattern: "{controller=Master}/{action=view}/{id?}");
 
             app.Run();
         }

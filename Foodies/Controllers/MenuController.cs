@@ -1,93 +1,40 @@
-﻿using System.Security.Claims;
+﻿using Foodies.Interfaces.Repositories;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Foodies.Controllers
 {
     public class MenuController : Controller
     {
-        private readonly FoodiesDbContext _context;
+        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IMenuItemRepository _menuItemRepository;
+        private readonly IRatingRepository _ratingRepository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly UserManager<IdentityUser> _userManager;
-
-        public MenuController(FoodiesDbContext context,
-        UserManager<IdentityUser> userManager)
+        public MenuController(
+            IRestaurantRepository restaurantRepository,
+            IMenuItemRepository menuItemRepository,
+            IRatingRepository ratingRepository,
+            ICustomerRepository customerRepository,
+            UserManager<IdentityUser> userManager)
         {
-            _context = context;
+            _restaurantRepository = restaurantRepository;
+            _menuItemRepository = menuItemRepository;
+            _ratingRepository = ratingRepository;
+            _customerRepository = customerRepository;
             _userManager = userManager;
         }
 
-        [HttpPost]
-
-        public async Task<IActionResult> addToFav(int resId)
+        public async Task<IActionResult> Index(string restaurantId, string? category = null)
         {
-            
-            var userId = _userManager.GetUserId(User);
-            Restaurant res = await _context.Restaurant
-               .Include(r => r.FavouriteCustomers)
-               .FirstOrDefaultAsync(x => x.Id == resId);
+            var restaurant = await _restaurantRepository.GetByIdWithRatings(restaurantId);
 
-            Customer customer = await _context.Customer
-                .Include(c => c.FavouriteRestaurants)
-                .FirstOrDefaultAsync(x => x.Id == userId);
-            //res.FavouriteCustomers = new List<Customer>();
-            //customer.FavouriteRestaurants = new List<Restaurant>();
+            if (restaurant == null) return NotFound();
+            Response.Cookies.Append("r", restaurantId);
 
-            if (!customer.FavouriteRestaurants.Contains(res) && !res.FavouriteCustomers.Contains(customer)){
-                res.FavouriteCustomers.Add(customer);
-
-                customer.FavouriteRestaurants.Add(res);
-
-                await _context.SaveChangesAsync();
-            }
-
-            return Content($"added to fav -{customer.Id}{res.Name}");
-        }
-        [HttpPost]
-        public async Task<IActionResult> removeFav(int resId)
-        {
-
-            var userId = _userManager.GetUserId(User);
-            Restaurant res = await _context.Restaurant
-               .Include(r => r.FavouriteCustomers)
-               .FirstOrDefaultAsync(x => x.Id == resId);
-
-            Customer customer = await _context.Customer
-                .Include(c => c.FavouriteRestaurants)
-                .FirstOrDefaultAsync(x => x.Id == userId);
-            //res.FavouriteCustomers = new List<Customer>();
-            //customer.FavouriteRestaurants = new List<Restaurant>();
-
-            if (customer.FavouriteRestaurants.Contains(res) && res.FavouriteCustomers.Contains(customer))
-            {
-                res.FavouriteCustomers.Remove(customer);
-
-                customer.FavouriteRestaurants.Remove(res);
-
-                await _context.SaveChangesAsync();
-                return Content("weee");
-                
-
-            }
-
-
-            return Content($"rem fav -{customer.Id}{res.Name}");
-        }
-        public async Task<IActionResult> Index(int restaurantId, string? category = null)
-        {
-            var restaurant = await _context.Restaurant
-                .Include(r => r.Ratings)
-                .FirstOrDefaultAsync(r => r.Id == restaurantId);
-
-            if (restaurant == null)
-            {
-                return NotFound();
-            }
-
-            var menuItems = await _context.MenuItem
-                .Where(m => m.Resturant.Id == restaurantId && (category == null || m.Category == category))
-                .ToListAsync();
+            var menuItems = await _menuItemRepository.GetAllByRestaurantId(restaurantId, category);
 
             var categories = menuItems
                 .Select(m => m.Category)
@@ -104,41 +51,77 @@ namespace Foodies.Controllers
 
             return View(viewModel);
         }
+        [HttpPost]
+        public async Task<IActionResult> addToFav(string resId)
+        {
 
+            var userId = _userManager.GetUserId(User);
+            Restaurant res = await _restaurantRepository.GetByIdWithFavouriteCustomers(resId);
+            
+            Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
+               
+            
+            //if (!customer.FavouriteRestaurants.Contains(res) && !res.FavouriteCustomers.Contains(customer))
+            //{
+                res.FavouriteCustomers.Add(customer);
+                customer.FavouriteRestaurants.Add(res);
+            //}
+
+            return Content($"added to fav -{customer.Id}{res.Name}");
+        }
+        [HttpPost]
+        public async Task<IActionResult> removeFav(string resId)
+        {
+
+            var userId = _userManager.GetUserId(User);
+            Restaurant res = await _restaurantRepository.GetByIdWithFavouriteCustomers(resId);
+
+            Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
+
+            if (customer.FavouriteRestaurants.Contains(res) && res.FavouriteCustomers.Contains(customer))
+            {
+                res.FavouriteCustomers.Remove(customer);
+                customer.FavouriteRestaurants.Remove(res);
+                return Content("weee");
+            }
+
+
+            return Content($"rem fav -{customer.Id}{res.Name}");
+        }
         public async Task<IActionResult> Favourite()
         {
-            //var userId = _userManager.GetUserId(User);
-            
+            var userId = _userManager.GetUserId(User);
+            Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
 
+            ViewBag.fav = customer;
 
             return View();
         }
         public async Task<IActionResult> Restaurant(string id)
         {
-            ViewBag.cusid=id;
-            var restaurants = await _context.Restaurant.ToListAsync();
+            ViewBag.cusid = id;
+            var restaurants = await _restaurantRepository.GetAll();
+
             var userId = _userManager.GetUserId(User);
-            Customer customer = await _context.Customer
-                .Include(c => c.FavouriteRestaurants)
-                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
 
             ViewBag.fav = customer;
 
+            //return Content($"{ViewBag.fav.FavouriteRestaurants}");
             return View(restaurants);
         }
 
-        public async Task<IActionResult> LoadMenuItems(int restaurantId, string? category = null)
+        public async Task<IActionResult> LoadMenuItems(string restaurantId, string? category = null)
         {
-            var menuItems = await _context.MenuItem
-                .Where(m => m.Resturant.Id == restaurantId && (category == null || m.Category == category))
-                .ToListAsync();
+            var menuItems = await _menuItemRepository.GetAllByRestaurantId(restaurantId, category);
 
             return PartialView("_MenuItems", menuItems);
         }
 
-        public async Task<IActionResult> Rate(int restaurantId)
+        public async Task<IActionResult> Rate(string restaurantId)
         {
-            var restaurant = await _context.Restaurant.FindAsync(restaurantId);
+            var restaurant = await _restaurantRepository.GetById(restaurantId);
             if (restaurant == null)
             {
                 return NotFound();
@@ -160,13 +143,12 @@ namespace Foodies.Controllers
             {
                 var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                var existingRating = await _context.Rating
-                    .FirstOrDefaultAsync(r => r.RestaurantId == model.RestaurantId && r.CustomerId == customerId);
+                var existingRating = await _ratingRepository.GetByCustomerIdAndRestaurantId(customerId, model.RestaurantId);
 
                 if (existingRating != null)
                 {
                     existingRating.Rate = model.Rate;
-                    _context.Rating.Update(existingRating);
+                    await _ratingRepository.Update(existingRating);
                 }
                 else
                 {
@@ -176,10 +158,8 @@ namespace Foodies.Controllers
                         Rate = model.Rate,
                         CustomerId = customerId,
                     };
-                    await _context.Rating.AddAsync(rating);
+                    await _ratingRepository.Create(rating);
                 }
-
-                await _context.SaveChangesAsync();
                 return Ok();
             }
 

@@ -75,20 +75,20 @@
            `,
            'my-restaurant': `
           <h3>About Your Restaurant</h3>
-<form action="/Home/EditRest/@Model.Resturantid" method="post">
+<form action="/Home/EditRest/@Model.Resturant.Id" method="post">
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" name="Name" value="@ViewBag.Rest.Name" required />       
+        <input type="text" class="form-control" name="Name" value="@Model.Resturant.Name" required />       
     </div>
 
     <div class="mb-3">
         <label for="cuisine-type" class="form-label">Cuisine Type</label>
-        <input type="text" class="form-control" name="Cuisine" value="@ViewBag.Rest.CuisineType" required />       
+        <input type="text" class="form-control" name="Cuisine" value="@Model.Resturant.CuisineType" required />       
     </div>
 
     <div class="mb-3">
         <label for="hotline" class="form-label">Hotline</label>
-        <input type="text" class="form-control" name="Hotline" value="@ViewBag.Rest.Hotline" required /> 
+        <input type="text" class="form-control" name="Hotline" value="@Model.Resturant.Hotline" required /> 
         <!-- Hidden field for AdminId -->
         <input type="hidden" name="AdminId" value="@Model.Id">
     </div>
@@ -102,10 +102,10 @@
              
                `,
            'branches': `
-            <form action="/Home/AddBranch/@Model.Resturantid" method="get">
+            <form action="/Home/AddBranch/@Model.Resturant.Id" method="get">
           <button type="submit"  class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #3e1ba6;">Add Branches</button>
                 </form>
-                @foreach (var i in @ViewBag.Branch)
+                @foreach (var i in @Model.Branch)
                 {
                                     
                      <h4>@i.Address.City</h4>
@@ -151,10 +151,10 @@
 </div>*@
  <div class="menu" class="restaurant-header">
                
-             <form action="/Home/Addmnuitm/@Model.Resturantid" method="get">
+             <form action="/Home/AddMenuItem/@Model.Resturant.Id" method="get">
                  <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Add menu item</button>
                 </form>
-            @foreach (var i in @ViewBag.menu)
+            @foreach (var i in @Model.Resturant.MenuItems)
                 {
                             <div class="menu-item">
                                     <img src="@i.img" alt="Chicken Sandwich">
@@ -162,7 +162,7 @@
                                     <h4>@i.Name</h4>
                                     <p>Price: @i.Price LE</p>
                                     <p>Description: @i.Description</p>
-                                              <td><a href="/Home/Editemnuitm/@i.Id" class="btn btn-secondary">Edite</a></td>
+                                              <td><a href="/Home/EditMenuItem/@i.Id" class="btn btn-secondary">Edite</a></td>
                                               <td><a href="/Home/Deletitem/@i.Id" class="btn btn-secondary">Delete</a></td>
                                 </div>
                                 <div class="add-to-cart">

@@ -1,3 +1,5 @@
+using Foodies.Interfaces.Repositories;
+using Foodies.Interfaces.Services;
 using Foodies.Models;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -7,33 +9,28 @@ namespace Foodies.Controllers
 {
     public class MasterController : Controller
     {
-        private readonly FoodiesDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-
         private readonly SignInManager<IdentityUser> _signInManager;
 
-       private readonly ImageUploader _imageUploader;
+        private readonly ICustomerService _customerService;
+        private readonly IAdminService _adminService;
+        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly ImageUploader _imageUploader;
 
-        public MasterController(FoodiesDbContext context,
-            UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager, ImageUploader imageUploader)
+        public MasterController(
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            ICustomerService customerService,
+            IAdminService adminService,
+            IRestaurantRepository repository,
+            ImageUploader imageUploader)
         {
-            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
+            _customerService = customerService;
+            _adminService = adminService;
+            _restaurantRepository = repository;
             _imageUploader = imageUploader;
-        }
-
-        public async Task CreateRole()
-        {
-
-            //if (!_roleManager.RoleExistsAsync(UserRoles.Customer).GetAwaiter().GetResult())
-            //{
-                _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(UserRoles.BranchManager)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin)).GetAwaiter().GetResult();
-            //}
         }
 
         public IActionResult view()
@@ -48,77 +45,23 @@ namespace Foodies.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveNewCustomer(RegisterationViewModel cus, IFormFile immg)
+        public async Task<IActionResult> SaveNewCustomer(RegistrationViewModel cus)
         {
-
             if (ModelState.IsValid)
             {
-
-                var existingCustomer = await _userManager.FindByEmailAsync(cus.Email);
-                if (existingCustomer == null)
+                //TODO: Edit function to handle img
+                var result = await _customerService.CreateCustomer(cus);
+                if (result != null)
                 {
-                    //fill identity info
-                    CreateRole();
-                    IdentityUser user = new IdentityUser();
-                    user.UserName = cus.Email;
-                    user.Email = cus.Email;
-                    user.PhoneNumber = cus.phoneNumber;
-
-                    string? usrl = await _imageUploader.UploadImageAsync(immg);
-                    IdentityResult result = await _userManager.CreateAsync(user, cus.Password);
-
-                    Customer customer = new Customer
-                    {
-                        Id = user.Id,
-                        FirstName = cus.FirstName,
-                        LastName = cus.LastName,
-                        img = usrl,
-
-                        Address = new Address // Initialize Address object
-                        {
-                            City = cus.City,
-                            Street = cus.Street,
-                            Building = cus.Building,
-                            Location = cus.Location,
-                        },
-                        IdentityUser = user,
-
-                    };
-
-                    _context.Customer.Add(customer);
-                    _context.SaveChanges();
-
-                    if (result.Succeeded)
-                    {
-
-                        await _userManager.AddToRoleAsync(user, "Customer");
-                        Customer cust = await _context.Customer
-                        .Include(c => c.FavouriteRestaurants)
-                        .FirstOrDefaultAsync(x => x.Id == user.Id);
-
-                        ViewBag.fav = cust;
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        ViewBag.NotificationMessage = "Customer registered successfully!";
-                        ViewBag.NotificationType = "success";
-                        //return RedirectToAction("Cusolginsignup");
-                        return RedirectToAction("restaurant", "menu", customer.Id);
-
-
-                    }
-                    else
-                    {
-                        ViewBag.NotificationMessage = string.Join(", ", result.Errors.Select(e => e.Description));
-                        ViewBag.NotificationType = "danger";
-                        return View("UserSignUp");
-
-                    }
+                    await _signInManager.SignInAsync(result.IdentityUser, isPersistent: false);
+                    ViewBag.NotificationMessage = "Customer registered successfully!";
+                    ViewBag.NotificationType = "success";
+                    return RedirectToAction("restaurant", "menu", result.Id);
                 }
                 else
                 {
-                    ViewBag.NotificationMessage = "The email is already registered.";
                     ViewBag.NotificationType = "danger";
-                    return View("UserSignUp", cus);
-
+                    return View("UserSignUp");
                 }
             }
             else
@@ -126,9 +69,7 @@ namespace Foodies.Controllers
                 ViewBag.NotificationMessage = "There are missing data.";
                 ViewBag.NotificationType = "danger";
                 return View("UserSignUp");
-
             }
-
         }
 
         public IActionResult AdminSignUp()
@@ -136,75 +77,46 @@ namespace Foodies.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin,IFormFile immg)
+        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin) // TODO: Add file upload again after fixing the image uploader
         {
             if (ModelState.IsValid)
             {
-
-                var existingCustomer = await _userManager.FindByEmailAsync(admin.Email);
-                if (existingCustomer == null)
+                Restaurant res = new Restaurant
                 {
-                    //fill identity info
-                    CreateRole();
-
-                    IdentityUser user = new IdentityUser();
-                    user.UserName = admin.Email;
-                    user.Email = admin.Email;
-                    user.PhoneNumber = admin.phoneNumber;
-                    string? usrl =await _imageUploader.UploadImageAsync(immg);
-
-                    var result = await _userManager.CreateAsync(user, admin.Password);
-
-                    Admin adminn = new Admin
+                    Name = admin.Name,
+                    Photo = admin.Photo,
+                    Hotline = admin.Hotline,
+                    CuisineType = admin.CuisineType,
+                    MaxPrice = admin.MaxPrice,
+                    MinPrice = admin.MinPrice
+                };
+                var restaurantResult = await _restaurantRepository.Create(res);
+                if (restaurantResult != null)
+                {
+                    var result = await _adminService.CreateAdmin(admin, restaurantResult);
+                    if (result != null)
                     {
-                        Id = user.Id,
-                        FirstName = admin.FirstName,
-                        LastName = admin.LastName,
-                        IdentityUser = user,
+                        await _signInManager.SignInAsync(result.IdentityUser, isPersistent: false);
 
-                    };
-                    Restaurant res = new Restaurant
-                    {
-                        Name = admin.Name,
-                        Photo = usrl,
-                        Hotline = admin.Hotline,
-                        CuisineType = admin.CuisineType,
-                        MaxPrice = admin.MaxPrice,
-                        MinPrice = admin.MinPrice,
-                      
-              
+                        res.RestaurantAdmin = result;
+                        await _restaurantRepository.Update(res);
 
-                    };
-                    //custo}mer.Id = user.Id;
-                    //cus.Address.Customer = customer;
-                    res.RestaurantAdmin = adminn;
-                    _context.Admin.Add(adminn);
-                    _context.Restaurant.Add(res);
-
-                    _context.SaveChanges();
-
-                    if (result.Succeeded)
-                    {
-                        await _userManager.AddToRoleAsync(user, "Admin");
-
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-
-
-                        ViewBag.NotificationMessage = "Customer registered successfully!";
+                        ViewBag.NotificationMessage = "Admin registered successfully!";
                         ViewBag.NotificationType = "success";
-                        return RedirectToAction("AdminProfile", "Home", new { id = user.Id });
+                        return RedirectToAction("AdminProfile", "Home", new { id = result.Id });
                     }
                     else
                     {
-                        ViewBag.NotificationMessage = string.Join(", ", result.Errors.Select(e => e.Description));
                         ViewBag.NotificationType = "danger";
                     }
+
                 }
                 else
                 {
-                    ViewBag.NotificationMessage = "The email is already registered.";
+                    ViewBag.NotificationMessage = "Restaurant registration failed.";
                     ViewBag.NotificationType = "danger";
                 }
+
             }
             else
             {
@@ -213,6 +125,7 @@ namespace Foodies.Controllers
             }
 
             return View("AdminSignUp", admin);
+
         }
 
         public IActionResult Login()
@@ -222,98 +135,66 @@ namespace Foodies.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LogInViewModel loginUser)
         {
-            
-                IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
+            IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-                if (user != null)
+            if (user != null)
+            {
+                SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
+                if (result.Succeeded)
                 {
-                    SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
-                    if (result.Succeeded)
-                    {
-                        var roles = await _userManager.GetRolesAsync(user);
-                        string x = string.Join(", ", roles);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    string x = string.Join(", ", roles);
 
-                    //        /menu/restaurant
                     if (x == "Customer")
                     {
-                        //var cus = _context.Customer.Where(x => x.Id == user.Id);
-                        Customer cus = await _context.Customer
-                        .Include(c => c.FavouriteRestaurants)
-                        .FirstOrDefaultAsync(x => x.Id == user.Id);
-
-                        ViewBag.fav = cus;
-                        var cust = _context.Customer.Where(x => x.Id == user.Id);
-
                         return RedirectToAction("restaurant", "menu");
                     }
                     else if (x == "Admin")
                     {
-                        return RedirectToAction("AdminProfile", "Home", new { id = user.Id }); //noooooooooooooo
+                        return RedirectToAction("AdminProfile", "Home", new { id = user.Id });
                     }
                     else
                     {
                         return RedirectToAction("Profile", "BranchManager", new { id = user.Id });
                     }
-                    }
-                    else
-                    {
-                        ViewBag.NotificationMessage = "Login failed. Incorrect password.";
-                        ViewBag.NotificationType = "danger";
-                        return View("Login");
-                    }
                 }
                 else
                 {
-                    ViewBag.NotificationMessage = "User not found.";
+                    ViewBag.NotificationMessage = "Unrecognized role.";
                     ViewBag.NotificationType = "danger";
                     return View("Login");
                 }
+            }
+            else
+            {
+                ViewBag.NotificationMessage = "Login failed. Incorrect password.";
+                ViewBag.NotificationType = "danger";
+                return View("Login");
+            }
             
             
         }
+        public async Task<IActionResult> Logout()
+        {
+            // Call the SignOutAsync method to log the user out
+            await _signInManager.SignOutAsync();
 
-
-        /*
-            public IActionResult ResturantLogIn()
-            {
-                return View("login");
-            }
-            [HttpPost]
-            public async Task<IActionResult> ResturantLogIn(LogInViewModel loginUser)
-            {
-                if (ModelState.IsValid)
-                {
-                    IdentityUser user = await _userManager.FindByEmailAsync(loginUser.Email);
-
-                    if (user != null)
-                    {
-                        SignInResult result = await _signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
-                        if (result.Succeeded)
-                        {
-
-                            var x = _userManager.GetRolesAsync(user);
-                            ViewBag.Roles = x;
-                            return Content(ViewBag.Roles);
-                        }
-                        else
-                        {
-                            return Content("not success");
-                        }
-                    }
-                    else
-                    {
-                        return Content("user null");
-                    }
-                }
-                else
-                {
-                    return Content("state no");
-
-                }
-
-            }
-
+            // Optionally, you can redirect the user to a different page after logout
+            return RedirectToAction("view", "Master");
         }
-        */
+        public async Task<IActionResult> Main()
+        {
+            // Call the SignOutAsync method to log the user out
+            if (User.Identity.IsAuthenticated)
+            {
+                // Redirect to an authenticated view or controller action
+                return RedirectToAction("restaurant", "menu");
+            }
+            else
+            {
+                // Redirect to the default view
+                return RedirectToAction("view", "Master");
+            }
+        }
     }
 }

@@ -14,15 +14,7 @@
     @* <script src="script.js" defer></script> *@
 </head>
 <body>
-  <nav>
-
-    <div class="nav-icons">
-        <i class="user-icon">👤</i>
-        <i class="search-icon">🔍</i>
-        <i class="cart-icon">🛒 Cart (<span id="cart-count">3</span>)</i>
-        <i class="menu-icon">☰</i>
-    </div>
-  </nav>
+  
 
   <section class="cart-section">
       <h2>Your Order</h2>
@@ -36,7 +28,7 @@
                     @if (item != null)
                     {
                         <div class="item-quantity">
-                                   @* <span class="quantity">Quantity : @item.Quantity</span>*@
+                                   @* <span class="quantity">Quantity : @item.Quantity</span> *@
                                 </div>
                              <div class="cart-item" data-price="@item.Price" 
                                            data-item-id="@item.Id">
@@ -72,9 +64,11 @@
       </div>
 
       <div class="checkout-buttons">
-        <button type="button" class="btn">Cancel</button>
-        
-     <form asp-action="order" asp-controller="Order" method="post">
+        <form action="/menu/restaurant" method="post">
+        <button type="submit" class="btn">Cancel</button>
+
+    </form>
+     <form asp-action="order" asp-controller="Order" method="post" id ="orderForm" >
         <input type="hidden" name="total" value="@ViewBag.Total" />
         <button type="submit" class="btn" id ="checkoutButton"
             >Confirm</button>
@@ -82,7 +76,11 @@
       </div>
       
   </section>
-  
+  <script>
+      document.getElementById("orderForm").addEventListener("submit", function(event) {
+        alert("Your order has been Placed successfully!");
+    });
+  </script>
 </body>
 </html>
 
