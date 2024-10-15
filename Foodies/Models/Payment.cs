@@ -11,7 +11,7 @@ namespace Foodies.Models
         public DateTime PaymentDate { get; set; }
         public virtual Order Order { get; set; } = default!;
 
-        public int ?cardId { get; set; }
+        public string ?cardId { get; set; }
         public virtual Card ?card { get; set; }
 
     }

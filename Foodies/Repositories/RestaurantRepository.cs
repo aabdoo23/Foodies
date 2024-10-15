@@ -2,6 +2,7 @@
 using Foodies.Data;
 using Foodies.Exceptions;
 using Foodies.Interfaces.Repositories;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 
 namespace Foodies.Repositories
 {
@@ -38,6 +39,7 @@ namespace Foodies.Repositories
                 .Include(x => x.MenuItems)
                 .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
         }
+
         public async Task<Restaurant> GetByIdWithMenuItemsAndBranches(string id)
         {
             return await _context.Restaurants
@@ -64,5 +66,16 @@ namespace Foodies.Repositories
                 .Include(x => x.Ratings)
                 .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
         }
+        public async Task<Restaurant> GetByIdWithBranchesIncludeAddress(string id)
+        {
+            return await _context.Restaurants
+                .Where(x => x.Id == id)
+                .Include(b => b.Branches)
+                .ThenInclude(b => b.Address)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException($"Restaurant with {id} not found");
+        }
+
     }
+
+
 }

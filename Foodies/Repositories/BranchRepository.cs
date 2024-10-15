@@ -45,8 +45,15 @@ namespace Foodies.Repositories
 
         public async Task<Branch> GetById(string id)
         {
-            var branch = await _context.Branches.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"BranchManager with ID {id} not found");
+            var branch = await _context.Branches.Include(a=>a.Address).FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"BranchManager with ID {id} not found");
             return branch;
+        }
+        public async Task<Branch> GetByIdIcludeOrders(string id)
+        {
+            return await _context.Branches
+                .Where(x => x.Id == id)
+                .Include(o => o.Orders)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException();
         }
 
         public async Task<Branch> Update(Branch entity)

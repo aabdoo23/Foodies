@@ -9,6 +9,7 @@ namespace Foodies.Models
         public TimeSpan OpeningHour { get; set; }//0-23
         [Column(TypeName = "time")]
         public TimeSpan ClosingHour { get; set; }
+        public String viewMap { get; set; }
         public virtual List<Order>? Orders { get; set; }
         public virtual BranchManager BranchManager { get; set; } 
         public string AddressId { get; set; }

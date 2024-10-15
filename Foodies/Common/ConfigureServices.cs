@@ -19,6 +19,8 @@ namespace Foodies.Common
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+            services.AddScoped<ICardRepository, CardRepository>();
+
 
             return services;
         }

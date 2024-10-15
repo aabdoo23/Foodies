@@ -48,7 +48,12 @@ namespace Foodies.Repositories
                 .Include(c => c.FavouriteRestaurants)
                 .FirstOrDefaultAsync(x => x.Id == userId) ?? throw new NotFoundException($"Customer with ID {userId} not found");
         }
-
+        public async Task<Customer> GetByIdIncludeOrders(string? userId)
+        {
+            return await _context.Customers
+                .Include(o => o.Orders)
+                .FirstOrDefaultAsync(x => x.Id == userId) ?? throw new NotFoundException($"Customer with ID {userId} not found");
+        }
         public async Task<Customer> Update(Customer entity)
         {
             _context.Customers.Update(entity);

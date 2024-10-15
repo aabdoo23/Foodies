@@ -18,11 +18,6 @@ using Newtonsoft.Json; // For async/await
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CreditCardValidator;
-using Foodies.Models;
-using Foodies.Migrations;
-using System.Collections.Generic;
-using Foodies.Controllers;
-using Microsoft.Identity.Client;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.CodeAnalysis.Operations;

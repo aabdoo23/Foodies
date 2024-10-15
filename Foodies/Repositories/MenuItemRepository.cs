@@ -45,6 +45,12 @@ namespace Foodies.Repositories
             return entity;
         }
 
+        public async Task<MenuItem> GetByIdWithOrders(string id)
+        {
+            return await _context.MenuItems
+                .Include(x => x.Orders)
+                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Menuitem with {id} not found");
+        }
         public async Task<IEnumerable<MenuItem>> GetAllByRestaurantId(string restaurantId)
         {
             return await _context.MenuItems.Where(x => x.Resturant.Id == restaurantId).ToListAsync();

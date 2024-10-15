@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Foodies.Migrations
 {
     /// <inheritdoc />
-    public partial class yaRab : Migration
+    public partial class all : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -229,6 +229,7 @@ namespace Foodies.Migrations
                     RestaurantId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     OpeningHour = table.Column<TimeSpan>(type: "time", nullable: false),
                     ClosingHour = table.Column<TimeSpan>(type: "time", nullable: false),
+                    viewMap = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddressId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -358,14 +359,15 @@ namespace Foodies.Migrations
                 name: "Cards",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExpiryMonth = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExpiryYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CVC = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -463,7 +465,7 @@ namespace Foodies.Migrations
                     PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<decimal>(type: "money", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                    cardId = table.Column<int>(type: "int", nullable: true),
+                    cardId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

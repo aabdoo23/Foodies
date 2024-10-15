@@ -7,6 +7,8 @@ namespace Foodies.Interfaces.Repositories
         public Task<Restaurant> GetByIdWithMenuItems(string id);
         public Task<Restaurant> GetByIdWithMenuItemsAndBranches(string id);
         public Task<Restaurant> GetByIdWithRatings(string id);
+        public Task<Restaurant> GetByIdWithBranchesIncludeAddress(string id);
+
 
     }
 }

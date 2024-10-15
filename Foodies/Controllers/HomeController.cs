@@ -290,7 +290,8 @@ namespace Foodies.Controllers
                     Street = adbr.Street,
                     Building = adbr.Building,
                     Location = adbr.Location,
-                }
+                },
+                viewMap = adbr.viewMap
             };
 
             res.Branches.Add(newBranch);

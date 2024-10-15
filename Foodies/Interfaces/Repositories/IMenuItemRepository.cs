@@ -7,5 +7,7 @@ namespace Foodies.Interfaces.Repositories
     {
         public Task<IEnumerable<MenuItem>> GetAllByRestaurantId(string restaurantId);
         public Task<IEnumerable<MenuItem>> GetAllByRestaurantId(string restaurantId, string category);
+        public  Task<MenuItem> GetByIdWithOrders(string id);
+
     }
 }
