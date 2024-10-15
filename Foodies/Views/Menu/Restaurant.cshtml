@@ -5,7 +5,7 @@
     <title>Restaurant List</title>
     <link rel="stylesheet" href="~/css/restaurant.css">
     <link rel="stylesheet" href="~/css/Main.css">
-    <link rel="script" href="~\js\sefr.js" >
+    <link rel="script" href="~\js\sefr.js">
 </head>
 
 <body>
@@ -31,52 +31,48 @@
     <div class="restaurant-cards">
         @foreach (var restaurant in Model)
         {
-                <div  class="restaurant-card" data-cuisine-type="@restaurant.CuisineType">
-                            <div  style="display: none;"  class="restaurant-name">@restaurant.Name</div>
+                <div class="restaurant-card" data-cuisine-type="@restaurant.CuisineType">
+                    <div style="display: none;" class="restaurant-name">@restaurant.Name</div>
 
-    <div class="food-card" >
-                    <div class="food-card-fav">
-                    @{
-                        if (@ViewBag.fav.FavouriteRestaurants != null && @ViewBag.fav.FavouriteRestaurants.Count > 0)
-                        {
-
-                            foreach (var r in @ViewBag.fav.FavouriteRestaurants)
+                    <div class="food-card">
+                        <div class="food-card-fav">
+                        @{
+                            if (@ViewBag.fav.FavouriteRestaurants != null && @ViewBag.fav.FavouriteRestaurants.Count > 0)
                             {
-                                if (r.Id == restaurant.Id)
+                                foreach (var r in @ViewBag.fav.FavouriteRestaurants)
                                 {
-                                          <i class="bi bi-heart-fill" id = "fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
-                                    break;
-                                }
-                                else
-                                {
-                                     <i class="bi bi-heart" id = "fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
-                                    break;
+                                    if (r.Id == restaurant.Id)
+                                    {
+                                                            <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
+                                        break;
+                                    }
+                                    else
+                                    {
+                                                            <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
+                                        break;
+                                    }
                                 }
                             }
+                            else
+                            {
+                                            <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
+                            }
                         }
-                        else
-                        {
-                                                         <i class="bi bi-heart" id = "fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
-                        }
 
-                    }
+                            <!-- Updated image with a better look and click behavior -->
+                                  <img class="food-card-img" src="@restaurant.Photo" alt="food image" onclick="window.location.href=$"/Menu/Index?restaurantId={@restaurant.Id}""/>
+                        </div>
+                    </div>
 
-                             <img class="food-card-img" src="@restaurant.Photo" alt="food image" 
-        onclick="window.location.href='@restaurant.Photo'"/> 
-        </div>
-
- </div>
-                   <div class="rating-container">
+                    <div class="rating-container">
                         <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">Rate Restaurant</button>
                         <div class="rating-input" style="display: none;">
                             <input type="number" min="1" max="5" step="0.1" placeholder="Rate (1-5)" class="form-control" />
                             <button class="btn btn-primary submit-rating" data-restaurant-id="@restaurant.Id">Submit</button>
                         </div>
                     </div>
-               
                 </div>
         }
-
     </div>
 
 </body>
@@ -152,12 +148,12 @@
             });
         });
     });
-     function addToFavourites(resId) {
+
+    function addToFavourites(resId) {
         var button = document.getElementById("fav-" + resId);
 
         if (button.classList.contains("bi-heart")) {
             button.classList.remove("bi-heart");
-            console.log("hello");
             button.classList.add("bi-heart-fill");
 
             $.ajax({
@@ -165,10 +161,10 @@
                 type: 'post', 
                 data: { resId: resId },
                 success: function(response) {
-                    alert('added to fav');
+                    alert('Added to favorites');
                 },
                 error: function(err) {
-                    console.error('Error adding to fav', err);
+                    console.error('Error adding to favorites', err);
                 }
             });
         }
@@ -180,18 +176,15 @@
                 type: 'post', 
                 data: { resId: resId },
                 success: function(response) {
-                    alert('rem from fav');
+                    alert('Removed from favorites');
                 },
                 error: function(err) {
-                    console.error('Error rem  fav', err);
+                    console.error('Error removing from favorites', err);
                 }
             });
         }
-
-
     }
 </script>
-
 
 <style>
 .category-button {
@@ -286,116 +279,50 @@
 .submit-rating {
     margin-left: 5px;
 }
-    .faIcon {
-        font-size: 35px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 5px;
-        color: var(--white);
 
-
-    }
-
-    /* menuitem card */
-
-    .food-card {
-        width: 350px;
-        height: 300px;
-        padding: .8em;
-        background: var(--white);
-        position: relative;
-        overflow: visible;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        border-radius: 15px;
-        transition: .3s ease;
-        cursor: pointer;
-        margin-top: 10px;
-        margin-right: 30px;
-    }
-
-    .food-card-img {
-        background-color: #ffcaa6;
-        width: 70%;
-        height: auto;
-        border-radius: 17px;
-        display: block; /* Ensures that the image behaves as a block-level element */
-        margin-left: auto;
-        margin-right: auto;
-        margin-top:-40px;
-         z-index: 1; 
-    }
-
-
-
-    /*icon facourite*/
-    .food-card-fav {
-
-        /* margin: -1em 20px; */
-        /* margin-right:40px; */
-        display: flex;
-        /* align-items: right; */
-        justify-content: flex-end;
-        padding: 0rem 1rem;
-        padding-top:0.1rem;
-        text-align: right;
-        border:none;
-
-    }
-    .bi-heart, .bi-heart-fill{
-        font-size: 1.9rem;
-        z-index: 2;
-        border-raduis: 14px;
-
-    }
-    .bi-heart{
-        color:  var(--black);
-    }
-    .bi-heart-fill{
-       color:  red;
-    }
-    .bi-heart:hover , .bi-heart-fill:hover{
-    transform: scale(1.05); /* Slightly scale up the box */
-
-    color: rgba(255, 100, 50, 0.9); /* Red shade on hover (with 30% opacity) */
-
-}    
-    /*Text*/
-.food-card-text-title {
-    font-weight: 700;
-    font-size: 1.2em;
-    color: var(--black);
-    text-align: center;
-   margin-top: 5px;
-
+/* Menu item card */
+.food-card {
+    width: 350px;
+    height: 300px;
+    padding: .8em;
+    background: var(--white);
+    position: relative;
+    overflow: visible;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
+.food-card-fav {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    font-size: 1.5rem;
+    z-index: 1;
+    color: #a22;
+}
 
+.bi-heart-fill {
+    color: red !important;
+}
 
+.food-card-img {
+    width: 90%;
+    height: auto;
+    border-radius: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-
-   /*  .food-card-footer {
-        display: flex;
-        align-items: center;
-
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        margin: 10px 0;
-    }
- */
-    /* .food-card-footer-text {
-        font-weight: 400;
-        font-size: 1em;
-        color: var(--black);
-        margin: 0 10px;
-    }
- */
-
-
-    /*Hover*/
-    .food-card:hover {
-        transform: translateY(-1%);
-        box-shadow: var(--teirtary-color) 0px 13px 47px -5px, var(--secondary-color) 0px 8px 16px -8px;
-    }
+.food-card-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
 </style>
