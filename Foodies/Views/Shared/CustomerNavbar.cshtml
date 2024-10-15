@@ -1,14 +1,21 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using Foodies.Interfaces.Repositories
+@using Microsoft.AspNetCore.Identity
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject ICustomerRepository _customerRepository;
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
+        var userId = UserManager.GetUserId(User);
+
+        // Fetch user information using the repository
+        var user = _customerRepository.GetById(userId);
      <div class="navbar">
         <div>
                 @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
+           <a href="~/menu/restaurant">Hello,</a>
         </div>
         <div class="nav-links">
             <a href="~/menu/restaurant">Home</a>

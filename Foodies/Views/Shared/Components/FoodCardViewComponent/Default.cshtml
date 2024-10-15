@@ -13,19 +13,19 @@
                 {
                     if(r.Id == Model.Id)
                     {
-                        <i class="bi bi-heart-fill" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+                        <i class="bi bi-heart-fill" id = "fav-@Model.Id" onclick="addToFavourites('@Model.Id')"></i>
                         break;
                     }
                     else
                     {
-                        <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+                        <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites('@Model.Id')"></i>
                         break;
                     }
                 }
             }
             else
             {
-             <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites(@Model.Id)"></i>
+             <i class="bi bi-heart" id = "fav-@Model.Id" onclick="addToFavourites('@Model.Id')"></i>
             }
         }
     </div>

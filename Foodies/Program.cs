@@ -7,6 +7,10 @@ using Microsoft.Extensions.FileProviders;
 using Firebase.Storage;
 using System.Configuration;
 using Foodies.Controllers;
+using Microsoft.AspNetCore.Identity;
+
+SignInManager<IdentityUser> SignInManager;
+UserManager<IdentityUser> UserManager;
 
 
 namespace Foodies
@@ -81,9 +85,10 @@ namespace Foodies
             app.MapControllerRoute(
                 name: "default",
 
+            
+            
+             pattern: "{controller=Master}/{action=Main}/{id?}");
 
-            //pattern: "{controller=Home}/{action=CustomerView}");
-            pattern: "{controller=Master}/{action=view}/{id?}");
 
             app.Run();
         }

@@ -61,11 +61,11 @@ namespace Foodies.Controllers
             Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
                
             
-            if (!customer.FavouriteRestaurants.Contains(res) && !res.FavouriteCustomers.Contains(customer))
-            {
+            //if (!customer.FavouriteRestaurants.Contains(res) && !res.FavouriteCustomers.Contains(customer))
+            //{
                 res.FavouriteCustomers.Add(customer);
                 customer.FavouriteRestaurants.Add(res);
-            }
+            //}
 
             return Content($"added to fav -{customer.Id}{res.Name}");
         }
