@@ -6,6 +6,6 @@ namespace Foodies.Interfaces.Repositories
     {
         public Task<IEnumerable<Order>> GetOrdersByBranchIdWithItems(string branchId);
         public Task<Order> GetByIdWithBranchIncluded(string id);
-        public  Task<Order> GetBycustomeridwithMenu(string cusid);
+        public  Task<IEnumerable<Order>> GetAllcustomeridwithMenu(string cusid);
     }
 }

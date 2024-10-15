@@ -46,7 +46,7 @@ namespace Foodies.Repositories
         {
             return await _context.Orders.Include(x => x.Branch).FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Order with ID {id} not found"); ;
         }
-        public async Task<List<Order>> GetBycustomeridwithMenu(string cusid)
+        public async Task<IEnumerable<Order>> GetAllcustomeridwithMenu(string cusid)
         {
             return await _context.Orders.Where(x => x.Customer.Id == cusid).Include(x => x.Items).ToListAsync() ?? throw new NotFoundException($"Order with ID {cusid} not found");
         }
@@ -64,9 +64,9 @@ namespace Foodies.Repositories
             return entity;
         }
 
-        Task<Order> IOrderRepository.GetBycustomeridwithMenu(string cusid)
-        {
-            throw new NotImplementedException();
-        }
+        //Task<Order> IOrderRepository.GetBycustomeridwithMenu(string cusid)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

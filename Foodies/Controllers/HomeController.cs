@@ -214,9 +214,8 @@ namespace Foodies.Controllers
             customerViewModel.bulding = customer.Address.Building;
             customerViewModel.Points = customer.Points;
             customerViewModel.Location = customer.Address.Location;
- //  var oredr = .Include(x => x.Items).Where(x=>x.Customer.Id==id).ToList();
-   var order= _orderRepository.ge
-            ViewBag.orders= oredr;
+            var order= _orderRepository.GetAllcustomeridwithMenu(id);
+            ViewBag.orders = order;
             return View(customerViewModel);
         }
 

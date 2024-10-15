@@ -9,44 +9,32 @@
     @if (SignInManager.IsSignedIn(User))
     {
         var userId = UserManager.GetUserId(User);
+        var user = _customerRepository.GetById(userId); // Fetch user information
 
-        // Fetch user information using the repository
-        var user = _customerRepository.GetById(userId);
-     <div class="navbar">
-        <div>
+            <div class="navbar">
+                <div>
+                @* Optional: Uncomment if you want to display a logo *@
                 @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
-           <a href="~/menu/restaurant">Hello,</a>
-        </div>
-        <div class="nav-links">
-            <a href="~/menu/restaurant">Home</a>
-            <a href="~/Order/cart">🛒 Cart</a>
-            <a href="~/menu/Favourite">Favourites</a>
-            <a href="~/Home/UserView">Profile</a>
-           <a href="~/Master/Logout">Logout</a>
-
-        </div>
-    </div>
-        @* <li class="nav-item">
-            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-        </li>
-
-
-        <li class="nav-item">
-            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-            </form>
-        </li> *@
+                    @* <a href="~/menu/restaurant">Hello, @(user?.FirstName ?? "User")</a> <!-- Greet the user --> *@
+                </div>
+                <div class="nav-links">
+                    <a href="~/menu/restaurant">Home</a>
+                    <a href="~/Order/cart">🛒 Cart</a>
+                    <a href="~/menu/Favourite">Favourites</a>
+                    <a href="~/Home/UserView">Profile</a>
+                    <a href="~/Master/Logout">Logout</a>
+                </div>
+            </div>
     }
     else
     {
             <div class="navbar">
-            <div>
-                @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
+                <div>
+                </div>
+                <div class="nav-links">
+                    <a href="~/Master/view">Home</a>
+                    <a href="#">About Us</a>
+                </div>
             </div>
-            <div class="nav-links">
-                <a href="~/Master/view">Home</a>
-                <a href="#">About Us</a>
-            </div>
-        </div>
     }
 </ul>
