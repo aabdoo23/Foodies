@@ -174,7 +174,14 @@ namespace Foodies.Controllers
             
             
         }
+        public async Task<IActionResult> Logout()
+        {
+            // Call the SignOutAsync method to log the user out
+            await _signInManager.SignOutAsync();
 
+            // Optionally, you can redirect the user to a different page after logout
+            return RedirectToAction("view", "Master");
+        }
 
     }
 }

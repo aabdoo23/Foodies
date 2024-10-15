@@ -51,7 +51,43 @@ namespace Foodies.Controllers
 
             return View(viewModel);
         }
+        [HttpPost]
+        public async Task<IActionResult> addToFav(string resId)
+        {
 
+            var userId = _userManager.GetUserId(User);
+            Restaurant res = await _restaurantRepository.GetByIdWithFavouriteCustomers(resId);
+            
+            Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
+               
+            
+            if (!customer.FavouriteRestaurants.Contains(res) && !res.FavouriteCustomers.Contains(customer))
+            {
+                res.FavouriteCustomers.Add(customer);
+                customer.FavouriteRestaurants.Add(res);
+            }
+
+            return Content($"added to fav -{customer.Id}{res.Name}");
+        }
+        [HttpPost]
+        public async Task<IActionResult> removeFav(string resId)
+        {
+
+            var userId = _userManager.GetUserId(User);
+            Restaurant res = await _restaurantRepository.GetByIdWithFavouriteCustomers(resId);
+
+            Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
+
+            if (customer.FavouriteRestaurants.Contains(res) && res.FavouriteCustomers.Contains(customer))
+            {
+                res.FavouriteCustomers.Remove(customer);
+                customer.FavouriteRestaurants.Remove(res);
+                return Content("weee");
+            }
+
+
+            return Content($"rem fav -{customer.Id}{res.Name}");
+        }
         public async Task<IActionResult> Favourite()
         {
             var userId = _userManager.GetUserId(User);

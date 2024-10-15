@@ -48,6 +48,12 @@ namespace Foodies.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
         }
 
+        public async Task<Restaurant> GetByIdWithFavouriteCustomers(string id)
+        {
+            return await _context.Restaurants
+                .Include(x => x.FavouriteCustomers)
+                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");
+        }
         public async Task<Restaurant> GetById(string id)
         {
             return await _context.Restaurants.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Restaurant with {id} not found");

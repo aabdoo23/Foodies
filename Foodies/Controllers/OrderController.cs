@@ -303,11 +303,12 @@ public class OrderController : Controller
         Cust.Orders.Add(order);
         branch.Orders.Add(order);
         payment.Order = order;
+        Cust.Points+= 100;
     
         await _orderRepository.Create(order);
         myCart.Clear();
 
-        return Content($"{order.Id} hoho");
+        return RedirectToAction("restaurant", "menu");
 
 
     }

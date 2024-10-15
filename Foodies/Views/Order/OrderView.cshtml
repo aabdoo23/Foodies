@@ -68,7 +68,7 @@
         <button type="submit" class="btn">Cancel</button>
 
     </form>
-     <form asp-action="order" asp-controller="Order" method="post">
+     <form asp-action="order" asp-controller="Order" method="post" id ="orderForm" >
         <input type="hidden" name="total" value="@ViewBag.Total" />
         <button type="submit" class="btn" id ="checkoutButton"
             >Confirm</button>
@@ -76,7 +76,11 @@
       </div>
       
   </section>
-  
+  <script>
+      document.getElementById("orderForm").addEventListener("submit", function(event) {
+        alert("Your order has been Placed successfully!");
+    });
+  </script>
 </body>
 </html>
 

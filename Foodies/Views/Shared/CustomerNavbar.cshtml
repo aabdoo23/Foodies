@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+     <div class="navbar">
+        <div>
+                @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
+        </div>
+        <div class="nav-links">
+            <a href="~/menu/restaurant">Home</a>
+            <a href="~/Order/cart">🛒 Cart</a>
+            <a href="~/menu/Favourite">Favourites</a>
+            <a href="~/Home/UserView">Profile</a>
+           <a href="~/Master/Logout">Logout</a>
+
+        </div>
+    </div>
+        @* <li class="nav-item">
+            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+
+
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+            </form>
+        </li> *@
+    }
+    else
+    {
+            <div class="navbar">
+            <div>
+                @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
+            </div>
+            <div class="nav-links">
+                <a href="~/Master/view">Home</a>
+                <a href="#">About Us</a>
+            </div>
+        </div>
+    }
+</ul>
