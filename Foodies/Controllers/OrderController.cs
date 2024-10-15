@@ -34,6 +34,7 @@ public class OrderController : Controller
         IMenuItemRepository menuItemRepository,
         ICustomerRepository customerRepository,
         IBranchRepository branchRepository,
+        IOrderRepository orderRepository,
         ICardRepository cardRepository,
 
         MapService mapService)
@@ -45,6 +46,7 @@ public class OrderController : Controller
         _customerRepository = customerRepository;
         _branchRepository = branchRepository;
         _cardRepository = cardRepository;
+        _orderRepository = orderRepository;
     }
 
 
@@ -232,7 +234,7 @@ public class OrderController : Controller
 
     //checkout
     [HttpPost]
-    public async Task<IActionResult> order(int total, string paymentMethod)
+    public async Task<IActionResult> order(int total)
     {
         ////id , State , total , date, paymentid , customerid, branch id
         Order order = new Order();
@@ -259,7 +261,7 @@ public class OrderController : Controller
         //not tested yet
         if (payment.PaymentMethod == "Card")
         {
-            string cardId =Request.Cookies["CardId"];
+            string cardId = Request.Cookies["CardId"];
 
             Card card = await _cardRepository.GetCardByCustomerId(userId);
             payment.card = card;
@@ -267,8 +269,8 @@ public class OrderController : Controller
         }
         order.Payment = payment;
 
-        string restID = Request.Cookies["restId"];
-        
+        //string restID = Request.Cookies["restId"];
+
         string branchID = Request.Cookies["bID"];
         Branch branch = await _branchRepository.GetByIdIcludeOrders(branchID);
         order.Branch = branch;
@@ -288,7 +290,7 @@ public class OrderController : Controller
         // last add order in menuitem model
         //empty cart
         order.Items = new List<MenuItem>(myCart);
-        
+
         foreach (var item in myCart)
         {
             //return Content($"{item.Id} hoho");
@@ -297,9 +299,11 @@ public class OrderController : Controller
 
         }
 
-        
+
         Cust.Orders.Add(order);
         branch.Orders.Add(order);
+        payment.Order = order;
+    
         await _orderRepository.Create(order);
         myCart.Clear();
 
