@@ -33,6 +33,10 @@
         {
             await Html.RenderPartialAsync("CustomerNavbar");
         }
+        else if (User.IsInRole("Admin"))
+        {
+            await Html.RenderPartialAsync("AdminNavbar");
+        }
         else
         {                     <!-- Start Navbar -->
             <div class="navbar">

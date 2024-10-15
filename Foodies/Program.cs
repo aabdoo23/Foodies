@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.FileProviders;
 using Firebase.Storage;
 
+using System.Configuration;
+using Foodies.Controllers;
+
 
 namespace Foodies
 {
@@ -80,8 +83,9 @@ namespace Foodies
                 name: "default",
 
 
-
+            //pattern: "{controller=Home}/{action=CustomerView}");
             pattern: "{controller=Master}/{action=view}/{id?}");
+
 
             app.Run();
         }

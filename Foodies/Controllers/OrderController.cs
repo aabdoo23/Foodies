@@ -50,13 +50,52 @@ public class OrderController : Controller
     }
 
 
-    
+    public (double latitude, double longitude)? ExtractCoordinates(string url)
+    {
+        string pattern = @"@(-?\d+\.\d+),(-?\d+\.\d+)";
+        Response.Cookies.Append("url", url);
+        Match match = Regex.Match(url, pattern);
+
+        if (match.Success)
+        {
+            double latitude = double.Parse(match.Groups[1].Value);
+            double longitude = double.Parse(match.Groups[2].Value);
+            return (latitude, longitude);
+        }
+
+        return null;
+    }
     //
 
     //resolve make it longer link
     //use logt and lat function
     //put it in final function
-   
+    public async Task<JObject> GetDistanceTime(double l1, double g1, double l2, double g2)
+    {
+        String apiKey = "5c2a1476c0e97f202c537b7e0459338cb9792efca2e0b763809c278a810abe74";
+        Hashtable ht = new Hashtable();
+        ht.Add("engine", "google_maps_directions");
+        ht.Add("start_coords", $"{l1}, {g1}");
+        ht.Add("end_coords", $"{l2}, {g2}");
+
+        GoogleSearch search = new GoogleSearch(ht, apiKey);
+        JObject data = search.GetJson();
+        var directions = data["directions"];
+        if (directions != null && directions.HasValues)
+        {
+
+            var firstDirection = directions[0];
+
+            var distance = firstDirection["formatted_distance"]?.ToString();
+            var time = firstDirection["formatted_duration"]?.ToString();
+
+
+            // Return JSON object with distance and time as strings
+            return JObject.FromObject(new { distance = distance, time = time });
+           
+         }
+        return null;
+    }
 
 
     public async Task<string> proceedDistanceTime(string resId)
@@ -68,7 +107,7 @@ public class OrderController : Controller
 
         Dictionary<string, (string dist, string time)> data = new Dictionary<string, (string, string)>();
 
-        var coordinateCustomer = _mapService.ExtractCoordinates(customer.Address.Location);
+        var coordinateCustomer = ExtractCoordinates(customer.Address.Location);
 
         foreach (var b in rest.Branches)
         {
@@ -76,9 +115,9 @@ public class OrderController : Controller
             //string destination = await _mapService.ResolveGoogleMapsLink(b.Address.Location);
             //string location = await _mapService.ResolveGoogleMapsLink(customer.Address.Location);
 
-            var coordinateBranch = _mapService.ExtractCoordinates(b.Address.Location);
+            var coordinateBranch = ExtractCoordinates(b.Address.Location);
 
-            var result = await _mapService.GetDistanceTime(coordinateCustomer.Value.latitude, coordinateCustomer.Value.longitude,coordinateBranch.Value.latitude, coordinateBranch.Value.longitude );
+            var result = await GetDistanceTime(coordinateCustomer.Value.latitude, coordinateCustomer.Value.longitude,coordinateBranch.Value.latitude, coordinateBranch.Value.longitude );
             Response.Cookies.Append($"br{b.Id}", $"{coordinateBranch.Value.latitude}{coordinateBranch.Value.longitude}");
 
             if (result["distance"] != null && result["time"] != null)

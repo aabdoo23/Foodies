@@ -1,16 +1,8 @@
-﻿@using Foodies.Interfaces.Repositories
-@using Microsoft.AspNetCore.Identity
-
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-@inject ICustomerRepository _customerRepository;
-
+﻿
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
-    {
-        var userId = UserManager.GetUserId(User);
-        var user = _customerRepository.GetById(userId); // Fetch user information
 
+        @* var userId = UserManager.GetUserId(User);
+        var user = _customerRepository.GetById(userId); // Fetch user information *@
             <div class="navbar">
                 <div>
                 @* Optional: Uncomment if you want to display a logo *@
@@ -25,16 +17,5 @@
                     <a href="~/Master/Logout">Logout</a>
                 </div>
             </div>
-    }
-    else
-    {
-            <div class="navbar">
-                <div>
-                </div>
-                <div class="nav-links">
-                    <a href="~/Master/view">Home</a>
-                    <a href="#">About Us</a>
-                </div>
-            </div>
-    }
+
 </ul>

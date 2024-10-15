@@ -182,19 +182,6 @@ namespace Foodies.Controllers
             // Optionally, you can redirect the user to a different page after logout
             return RedirectToAction("view", "Master");
         }
-        public async Task<IActionResult> Main()
-        {
-            // Call the SignOutAsync method to log the user out
-            if (User.Identity.IsAuthenticated)
-            {
-                // Redirect to an authenticated view or controller action
-                return RedirectToAction("restaurant", "menu");
-            }
-            else
-            {
-                // Redirect to the default view
-                return RedirectToAction("view", "Master");
-            }
-        }
+
     }
 }
