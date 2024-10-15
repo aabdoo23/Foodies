@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Net.Http;
+﻿using System.Net; // For async/await
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using CreditCardValidator;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using GoogleApi;
+using System.Net.Http;
 using Newtonsoft.Json.Linq;
-using System;
+using SerpApi;
 using System.Collections;
-using SerpApi;
-using Newtonsoft.Json.Linq;
-using SerpApi;
-using Newtonsoft.Json.Linq; // For JObject and JArray
-using System.Collections.Generic; // For Dictionary
-using System.Net.Http; // For HttpClient
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Azure.Core;
-using System.Net; // For async/await
+using FirebaseAdmin.Messaging;
+using Azure;
+using GoogleApi.Entities.Maps.Common;
+using Foodies.Interfaces.Repositories;
+using Foodies.Repositories;
+using System.Collections.Generic;
+
 
 public class MapService
 {

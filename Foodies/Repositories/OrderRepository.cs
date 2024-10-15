@@ -2,6 +2,7 @@
 using Foodies.Data;
 using Foodies.Exceptions;
 using Foodies.Interfaces.Repositories;
+using GoogleApi.Entities.Search.Video.Common;
 
 namespace Foodies.Repositories
 {
@@ -45,6 +46,10 @@ namespace Foodies.Repositories
         {
             return await _context.Orders.Include(x => x.Branch).FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Order with ID {id} not found"); ;
         }
+        public async Task<List<Order>> GetBycustomeridwithMenu(string cusid)
+        {
+            return await _context.Orders.Where(x => x.Customer.Id == cusid).Include(x => x.Items).ToListAsync() ?? throw new NotFoundException($"Order with ID {cusid} not found");
+        }
 
         public async Task<IEnumerable<Order>> GetOrdersByBranchIdWithItems(string branchId)
         {
@@ -57,6 +62,11 @@ namespace Foodies.Repositories
             _context.Orders.Update(entity);
             await _context.SaveChangesAsync();
             return entity;
+        }
+
+        Task<Order> IOrderRepository.GetBycustomeridwithMenu(string cusid)
+        {
+            throw new NotImplementedException();
         }
     }
 }

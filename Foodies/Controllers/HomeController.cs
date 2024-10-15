@@ -20,8 +20,10 @@ namespace Foodies.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ImageUploader _imageUploader;
+        private readonly IOrderRepository _orderRepository;
 
-        public HomeController(ILogger<HomeController> logger,
+
+        public HomeController(ILogger<HomeController> logger, IOrderRepository orderRepository,
             IAdminRepository adminRepository,
             IRestaurantRepository restaurantRepository,
             IBranchRepository branchRepository,
@@ -44,6 +46,7 @@ namespace Foodies.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _imageUploader = imageUploader;
+            _orderRepository = orderRepository;
         }
   
         public async Task<IActionResult> AdminProfile(string id)
@@ -211,7 +214,8 @@ namespace Foodies.Controllers
             customerViewModel.bulding = customer.Address.Building;
             customerViewModel.Points = customer.Points;
             customerViewModel.Location = customer.Address.Location;
-   var oredr = _context.Order.Include(x => x.Items).Where(x=>x.Customer.Id==id).ToList();
+ //  var oredr = .Include(x => x.Items).Where(x=>x.Customer.Id==id).ToList();
+   var order= _orderRepository.ge
             ViewBag.orders= oredr;
             return View(customerViewModel);
         }
