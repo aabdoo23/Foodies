@@ -45,14 +45,7 @@ namespace Foodies.Controllers
             _signInManager = signInManager;
             _imageUploader = imageUploader;
         }
-        public IActionResult CustomerView()
-        {
-            return View();
-        }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+  
         public async Task<IActionResult> AdminProfile(string id)
         {
             var admin = await _adminRepository.GetById(id);
@@ -204,6 +197,7 @@ namespace Foodies.Controllers
             //todo get user id from userManager   
             var id = _userManager.GetUserId(User);
 
+
             var customer = await _customerRepository.GetById(id);
             var customerViewModel = new CustomerViewModel();
 
@@ -217,7 +211,8 @@ namespace Foodies.Controllers
             customerViewModel.bulding = customer.Address.Building;
             customerViewModel.Points = customer.Points;
             customerViewModel.Location = customer.Address.Location;
-
+   var oredr = _context.Order.Include(x => x.Items).Where(x=>x.Customer.Id==id).ToList();
+            ViewBag.orders= oredr;
             return View(customerViewModel);
         }
 
