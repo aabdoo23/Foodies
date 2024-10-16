@@ -59,6 +59,7 @@ namespace Foodies.Controllers
             adminProfileViewModel.Email = admin.IdentityUser.Email;
             adminProfileViewModel.FirstName = admin.FirstName;
             adminProfileViewModel.LastName = admin.LastName;
+            adminProfileViewModel.img = restaurant.Photo;
             adminProfileViewModel.PhoneNumber = admin.IdentityUser.PhoneNumber;
             adminProfileViewModel.Resturant = restaurant;
             adminProfileViewModel.Branch = await _branchRepository.GetAllBrancheshByRestaurantId(admin.RestaurantId);
@@ -96,14 +97,19 @@ namespace Foodies.Controllers
             var restaurant = await _restaurantRepository.GetById(id);
             return View(restaurant);
         }
-        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, string restaurantId) //, IFormFile immg
+        /* IFormFile immg) 
         {
-            //string? usrl = await _imageUploader.UploadImageAsync(immg);
+            string? usrl = await _imageUploader.UploadImageAsync(immg);
+            if (ModelState.IsValid)*/
+        public async Task<IActionResult> SaveAddmnu(MenuItem Menu, string restaurantId, IFormFile immg) //, IFormFile immg
+        {
+            string? usrl = await _imageUploader.UploadImageAsync(immg);
             MenuItem menuItem = new MenuItem
             {
                 Name = Menu.Name,
                 Category = Menu.Category,
                 Description = Menu.Description,
+                img = usrl,
                 Resturant = await _restaurantRepository.GetById(restaurantId),
                 //img=usrl,
                 Price = Menu.Price
@@ -213,6 +219,7 @@ namespace Foodies.Controllers
             customerViewModel.Street = customer.Address.Street;
             customerViewModel.bulding = customer.Address.Building;
             customerViewModel.Points = customer.Points;
+            customerViewModel.img = customer.img;
             customerViewModel.Location = customer.Address.Location;
             var order= _orderRepository.GetAllcustomeridwithMenu(id);
             ViewBag.orders = order;

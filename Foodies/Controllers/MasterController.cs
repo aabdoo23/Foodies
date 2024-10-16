@@ -45,11 +45,12 @@ namespace Foodies.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveNewCustomer(RegistrationViewModel cus)
+        public async Task<IActionResult> SaveNewCustomer(RegistrationViewModel cus, IFormFile immg)
         {
             if (ModelState.IsValid)
             {
-                //TODO: Edit function to handle img
+                string? usrl = await _imageUploader.UploadImageAsync(immg);
+                cus.img = usrl;
                 var result = await _customerService.CreateCustomer(cus);
                 if (result != null)
                 {
@@ -77,14 +78,16 @@ namespace Foodies.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin) // TODO: Add file upload again after fixing the image uploader
+        public async Task<IActionResult> SaveAdminAndResturant(AdminRegisterViewModel admin, IFormFile immg) 
         {
+            string? usrl = await _imageUploader.UploadImageAsync(immg);
             if (ModelState.IsValid)
             {
                 Restaurant res = new Restaurant
                 {
+                    
                     Name = admin.Name,
-                    Photo = admin.Photo,
+                    Photo = usrl,
                     Hotline = admin.Hotline,
                     CuisineType = admin.CuisineType,
                     MaxPrice = admin.MaxPrice,

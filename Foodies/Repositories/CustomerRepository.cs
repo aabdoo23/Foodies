@@ -13,6 +13,7 @@ namespace Foodies.Repositories
         }
         public async Task<Customer> Create(Customer entity)
         {
+            
             _context.Customers.Add(entity);
             await _context.SaveChangesAsync();
             return entity;

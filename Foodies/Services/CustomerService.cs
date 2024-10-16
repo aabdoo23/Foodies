@@ -42,6 +42,7 @@ namespace Foodies.Services
                     Id = user.Id,
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
+                    img= viewModel.img,
 
                     Address = new Address
                     {

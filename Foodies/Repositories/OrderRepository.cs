@@ -44,7 +44,8 @@ namespace Foodies.Repositories
 
         public async Task<Order> GetByIdWithBranchIncluded(string id)
         {
-            return await _context.Orders.Include(x => x.Branch).FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Order with ID {id} not found"); ;
+          //  await _context.Order.Include(o => o.Customer).Include(c => c.Items).FirstOrDefaultAsync(o => o.Id == id);
+            return await _context.Orders.Include(o => o.Customer).Include(c => c.Items).Include(x => x.Branch).FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Order with ID {id} not found"); ;
         }
         public async Task<IEnumerable<Order>> GetAllcustomeridwithMenu(string cusid)
         {

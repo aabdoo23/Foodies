@@ -1,4 +1,5 @@
-﻿
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+
  @model Order
 
 <!DOCTYPE html>
@@ -45,12 +46,7 @@
                 <p><strong>Customer:</strong>@Model.Customer.FirstName @Model.Customer.LastName</p>
 <p><strong>Order Date:</strong> @Model.OrderDate</p>  
 <p>
-                   @* <strong>Status:</strong>
-                    <select id="order-status" onchange="editOrderStatus()">
-                        <option value="Delivered">Delivered</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Canceled">Canceled</option>
-                    </select>*@
+                  
                 <form action="/BranchManager/Changestate/@Model.Id" method="get">
     <label for="order-status">Order Status:</label>
     <select id="order-status" name="state" onchange="editOrderStatus()">
@@ -67,8 +63,8 @@
 
 
             
-                @foreach (var item in Model.Items)
-                {
+                    @foreach (var item in Model.Items)
+                    {
                     @if (item != null)
                     {
                              <div class="cart-item" data-price="@item.Price" 
@@ -76,13 +72,10 @@
                                 <img src="@item.img" alt="@item.Name" loading="lazy">
                               <div class="item-details">
                                   <p class="item-name">@item.Name</p>
-                                  <p class="restaurant">Restaurant: KFC</p>
                               </div>
                                       <div class="item-price">@item.Price</div>
                               <div class="item-quantity">
-                                  <button class="decrease-btn">-</button>
                                   <span class="quantity">1</span>
-                                  <button class="increase-btn">+</button>
                               </div>
                                       <i class="fa-solid fa-trash delicon"  ></i>
                           </div>
@@ -100,10 +93,7 @@
 
 
       </div>
-      <div class="special-instructions">
-        <p class="special-instructions-title">📋 Special Instructions (Optional)</p>
-        <input type="text" class="special-input" placeholder="Enter your instructions...">
-    </div>
+   
 
       <div class="checkout-summary">
           <div class="subtotal">

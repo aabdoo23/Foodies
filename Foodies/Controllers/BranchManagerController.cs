@@ -59,7 +59,7 @@ namespace Foodies.Controllers
             var order = await _orderRepository.GetByIdWithBranchIncluded(id);
             order.State = state;
             await _orderRepository.Update(order);
-            return RedirectToAction("OrderList", new { id = order.Branch.Id });
+            return RedirectToAction("OrderList", new { branchId = order.Branch.Id });
         }
         #region
         //public async Task<IActionResult> Details(int id)
