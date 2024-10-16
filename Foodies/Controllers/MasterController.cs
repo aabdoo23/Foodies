@@ -182,6 +182,33 @@ namespace Foodies.Controllers
             // Optionally, you can redirect the user to a different page after logout
             return RedirectToAction("view", "Master");
         }
-
+        public async Task<IActionResult> AboutUs()
+        {
+            return view();
+        }
+        public async Task<IActionResult> Main()
+        {
+            var userid =  _userManager.GetUserId(User);
+            // Call the SignOutAsync method to log the user out
+            if (User.Identity.IsAuthenticated)
+            {
+                if(User.IsInRole("Customer")){
+                    return RedirectToAction("restaurant", "menu");
+                }
+                else if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("AdminProfile", "Home", new { id = userid });
+                }
+                else
+                {
+                    return RedirectToAction("Profile","BranchManager");
+                }
+            }
+            else
+            {
+                // Redirect to the default view
+                return RedirectToAction("view", "Master");
+            }
+        }
     }
 }

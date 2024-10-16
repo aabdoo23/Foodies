@@ -37,16 +37,17 @@
         {
             await Html.RenderPartialAsync("AdminNavbar");
         }
-        else
+        
+        else if (!User.IsInRole("BranchManager"))
         {                     <!-- Start Navbar -->
             <div class="navbar">
                 <div>
-                    @* <img src="/images/foodies.png" alt="Foodies Logo" class="logo"> *@
+                    <img src="/images/logo.png" alt="Foodies Logo" class="logo"> 
                 </div>
                 <div class="nav-links">
                     <a href="~/Master/view" style="color: #D35269">Home</a>
                     <a href="#">Services</a>
-                    <a href="#">About us</a>
+                    <a href="~/Master/AboutUs">About us</a>
                 </div>
             </div>
         }

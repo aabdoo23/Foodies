@@ -49,7 +49,12 @@ public class OrderController : Controller
         _orderRepository = orderRepository;
     }
 
-
+    public async Task<IActionResult> history()
+    {
+        var userid = _userManager.GetUserId(User);
+        var orders = await _orderRepository.GetAllcustomeridwithMenu(userid);
+        return View(orders);
+    }
     public (double latitude, double longitude)? ExtractCoordinates(string url)
     {
         string pattern = @"@(-?\d+\.\d+),(-?\d+\.\d+)";
@@ -162,7 +167,8 @@ public class OrderController : Controller
     [HttpPost]
     public async Task<IActionResult> checkout(int total)
     {
-        ViewBag.Total = total.ToString();
+
+        ViewBag.Total = total;
         string restID = Request.Cookies["restId"];
 
         var userId = _userManager.GetUserId(User);
@@ -178,7 +184,6 @@ public class OrderController : Controller
         Response.Cookies.Append("bID", branch.Id);
         ViewBag.distance = arrayData[2];
         ViewBag.time = arrayData[1];
-
         return View(branch);
     }
 
@@ -359,11 +364,6 @@ public class OrderController : Controller
 
         // Output the cookie list along with the itemId for testing purposes
         return Content("The is decrease");
-    }
-
-    public IActionResult History()
-    {
-        return View();
     }
 
     //view cart

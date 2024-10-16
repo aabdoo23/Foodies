@@ -84,9 +84,9 @@ namespace Foodies
 
 
             //pattern: "{controller=Home}/{action=CustomerView}");
-            pattern: "{controller=Master}/{action=view}/{id?}");
+            pattern: "{controller=Master}/{action=Main}/{id?}");
 
-
+           
             app.Run();
         }
     }

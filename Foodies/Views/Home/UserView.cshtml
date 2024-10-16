@@ -190,22 +190,7 @@
             @{
                 int con = 0;
             }
-            @foreach (var i in ViewBag.orders)
-            {
-                 <div class="order-item">
-                  <div class="order-details">
-                    <h4>Order #@con</h4>
-                    <p>Date: @i.OrderDate</p>
-                    <p>Restaurant: </p>
-                    <p>Description: 4x 200gm sandwiches with 4 small fries and 4 drinks</p>
-                    <p>Total Price: @i.TotalPrice EGP</p>
-                  </div>
-                  <div class="order-actions">
-                    <img src="burger.png" alt="Order Photo" class="order-photo">
-                  </div>
-                     </div>
-                     
-            }
+            
 
              @*     <!-- Order #2 -->
                 <div class="order-item">
@@ -257,6 +242,11 @@
 </html>
 
 <style>
+
+    .mt-5{
+    background-color:white;
+        margin-top:120px !important;
+    }
      .alert {
     padding: 15px;
     margin-bottom: 20px;

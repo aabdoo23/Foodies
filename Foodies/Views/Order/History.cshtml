@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model List<Order>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -189,38 +190,35 @@
         <h1>Order History</h1>
 
         <!-- Order Card 1 -->
-        <div class="order-card">
-            <div class="order-details">
-                <h3>Order #1</h3>
-                <p>Date: September 5, 2024</p>
-                <p>Restaurant: Buffalo Burger</p>
-                <p>4 200gm sandwiches with 4 small fries and 4 drinks</p>
-                <p><strong>Total Price: 120.00 EGP</strong></p>
-            </div>
-            <div class="order-image">
-                <img src="/assets/images/order_history/burger.png" alt="Burger">
-            </div>
-            <button class="reorder-button">Reorder</button>
-        </div>
-
+        
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var order in Model)
+            {
+            <div class="order-card">
+                    <img src="/assets/images/orders/order_placeholder.png" alt="Order Icon" class="order-icon">
+                    <div class="order-details">
+                        <p>Date: @order.OrderDate.ToString("MM/dd/yyyy")</p>
+                        <p>Total: @order.TotalPrice.ToString("C")</p>
+                        <p>Status: @order.State</p>
+                    </div>
+                    <div class="order-actions">
+                    <div class="order-image">
+                        <img src="/assets/images/order_history/pizza.png" alt="Pizza">
+                    </div>
+                      <button class="reorder-button" onclick="location.href='/order/checkout/@order.TotalPrice'">Reorder</button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+           <p>No orders available.</p>
+        }
         <!-- Order Card 2 -->
         <div class="order-card">
             <div class="order-details">
                 <h3>Order #2</h3>
-                <p>Date: July 15, 2024</p>
-                <p>Restaurant: Domino's Pizza</p>
-                <p>Pepperoni Pizza</p>
-                <p><strong>Total Price: 275.00 EGP</strong></p>
-            </div>
-            <div class="order-image">
-                <img src="/assets/images/order_history/pizza.png" alt="Pizza">
-            </div>
-            <button class="reorder-button">Reorder</button>
-        </div>
-
-        <div class="order-card">
-            <div class="order-details">
-                <h3>Order #3</h3>
                 <p>Date: July 15, 2024</p>
                 <p>Restaurant: Domino's Pizza</p>
                 <p>Pepperoni Pizza</p>

@@ -1,5 +1,7 @@
 ﻿using Foodies.Data;
 using Foodies.Interfaces.Repositories;
+using Foodies.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Foodies.Controllers
@@ -9,20 +11,27 @@ namespace Foodies.Controllers
         private readonly ILogger<BranchManagerController> _logger;
         private readonly IOrderRepository _orderRepository;
         private readonly IBranchManagerRepository _branchManagerRepository;
+        private readonly UserManager<IdentityUser> _usermanager;
+
 
         public BranchManagerController(ILogger<BranchManagerController> logger,
             IOrderRepository orderRepository,
-            IBranchManagerRepository branchManagerRepository)
+            IBranchManagerRepository branchManagerRepository,
+            UserManager<IdentityUser> usermanager)
         {
             _logger = logger;
             _orderRepository = orderRepository;
             _branchManagerRepository = branchManagerRepository;
+            _usermanager = usermanager;
         }
 
         public async Task<IActionResult> OrderList(string branchId)
         {
             var allOrdersForBranch = await _orderRepository.GetOrdersByBranchIdWithItems(branchId);
+            var userid = _usermanager.GetUserId(User);
+            var branchmanager = await _branchManagerRepository.GetByIdWithBranchAndRestaurantIncluded(userid);
 
+            ViewBag.b = branchmanager.BranchId;
             return View(allOrdersForBranch);
         }
         #region no
@@ -41,8 +50,8 @@ namespace Foodies.Controllers
         #endregion
         public async Task<IActionResult> Details(string id)
         {
-            var order = await _orderRepository.GetById(id);
-
+            var order = await _orderRepository.GetByIdWithBranchIncluded(id);
+            
             return View(order);
         }
         public async Task<IActionResult> ChangeState(string id, string state)
@@ -68,9 +77,10 @@ namespace Foodies.Controllers
         //    return View(order);
         //}
         #endregion
-        public async Task<IActionResult> Profile(string id)
+        public async Task<IActionResult> Profile(string ?id)
         {
-            var branchmanager = await _branchManagerRepository.GetByIdWithBranchAndRestaurantIncluded(id);
+            var userid = _usermanager.GetUserId(User);
+            var branchmanager = await _branchManagerRepository.GetByIdWithBranchAndRestaurantIncluded(userid);
             return View(branchmanager);
         }
 

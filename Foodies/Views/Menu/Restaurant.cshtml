@@ -43,25 +43,25 @@
                                 {
                                     if (r.Id == restaurant.Id)
                                     {
-                                                            <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
+                                                            <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
                                         break;
                                     }
                                     else
                                     {
-                                                            <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
+                                                            <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
                                         break;
                                     }
                                 }
                             }
                             else
                             {
-                                            <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
+                                            <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
                             }
                         }
 
                             <!-- Updated image with a better look and click behavior -->
-                                  <img class="food-card-img" src="@restaurant.Photo" alt="food image" onclick="window.location.href=$"/Menu/Index?restaurantId={@restaurant.Id}""/>
-                        </div>
+                                        <img class="food-card-img" src="@restaurant.Photo" alt="food image" onclick="window.location.href='/Menu/Index?restaurantId=@restaurant.Id'" />
+                            </div>
                     </div>
 
                     <div class="rating-container">

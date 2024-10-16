@@ -5,32 +5,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Branch Manager Dashboard</title>
+    <link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/css/Main.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Foodies.styles.css" asp-append-version="true" />
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/all.min.css" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
+     <ul class="navbar-nav">
 
-    <!-- Navbar with Profile Button -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">
-                    <i class="fa-solid fa-utensils"></i>
-                    <b>Foodies</b>
-                </a>
-            </div>
-            <div class="button-container">
-                <!-- Order List Button -->
-<button class="order-btn" onclick="location.href='/BranchManager/OrderList/@Model.BranchId'">
-                    <i class="fa fa-list"></i> Orders
-                </button>
-                         </div>
+
+    <div class="navbar">
+        <div>
+            <img src="/images/logo.png" alt="Foodies Logo" class="logo"> 
         </div>
-    </nav>
-
+        <div class="nav-links">
+            <a href="~/BranchManager/OrderList/@Model.BranchId">Orders</a> <!-- Use user ID in links if needed -->
+            <a href="~/BranchManager/Profile">Profile</a>
+            <a href="~/Master/Logout">Logout</a>
+        </div>
+    </div>
+</ul>
+   
     <!-- Branch Manager Dashboard -->
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="row w-75 shadow-lg p-4 rounded">
@@ -102,21 +100,7 @@
 </html>
 
 <style>
-    /* Navbar Styles */
-    .navbar {
-        padding: 10px 20px;
-        background-color: #f8f9fa;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .navbar-brand {
-        font-size: 1.2em;
-        color: #333;
-    }
-
+  
     /* Container to hold buttons */
     .button-container {
         display: flex;

@@ -81,7 +81,7 @@
 
 
     <form asp-action="OrderView" asp-controller="Order" method="post" onsubmit="return createPayment(this);">
-        <input type="hidden" name="total" value="@ViewBag.Total" />
+        <input type="hidden" name="total" value=@ViewBag.Total />
            <input type="hidden" name="paymentMethod" id="paymentMethod"  />
         <button type="submit" class="confirm-btn">View Order</button>
     </form>

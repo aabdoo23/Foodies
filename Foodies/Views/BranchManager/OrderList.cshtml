@@ -7,29 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order List</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+       <link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true"/>
+       <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Foodies.styles.css" asp-append-version="true" />
+
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
     <!-- Navbar with Profile Button -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">
-                    <i class="fa-solid fa-utensils"></i>
-                    <b>Foodies</b>
-                </a>
-            </div>
-            <div class="button-container">
-                <!-- Order List Button -->
-                <button class="order-btn" onclick="location.href='/BranchManager/OrderList'">
-                    <i class="fa fa-list"></i> Orders
-                </button>
-                <!-- Profile Button -->
-              
-            </div>
+     <ul class="navbar-nav">
+         
+
+    <div class="navbar">
+        <div>
+            <img src="/images/logo.png" alt="Foodies Logo" class="logo"> 
         </div>
-    </nav>
+        <div class="nav-links">
+            <!-- Navigation Links -->
+            <a href="~/BranchManager/OrderList/@ViewBag.b">Orders</a> <!-- Use user ID in links if needed -->
+            <a href="~/BranchManager/Profile/">Profile</a>
+            <a href="~/Master/Logout">Logout</a>
+        </div>
+    </div>
+</ul>
 
     <!-- Main Content -->
     <div class="container">
