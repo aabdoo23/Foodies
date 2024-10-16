@@ -4,8 +4,6 @@ namespace Foodies.Models
 {
     public class Card : BaseEntity
     {
-        [Key]
-        public String Id { get; set; }
         public string? CardNumber { get; set; }
         public string? ExpiryMonth { get; set; }
         public string? ExpiryYear { get; set; }

@@ -5,8 +5,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FOODIES</title>
-
+    <title>Profile</title>
+    <link rel="stylesheet" href="~/css/Main.css">
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/all.min.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -106,42 +106,43 @@
 }
 <form action="/Order/AddCard" method="post">
     <div class="form-group">
-   @* <label for="CardNumber">@Model.Card.CardNumber</label>*@
-        <input type="text" asp-for="CardNumber" name="CardNumber" class="form-control" required />
+            <label for="CardNumber">Card Number</label>
+
+                    <input type="text" asp-for="CardNumber" name="CardNumber" class="form-control" value = "@Model.Card.CardNumber" required />
         <span asp-validation-for="CardNumber" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label for="ExpiryMonth">Expiry Month</label>
-        <input type="text" asp-for="ExpiryMonth" name="ExpiryMonth" class="form-control" required />
+                    <input type="text" asp-for="ExpiryMonth" name="ExpiryMonth" class="form-control" value = "@Model.Card.ExpiryMonth"required />
         <span asp-validation-for="ExpiryMonth" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label for="ExpiryYear">Expiry Year</label>
-        <input type="text" asp-for="ExpiryYear" name="ExpiryYear" class="form-control" required />
+                                <input type="text" asp-for="ExpiryYear" name="ExpiryYear"  class="form-control" value = "@Model.Card.ExpiryYear" ="form-control" required />
         <span asp-validation-for="ExpiryYear" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label for="CVC">CVC</label>
-        <input type="text" asp-for="CVC" name="CVC" class="form-control" required />
+                    <input type="text" asp-for="CVC" name="CVC" class="form-control" value = "@Model.Card.CVC" required />
         <span asp-validation-for="CVC" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label for="Type">Card Type</label>
-        <input type="hidden" asp-for="Type" name="Type" class="form-control" />
+                    <input type="text" asp-for="Type" name="Type" class="form-control" value = "@Model.Card.Type" />
         <span asp-validation-for="Type" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label for="CustomerId">Customer ID</label>
         <input type="hidden" asp-for="CustomerId" name="CustomerId" class="form-control" value="" required />
         <span asp-validation-for="CustomerId" class="text-danger"></span>
     </div>
-
-    <button type="submit" class="btn">Add Card</button>
+    @if(Model.Card == null){
+        <button type="submit" class="btn-second">Add Card</button>
+    }
 </form>
 
 
@@ -165,7 +166,7 @@
               
              
               <div class="mb-3">
-              <button type="submit" class="btn btn-primary w-100" style="background-color:#3e1ba6; border-color: #048A81;">Save Changes</button>
+              <button type="submit" class="btn" >Save Changes</button>
               </div>
             </form>
           `,
