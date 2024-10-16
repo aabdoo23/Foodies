@@ -233,6 +233,7 @@ public class OrderController : Controller
                 myCart.Add(menuItem);
             }
         }
+        ViewBag.total = total;
         Response.Cookies.Append("paymentmethod", paymentMethod);
         return View(myCart);
     }
