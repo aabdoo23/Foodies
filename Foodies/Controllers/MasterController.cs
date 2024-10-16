@@ -103,8 +103,6 @@ namespace Foodies.Controllers
                     Photo = usrl,
                     Hotline = admin.Hotline,
                     CuisineType = admin.CuisineType,
-                    MaxPrice = admin.MaxPrice,
-                    MinPrice = admin.MinPrice
                 };
                 var restaurantResult = await _restaurantRepository.Create(res);
                 if (restaurantResult != null)

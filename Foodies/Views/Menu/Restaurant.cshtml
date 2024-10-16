@@ -9,15 +9,18 @@
 </head>
 
 <body>
-    <br /><br /><br /><br />
+    <br />
+    <br />
+    <br />
+    <br />
     <div class="category-bar d-flex justify-content-center">
         @{
             var ef = Model.Select(r => r.CuisineType).Distinct();
             foreach (var i in ef)
             {
-                                <div class="category-item" data-category="@i">
-                                    <button class="category-button">@i</button>
-                                </div>
+                <div class="category-item" data-category="@i">
+                    <button class="category-button">@i</button>
+                </div>
             }
         }
     </div>
@@ -31,41 +34,47 @@
     <div class="restaurant-cards">
         @foreach (var restaurant in Model)
         {
-                <div class="card restaurant-card" data-cuisine-type="@restaurant.CuisineType">
-    <a href="/Menu/Index?restaurantId=@restaurant.Id" class="image-link">
-        <div class="image-container">
-                            <img src="@restaurant.Photo" alt="Restaurant" class="restaurant-image">
-                        </div>
-                    </a>
-                    <div class="card-content">
-                        <h2 class="restaurant-name">@restaurant.Name</h2>
-                        <div class="actions">
-                            <button class="favorite-btn" id="favoriteBtn" onclick="addToFavourites(@restaurant.Id)">&#10084;</button>
-                            <div class="rating">
-                                <span class="star" data-value="5">&#9733;</span>
-                                <span class="star" data-value="4">&#9733;</span>
-                                <span class="star" data-value="3">&#9733;</span>
-                                <span class="star" data-value="2">&#9733;</span>
-                                <span class="star" data-value="1">&#9733;</span>
-                            </div>
-                        </div>
-                        <button class="submit-rating" id="submitRatingBtn">Submit Rating</button>
-                        <p id="ratingResult" class="rating-result"></p>
+            <div class="card restaurant-card" data-cuisine-type="@restaurant.CuisineType">
+                <a href="/Menu/Index?restaurantId=@restaurant.Id" class="image-link">
+                    <div class="image-container">
+                        <img src="@restaurant.Photo" alt="Restaurant" class="restaurant-image">
                     </div>
+                </a>
+                <div class="card-content">
+                    <h2 class="restaurant-name">@restaurant.Name</h2>
+                    <div class="actions">
+                        <button class="favorite-btn" data-restaurant-id="@restaurant.Id">&#10084;</button>
+                        <div class="rating">
+                            <span class="star" data-value="5">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="1">&#9733;</span>
+                        </div>
+                    </div>
+                    <div class="rating-container">
+                        <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">Rate Restaurant</button>
+                        <div class="rating-input" style="display: none;">
+                            <input type="number" min="1" max="5" step="0.1" placeholder="Rate (1-5)" class="form-control" />
+                            <button class="btn btn-primary submit-rating" data-restaurant-id='@restaurant.Id'>Submit</button>
+                        </div>
+                    </div>
+                    <button class="submit-rating" data-restaurant-id="@restaurant.Id">Submit Rating</button>
+                    <p id=data-restaurant-id ="@restaurant.Id" class="rating-result"></p>
                 </div>
+            </div>
         }
     </div>
 
 </body>
 </html>
- 
+
 <script>
-     document.querySelectorAll('.category-item button').forEach(item => {
-        item.addEventListener('click', function(event) {
+    document.querySelectorAll('.category-item button').forEach(item => {
+        item.addEventListener('click', function (event) {
             event.preventDefault();
             var selectedCategory = this.closest('.category-item').getAttribute('data-category');
-            var restaurantCards = document.querySelectorAll('.restaurant-card'); // Ensure correct class reference
-
+            var restaurantCards = document.querySelectorAll('.restaurant-card');
             restaurantCards.forEach(card => {
                 var cuisineType = card.getAttribute('data-cuisine-type');
                 if (cuisineType === selectedCategory || selectedCategory === 'All') {
@@ -77,7 +86,7 @@
         });
     });
 
-   document.getElementById('restaurantSearch').addEventListener('input', function() {
+    document.getElementById('restaurantSearch').addEventListener('input', function () {
         var searchQuery = this.value.toLowerCase();
         var restaurantCards = document.querySelectorAll('.restaurant-card'); // Ensure correct class reference
 
@@ -97,38 +106,38 @@
         rateButtons.forEach(button => {
             button.addEventListener('click', function () {
                 const ratingInput = this.nextElementSibling;
-                ratingInput.style.display = ratingInput.style.display === 'none' ? 'flex' : 'none';
+                ratingInput.style.display = ratingInput.style.display === 'none' ? 'block' : 'none';
             });
         });
 
         const submitButtons = document.querySelectorAll('.submit-rating');
 
         submitButtons.forEach(button => {
-            button.addEventListener('click', async function () {
+            button.addEventListener('click', function () {
                 const restaurantId = this.getAttribute('data-restaurant-id');
-                const ratingValue = this.previousElementSibling.value;
+                const rate = this.previousElementSibling.value;
+                console.log(rate, restaurantId);
 
-                if (ratingValue) {
-                    const response = await fetch(`/Menu/AddRating`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
+                if (rate) {
+                    $.ajax({
+                        url: '/Menu/AddRating',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ RestaurantId: restaurantId, Rate: parseFloat(rate) }),
+                        success: function () {
+                            alert('Thank you for your rating!');
+                            location.reload();
                         },
-                        body: JSON.stringify({ RestaurantId: restaurantId, Rate: parseFloat(ratingValue) })
+                        error: function () {
+                            alert('An error occurred while submitting your rating.');
+                        }
                     });
-
-                    if (response.ok) {
-                        alert('Thank you for your rating!');
-                        location.reload();
-                    } else {
-                        alert('An error occurred while submitting your rating.');
-                    }
                 } else {
                     alert('Please enter a rating.');
                 }
             });
         });
-    });
+
 
     function addToFavourites(resId) {
         var button = document.getElementById("fav-" + resId);
@@ -138,13 +147,13 @@
             button.classList.add("bi-heart-fill");
 
             $.ajax({
-                url: '/menu/addToFav', 
-                type: 'post', 
+                url: '/menu/addToFav',
+                type: 'post',
                 data: { resId: resId },
-                success: function(response) {
+                success: function (response) {
                     alert('Added to favorites');
                 },
-                error: function(err) {
+                error: function (err) {
                     console.error('Error adding to favorites', err);
                 }
             });
@@ -153,292 +162,292 @@
             button.classList.remove("bi-heart-fill");
             button.classList.add("bi-heart");
             $.ajax({
-                url: '/menu/removeFav', 
-                type: 'post', 
+                url: '/menu/removeFav',
+                type: 'post',
                 data: { resId: resId },
-                success: function(response) {
+                success: function (response) {
                     alert('Removed from favorites');
                 },
-                error: function(err) {
+                error: function (err) {
                     console.error('Error removing from favorites', err);
                 }
             });
         }
     }
     /*
-    card js 
-    */ 
-   // Favorite Button Toggle
-const favoriteBtn = document.getElementById('favoriteBtn');
-favoriteBtn.addEventListener('click', function() {
-    favoriteBtn.classList.toggle('active');
-});
+    card js
+    */
+    // Favorite Button Toggle
+    const favoriteBtn = document.getElementById('favoriteBtn');
+    favoriteBtn.addEventListener('click', function () {
+        favoriteBtn.classList.toggle('active');
+    });
 
-// Rating System (left to right logic)
-const stars = document.querySelectorAll('.star');
-let selectedRating = 0;
+    // Rating System (left to right logic)
+    const stars = document.querySelectorAll('.star');
+    let selectedRating = 0;
 
-stars.forEach((star, index) => {
-    star.addEventListener('click', function() {
-        // Clear previous active states
-        stars.forEach(s => s.classList.remove('active'));
+    stars.forEach((star, index) => {
+        star.addEventListener('click', function () {
+            // Clear previous active states
+            stars.forEach(s => s.classList.remove('active'));
 
-        // Set the clicked star and all previous stars to active
-        selectedRating = index + 1;
-        for (let i = 0; i <= index; i++) {
-            stars[i].classList.add('active');
+            // Set the clicked star and all previous stars to active
+            selectedRating = index + 1;
+            for (let i = 0; i <= index; i++) {
+                stars[i].classList.add('active');
+            }
+        });
+    });
+
+    // Submit Rating Button
+    const submitRatingBtn = document.getElementById('submitRatingBtn');
+    const ratingResult = document.getElementById('ratingResult');
+
+    submitRatingBtn.addEventListener('click', function () {
+        if (selectedRating > 0) {
+            ratingResult.textContent = `You rated this restaurant ${selectedRating} stars!`;
+        } else {
+            ratingResult.textContent = "Please select a rating before submitting.";
         }
     });
-});
-
-// Submit Rating Button
-const submitRatingBtn = document.getElementById('submitRatingBtn');
-const ratingResult = document.getElementById('ratingResult');
-
-submitRatingBtn.addEventListener('click', function() {
-    if (selectedRating > 0) {
-        ratingResult.textContent = `You rated this restaurant ${selectedRating} stars!`;
-    } else {
-        ratingResult.textContent = "Please select a rating before submitting.";
-    }
-});
 
 </script>
 
 <style>
-.category-button {
-    background-color: #b6200c;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px; 
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    margin: 5px;
-}
+    .category-button {
+        background-color: #b6200c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 5px;
+    }
 
-.category-button:hover {
-    background-color: #b6200c; 
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-}
+        .category-button:hover {
+            background-color: #b6200c;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
 
-.category-button:active {
-    background-color: #b6200c; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transform: translateY(2px);
-}
+        .category-button:active {
+            background-color: #b6200c;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(2px);
+        }
 
-.search-section {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-}
+    .search-section {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
 
-.search-group {
-    position: relative; 
-    width: 100%;
-    max-width: 500px;
-}
+    .search-group {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+    }
 
-.search-input {
-    width: 100%; 
-    padding: 12px 20px; 
-    font-size: 16px;
-    border: 2px solid #3498db;
-    border-radius: 25px;
-    outline: none; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
-}
+    .search-input {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: 2px solid #3498db;
+        border-radius: 25px;
+        outline: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.search-input::placeholder {
-    color: #7f8c8d;
-    font-style: italic; 
-}
+        .search-input::placeholder {
+            color: #7f8c8d;
+            font-style: italic;
+        }
 
-/* Focus Effect */
-.search-input:focus {
-    border-color: #2980b9;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
-}
+        /* Focus Effect */
+        .search-input:focus {
+            border-color: #2980b9;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
 
-.search-group::before {
-    content: '\f002';
-    font-family: 'FontAwesome';
-    position: absolute;
-    left: 15px; 
-    top: 50%;
-    transform: translateY(-50%);
-    color: #7f8c8d;
-    font-size: 16px;
-}
+    .search-group::before {
+        content: '\f002';
+        font-family: 'FontAwesome';
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c8d;
+        font-size: 16px;
+    }
 
-.rating-container {
-    margin-top: 10px;
-    display: flex; 
-    align-items: center;
-}
+    .rating-container {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
 
-.rating-input {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-}
+    .rating-input {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+    }
 
-.form-control {
-    width: 80px; 
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 5px; 
-}
+    .form-control {
+        width: 80px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 5px;
+    }
 
-.submit-rating {
-    margin-left: 5px;
-}
+    .submit-rating {
+        margin-left: 5px;
+    }
 
-/* Menu item card */
-.food-card {
-    width: 350px;
-    height: 300px;
-    position: relative; 
-    overflow: hidden;
-}
+    /* Menu item card */
+    .food-card {
+        width: 350px;
+        height: 300px;
+        position: relative;
+        overflow: hidden;
+    }
 
-.food-card-fav {
-    position: absolute; 
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
-    z-index: 1; 
-}
+    .food-card-fav {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.5rem;
+        z-index: 1;
+    }
 
-.food-card-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.2s;
-}
+    .food-card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.2s;
+    }
 
-.food-card-img:hover {
-    transform: scale(1.05);
-}
+        .food-card-img:hover {
+            transform: scale(1.05);
+        }
 
-.restaurant-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-/*last for cars*/
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-}
+    .restaurant-cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+    /*last for cars*/
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+    }
 
-.card {
-    width: 300px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    margin: 20px auto;
-    background-color: white;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
-}
+    .card {
+        width: 300px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        margin: 20px auto;
+        background-color: white;
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+    }
 
-.card:hover {
-    transform: translateY(-5px); /* Slightly lift the card */
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Increase the shadow on hover */
-}
+        .card:hover {
+            transform: translateY(-5px); /* Slightly lift the card */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Increase the shadow on hover */
+        }
 
-.image-link {
-    display: block;
-    text-decoration: none;
-}
+    .image-link {
+        display: block;
+        text-decoration: none;
+    }
 
-.image-container {
-    width: 100%;
-}
+    .image-container {
+        width: 100%;
+    }
 
-.restaurant-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    cursor: pointer;
-}
+    .restaurant-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        cursor: pointer;
+    }
 
-.card-content {
-    padding: 15px;
-}
+    .card-content {
+        padding: 15px;
+    }
 
-.restaurant-name {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-align: center;
-    color: #333;
-}
+    .restaurant-name {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+        color: #333;
+    }
 
-.actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-.favorite-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: gray;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
+    .favorite-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: gray;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
 
-.favorite-btn.active {
-    color: red;
-}
+        .favorite-btn.active {
+            color: red;
+        }
 
-.rating {
-    display: flex;
-    direction: rtl;
-}
+    .rating {
+        display: flex;
+        direction: rtl;
+    }
 
-.star {
-    font-size: 24px;
-    color: gray;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
+    .star {
+        font-size: 24px;
+        color: gray;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
 
-.star:hover,
-.star.active {
-    color: gold;
-}
+        .star:hover,
+        .star.active {
+            color: gold;
+        }
 
-.submit-rating {
-    width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
+    .submit-rating {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
 
-.submit-rating:hover {
-    background-color: #218838;
-}
+        .submit-rating:hover {
+            background-color: #218838;
+        }
 
-.rating-result {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #555;
-    text-align: center;
-}
+    .rating-result {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #555;
+        text-align: center;
+    }
 
 </style>

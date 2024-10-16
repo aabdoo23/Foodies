@@ -7,8 +7,6 @@ namespace Foodies.Models
         public string Name { get; set; }
         public string? Photo { get; set; }
         public string Hotline { get; set; }
-        public int? MinPrice { get; set; } = 0;
-        public int? MaxPrice { get; set; } = 0;
         public string CuisineType { get; set; }
         public virtual List<Rating>? Ratings { get; set; }
         public virtual List<MenuItem>? MenuItems { get; set; }

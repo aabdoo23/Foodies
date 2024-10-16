@@ -111,10 +111,8 @@ namespace Foodies.Data
         }
 
         public virtual DbSet<Admin> Admins { get; set; }
-        public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Rating> Ratings { get; set; }
-        public virtual DbSet<Chat> Chats { get; set; }
         public virtual DbSet<MenuItem> MenuItems { get; set; }
         public virtual DbSet<Restaurant> Restaurants { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }

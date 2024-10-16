@@ -137,7 +137,7 @@ namespace Foodies.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRating([FromBody] RatingViewModel model)
+        public async Task<IActionResult> AddRating( RatingViewModel model)
         {
             if (ModelState.IsValid)
             {

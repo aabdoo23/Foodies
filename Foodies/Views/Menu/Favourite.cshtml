@@ -17,21 +17,29 @@
                 if(ViewBag?.fav?.FavouriteRestaurants!= null){
                     foreach (var restaurant in ViewBag.fav.FavouriteRestaurants)
                     {
-
-                            @await Component.InvokeAsync("FoodCardViewComponent",new
-                            {
-                                Id = restaurant.Id,
-                                Title = restaurant.Name,
-                                Hotline = restaurant.Hotline,
-                                CuisineType = restaurant.CuisineType,
-                                MinPrice = restaurant.MinPrice,
-                                MaxPrice = restaurant.MaxPrice,
-                                ImageUrl = restaurant.Photo,
-                                Customer = ViewBag.fav,
-
-                                Url = $"/Menu/Index?restaurantId={restaurant.Id}",
-                            })
-                        
+                        <div class="card restaurant-card" data-cuisine-type="@restaurant.CuisineType">
+                            <a href="/Menu/Index?restaurantId=@restaurant.Id" class="image-link">
+                                <div class="image-container">
+                                    <img src="@restaurant.Photo" alt="Restaurant" class="restaurant-image">
+                                </div>
+                            </a>
+                            <div class="card-content">
+                                <h2 class="restaurant-name">@restaurant.Name</h2>
+                                <div class="actions">
+                                    <button class="favorite-btn" id="favoriteBtn'@restaurant.Id'" onclick="addToFavourites('@restaurant.Id')">&#10084;</button>
+                                    <div class="rating">
+                                        <span class="star" data-value="5">&#9733;</span>
+                                        <span class="star" data-value="4">&#9733;</span>
+                                        <span class="star" data-value="3">&#9733;</span>
+                                        <span class="star" data-value="2">&#9733;</span>
+                                        <span class="star" data-value="1">&#9733;</span>
+                                    </div>
+                                </div>
+                                <button class="submit-rating" id="submitRatingBtn">Submit Rating</button>
+                                <p id="ratingResult" class="rating-result"></p>
+                            </div>
+                        </div>
+                            
                     
             <div class="rating-container">
                 <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">Rate Restaurant</button>

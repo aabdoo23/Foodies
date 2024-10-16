@@ -6,18 +6,9 @@
 </head>
 
 <body>
-    <header class="header">
-        <div class="user-info">
-            <img src="/assets/images/menu/user.png" alt="User Avatar">
-            <span>Me ▼</span>
-            <div class="cart">
-                <img src="/assets/images/menu/cart_icon.png" alt="Cart">
-                <span>(0)</span>
-            </div>
-        </div>
+     <header class="header">
         <a asp-controller="Menu" asp-action="Restaurant" class="back-btn">Back to Restaurants</a>
     </header>
-
     <div class="container">
         <div class="main-content">
             <div class="restaurant-info">
@@ -25,7 +16,7 @@
                 <div class="restaurant-details">
                     <h1>@Model.Restaurant.Name</h1>
                     <h1>@Model.Restaurant.CuisineType</h1>
-                    <p>Open 24 Hours | Delivery time: 40 minutes | Delivered by: Foodies</p>
+                    <p>Estimated Delivery time: 40 minutes | Delivered by: Foodies</p>
                 </div>
                <div class="restaurant-rating">
     <p>Rating: @Model.Restaurant.AverageRating.ToString("F1")</p>
