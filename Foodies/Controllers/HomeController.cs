@@ -221,7 +221,9 @@ namespace Foodies.Controllers
             customerViewModel.Points = customer.Points;
             customerViewModel.img = customer.img;
             customerViewModel.Location = customer.Address.Location;
+        //    customerViewModel.Card=customer.card;
             var order= _orderRepository.GetAllcustomeridwithMenu(id);
+            
             ViewBag.orders = order;
             return View(customerViewModel);
         }

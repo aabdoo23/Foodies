@@ -49,29 +49,42 @@ namespace Foodies.Controllers
         {
             if (ModelState.IsValid)
             {
-                string? usrl = await _imageUploader.UploadImageAsync(immg);
-                cus.img = usrl;
-                var result = await _customerService.CreateCustomer(cus);
-                if (result != null)
+                var existingCustomer = await _userManager.FindByEmailAsync(cus.Email);
+
+                if (existingCustomer == null)
                 {
+                    var result = await _customerService.CreateCustomer(cus);
+                            
+                    if (immg != null)
+                    {                                           
+                        string? imgUrl = await _imageUploader.UploadImageAsync(immg);
+                        cus.img = imgUrl;
+                    }                                                                
+                                       
                     await _signInManager.SignInAsync(result.IdentityUser, isPersistent: false);
+
+
+
                     ViewBag.NotificationMessage = "Customer registered successfully!";
                     ViewBag.NotificationType = "success";
-                    return RedirectToAction("restaurant", "menu", result.Id);
+
+                    return RedirectToAction("restaurant", "menu", new { id = result.Id });
                 }
                 else
                 {
+                    ViewBag.NotificationMessage = "A customer with this email already exists.";
                     ViewBag.NotificationType = "danger";
                     return View("UserSignUp");
                 }
             }
             else
             {
-                ViewBag.NotificationMessage = "There are missing data.";
+                ViewBag.NotificationMessage = "There are missing or invalid data.";
                 ViewBag.NotificationType = "danger";
-                return View("UserSignUp");
+                return View("UserSignUp", cus); // Return cus to repopulate form with user data
             }
         }
+
 
         public IActionResult AdminSignUp()
         {

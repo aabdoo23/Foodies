@@ -106,7 +106,7 @@
 }
 <form action="/Order/AddCard" method="post">
     <div class="form-group">
-        <label for="CardNumber">Card Number</label>
+   @* <label for="CardNumber">@Model.Card.CardNumber</label>*@
         <input type="text" asp-for="CardNumber" name="CardNumber" class="form-control" required />
         <span asp-validation-for="CardNumber" class="text-danger"></span>
     </div>

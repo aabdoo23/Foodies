@@ -37,7 +37,7 @@ namespace Foodies.Repositories
         {
             var customer = await _context.Customers
                 .Include(x => x.IdentityUser)
-                .Include(x=>x.Address)
+                .Include(x=>x.Address).Include(x=>x.card)
                 .FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException($"Customer with ID {id} not found");
             return customer;
         }
