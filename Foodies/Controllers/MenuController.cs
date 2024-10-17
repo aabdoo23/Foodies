@@ -1,8 +1,8 @@
-﻿using Foodies.Interfaces.Repositories;
+﻿using System.Security.Claims;
+using Foodies.Interfaces.Repositories;
 using Foodies.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Foodies.Controllers
 {
@@ -57,10 +57,10 @@ namespace Foodies.Controllers
 
             var userId = _userManager.GetUserId(User);
             Restaurant res = await _restaurantRepository.GetByIdWithFavouriteCustomers(resId);
-            
+
             Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
-               
-            
+
+
             if (!customer.FavouriteRestaurants.Contains(res) && !res.FavouriteCustomers.Contains(customer))
             {
                 res.FavouriteCustomers.Add(customer);
@@ -139,32 +139,41 @@ namespace Foodies.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRating([FromBody] RatingViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                var existingRating = await _ratingRepository.GetByCustomerIdAndRestaurantId(customerId, model.RestaurantId);
-
-                if (existingRating != null)
+                if (ModelState.IsValid)
                 {
-                    existingRating.Rate = model.Rate;
-                    await _ratingRepository.Update(existingRating);
-                }
-                else
-                {
-                    var rating = new Rating
+                    var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var existingRating = await _ratingRepository.GetByCustomerIdAndRestaurantId(customerId, model.RestaurantId);
+
+                    if (existingRating != null)
                     {
-                        RestaurantId = model.RestaurantId,
-                        Rate = model.Rate,
-                        CustomerId = customerId,
-                    };
-                    await _ratingRepository.Create(rating);
+                        existingRating.Rate = model.Rate;
+                        await _ratingRepository.Update(existingRating);
+                        return Ok("Rating updated successfully.");
+                    }
+                    else
+                    {
+                        var rating = new Rating
+                        {
+                            RestaurantId = model.RestaurantId,
+                            Rate = model.Rate,
+                            CustomerId = customerId,
+                        };
+                        await _ratingRepository.Create(rating);
+                        return Ok("Rating created successfully.");
+                    }
                 }
-                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while adding/updating rating: " + ex.Message);
+                return StatusCode(500, "Internal server error");
             }
 
             return BadRequest("Invalid rating data.");
         }
+
     }
 }
 

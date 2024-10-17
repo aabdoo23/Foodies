@@ -1,5 +1,4 @@
-﻿using Foodies.Common;
-using Foodies.Data;
+﻿using Foodies.Data;
 using Foodies.Exceptions;
 using Foodies.Interfaces.Repositories;
 
@@ -44,7 +43,8 @@ namespace Foodies.Repositories
 
         public async Task<Rating> GetByCustomerIdAndRestaurantId(string customerId, string restaurantId)
         {
-            return await _context.Ratings.FirstOrDefaultAsync(x => x.CustomerId == customerId && x.RestaurantId == restaurantId) ?? throw new NotFoundException($"Rating with userId {customerId} and restaurantId {restaurantId} not found");
+            return await _context.Ratings
+                .FirstOrDefaultAsync(x => x.CustomerId == customerId && x.RestaurantId == restaurantId);
         }
 
         public async Task<Rating> Update(Rating entity)

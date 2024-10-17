@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Restaurant>
+﻿@using System.Security.Claims
+@model IEnumerable<Restaurant>
 
 <html>
 <head>
@@ -29,38 +30,34 @@
     </div>
 
     <div class="restaurant-cards">
-        @{foreach (var restaurant in Model)
-        {
-
-                <div class="card restaurant-card" data-cuisine-type="@restaurant.CuisineType">
-    <a href="/Menu/Index?restaurantId=@restaurant.Id" class="image-link">
-        <div class="image-container">
+        @{
+            foreach (var restaurant in Model)
+            {
+                <div class="card restaurant-card" data-restaurant-id="@restaurant.Id" data-cuisine-type="@restaurant.CuisineType">
+                    <a href="/Menu/Index?restaurantId=@restaurant.Id" class="image-link">
+                        <div class="image-container">
                             <img src="@restaurant.Photo" alt="Restaurant" class="restaurant-image">
                         </div>
                     </a>
                     <div class="card-content">
                         <h2 class="restaurant-name">@restaurant.Name</h2>
                         <div class="actions">
-                        
-                            @if (@ViewBag?.fav?.FavouriteRestaurants.Count > 0 ){
-
+                            @if (@ViewBag?.fav?.FavouriteRestaurants.Count > 0)
+                            {
                                 if (@ViewBag?.fav?.FavouriteRestaurants.Contains(restaurant))
-                                    {
-                                        <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
-                                    }
+                                {
+                                    <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
+                                }
                                 else
                                 {
-
                                     <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
                                 }
                             }
-
                             else
                             {
-
                                 <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
                             }
-                                                    <div class="rating">
+                            <div class="rating">
                                 <span class="star" data-value="5">&#9733;</span>
                                 <span class="star" data-value="4">&#9733;</span>
                                 <span class="star" data-value="3">&#9733;</span>
@@ -72,7 +69,7 @@
                         <p id="ratingResult" class="rating-result"></p>
                     </div>
                 </div>
-        }
+            }
         }
     </div>
 
@@ -178,8 +175,6 @@
                     } else {
                         alert('An error occurred while submitting your rating.');
                     }
-                } else {
-                    alert('Please enter a rating.');
                 }
             });
         });
@@ -195,34 +190,85 @@
 //     favoriteBtn.classList.toggle('active');
 // });
 
-// Rating System (left to right logic)
-const stars = document.querySelectorAll('.star');
-let selectedRating = 0;
 
-stars.forEach((star, index) => {
-    star.addEventListener('click', function() {
-        // Clear previous active states
-        stars.forEach(s => s.classList.remove('active'));
 
-        // Set the clicked star and all previous stars to active
-        selectedRating = index + 1;
-        for (let i = 0; i <= index; i++) {
-            stars[i].classList.add('active');
-        }
+
+    // Rate Logic
+    document.addEventListener('DOMContentLoaded', function () {
+        const restaurantCards = document.querySelectorAll('.restaurant-card');
+
+        restaurantCards.forEach(card => {
+            const stars = card.querySelectorAll('.star');
+            let selectedRating = 0;
+            const currentRestaurantId = card.getAttribute('data-restaurant-id');
+            const customerId = '@User.FindFirstValue(ClaimTypes.NameIdentifier)';
+            const submitButton = card.querySelector('.submit-rating');
+
+            const storedRating = localStorage.getItem(`rating-${currentRestaurantId}-${customerId}`);
+            if (storedRating) {
+                selectedRating = parseInt(storedRating);
+                highlightStars(selectedRating);
+            }
+
+            stars.forEach(star => {
+                star.addEventListener('click', function () {
+                    stars.forEach(s => s.classList.remove('active'));
+                    selectedRating = parseInt(star.getAttribute('data-value'));
+
+                    console.log('Selected Rating:', selectedRating);
+
+                    highlightStars(selectedRating);
+                });
+            });
+
+            submitButton.addEventListener('click', async function () {
+                console.log('Submitting Rating:', selectedRating); 
+
+                if (selectedRating < 1 || selectedRating > 5) {
+                    alert('Please select a rating between 1 and 5 before submitting.');
+                    return;
+                }
+
+                submitButton.disabled = true;
+                submitButton.textContent = 'Submitting...';
+
+                try {
+                    const response = await fetch(`/Menu/AddRating`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            RestaurantId: currentRestaurantId,
+                            Rate: selectedRating,
+                            CustomerId: customerId
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert('Thank you for your rating!');
+                        localStorage.setItem(`rating-${currentRestaurantId}-${customerId}`, selectedRating);
+                        stars.forEach(s => s.classList.remove('active'));
+                        location.reload();
+                    } else {
+                        const errorMessage = await response.text();
+                        alert('An error occurred while submitting your rating: ' + errorMessage);
+                    }
+                } catch (error) {
+                    alert('An unexpected error occurred: ' + error.message);
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Submit Rating';
+                }
+            });
+
+            function highlightStars(rating) {
+                for (let i = 0; i < rating; i++) {
+                    stars[i].classList.add('active');
+                }
+            }
+        });
     });
-});
-
-// Submit Rating Button
-const submitRatingBtn = document.getElementById('submitRatingBtn');
-const ratingResult = document.getElementById('ratingResult');
-
-submitRatingBtn.addEventListener('click', function() {
-    if (selectedRating > 0) {
-        ratingResult.textContent = `You rated this restaurant ${selectedRating} stars!`;
-    } else {
-        ratingResult.textContent = "Please select a rating before submitting.";
-    }
-});
 
 </script>
 
