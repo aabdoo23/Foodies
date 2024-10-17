@@ -1,233 +1,468 @@
-﻿<html>
-    <header>
-            <title>Favourite List</title>
-                <link rel="stylesheet" href="~/css/restaurant.css">
-    @* <link rel="stylesheet" href="~/css/Navbar.css"> *@
-                <link rel="stylesheet" href="~/css/Main.css">
+﻿@model List<Restaurant>
 
+<html>
+<head>
+    <title>Restaurant List</title>
+    <link rel="stylesheet" href="~/css/restaurant.css">
+    <link rel="stylesheet" href="~/css/Main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"> <!-- Bootstrap Icons -->
+</head>
 
-</header>
 <body>
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="category-bar d-flex justify-content-center">
+        @{
+            var ef = Model.Select(r => r.CuisineType).Distinct();
+            foreach (var i in ef)
+            {
+                <div class="category-item" data-category="@i">
+                    <button class="category-button">@i</button>
+                </div>
+            }
+        }
+    </div>
 
-        @* restaurants *@
-        <div class="restaurant-list">
-        <div class="btn"><h1>Your Favourites</h1></div>
-            <div class="restaurant-cards">
-            @{
-                if(ViewBag?.fav?.FavouriteRestaurants!= null){
-                    foreach (var restaurant in ViewBag.fav.FavouriteRestaurants)
-                    {
-                        <div class="card restaurant-card" data-cuisine-type="@restaurant.CuisineType">
-                            <a href="/Menu/Index?restaurantId=@restaurant.Id" class="image-link">
-                                <div class="image-container">
-                                    <img src="@restaurant.Photo" alt="Restaurant" class="restaurant-image">
-                                </div>
-                            </a>
-                            <div class="card-content">
-                                <h2 class="restaurant-name">@restaurant.Name</h2>
-                                <div class="actions">
-                                    <button class="favorite-btn" id="favoriteBtn'@restaurant.Id'" onclick="addToFavourites('@restaurant.Id')">&#10084;</button>
-                                    <div class="rating">
-                                        <span class="star" data-value="5">&#9733;</span>
-                                        <span class="star" data-value="4">&#9733;</span>
-                                        <span class="star" data-value="3">&#9733;</span>
-                                        <span class="star" data-value="2">&#9733;</span>
-                                        <span class="star" data-value="1">&#9733;</span>
-                                    </div>
-                                </div>
-                                <button class="submit-rating" id="submitRatingBtn">Submit Rating</button>
-                                <p id="ratingResult" class="rating-result"></p>
-                            </div>
+    <div class="search-section">
+        <div class="search-group">
+            <input id="restaurantSearch" placeholder="Search" type="search" class="search-input">
+        </div>
+    </div>
+
+    <div class="restaurant-cards">
+        @foreach (var restaurant in Model)
+        {
+            <div class="card restaurant-card" data-cuisine-type="@restaurant.CuisineType">
+                <a href="/Menu/Index?restaurantId=@restaurant.Id" class="image-link">
+                    <div class="image-container">
+                        <img src="@restaurant.Photo" alt="Restaurant" class="restaurant-image">
+                    </div>
+                </a>
+                <div class="card-content">
+                    <h2 class="restaurant-name">@restaurant.Name</h2>
+                    <div class="actions">
+                        
+                        <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
+                        <div class="rating">
+                            <span class="star" data-value="5">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="1">&#9733;</span>
                         </div>
-                            
-                    
-            <div class="rating-container">
-                <button class="btn btn-warning btn-sm rate-restaurant" data-restaurant-id="@restaurant.Id">Rate Restaurant</button>
-                <div class="rating-input" style="display: none;">
-                    <input type="number" min="1" max="5" step="0.1" placeholder="Rate (1-5)" class="form-control" />
-                    <button class="btn btn-primary submit-rating" data-restaurant-id="@restaurant.Id">Submit</button>
+                    </div>
+                    <button class="submit-rating" id="submitRatingBtn">Submit Rating</button>
+                    <p id="ratingResult" class="rating-result"></p>
                 </div>
             </div>
-                    }
-                }
-                }
-</div>
-
-
+        }
     </div>
-      
-    </div>
-    <script src="~/js/rate.js"></script>
+
 </body>
-
 </html>
 
+<script>
+    document.querySelectorAll('.category-item button').forEach(item => {
+        item.addEventListener('click', function (event) {
+            event.preventDefault();
+            var selectedCategory = this.closest('.category-item').getAttribute('data-category');
+            var restaurantCards = document.querySelectorAll('.restaurant-card'); // Ensure correct class reference
+
+            restaurantCards.forEach(card => {
+                var cuisineType = card.getAttribute('data-cuisine-type');
+                if (cuisineType === selectedCategory || selectedCategory === 'All') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    document.getElementById('restaurantSearch').addEventListener('input', function () {
+        var searchQuery = this.value.toLowerCase();
+        var restaurantCards = document.querySelectorAll('.restaurant-card'); // Ensure correct class reference
+
+        restaurantCards.forEach(card => {
+            var restaurantName = card.querySelector('.restaurant-name').textContent.toLowerCase();
+            if (restaurantName.includes(searchQuery)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const rateButtons = document.querySelectorAll('.rate-restaurant');
+
+        rateButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const ratingInput = this.nextElementSibling;
+                ratingInput.style.display = ratingInput.style.display === 'none' ? 'flex' : 'none';
+            });
+        });
+
+        const submitButtons = document.querySelectorAll('.submit-rating');
+
+        submitButtons.forEach(button => {
+            button.addEventListener('click', async function () {
+                const restaurantId = this.getAttribute('data-restaurant-id');
+                const ratingValue = this.previousElementSibling.value;
+
+                if (ratingValue) {
+                    const response = await fetch(`/Menu/AddRating`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ RestaurantId: restaurantId, Rate: parseFloat(ratingValue) })
+                    });
+
+                    if (response.ok) {
+                        alert('Thank you for your rating!');
+                        location.reload();
+                    } else {
+                        alert('An error occurred while submitting your rating.');
+                    }
+                } else {
+                    alert('Please enter a rating.');
+                }
+            });
+        });
+    });
+
+    function addToFavourites(resId) {
+        var button = document.getElementById("fav-" + resId);
+
+        if (button.classList.contains("bi-heart")) {
+            button.classList.remove("bi-heart");
+            button.classList.add("bi-heart-fill");
+
+            $.ajax({
+                url: '/menu/addToFav',
+                type: 'post',
+                data: { resId: resId },
+                success: function (response) {
+                    alert('Added to favorites');
+                },
+                error: function (err) {
+                    console.error('Error adding to favorites', err);
+                }
+            });
+        }
+        else {
+            button.classList.remove("bi-heart-fill");
+            button.classList.add("bi-heart");
+            $.ajax({
+                url: '/menu/removeFav',
+                type: 'post',
+                data: { resId: resId },
+                success: function (response) {
+                    alert('Removed from favorites');
+                },
+                error: function (err) {
+                    console.error('Error removing from favorites', err);
+                }
+            });
+        }
+    }
+    /*
+    card js
+    */
+    // Favorite Button Toggle
+    // const favoriteBtn = document.getElementById('favoriteBtn');
+    // favoriteBtn.addEventListener('click', function() {
+    //     favoriteBtn.classList.toggle('active');
+    // });
+
+    // Rating System (left to right logic)
+    const stars = document.querySelectorAll('.star');
+    let selectedRating = 0;
+
+    stars.forEach((star, index) => {
+        star.addEventListener('click', function () {
+            // Clear previous active states
+            stars.forEach(s => s.classList.remove('active'));
+
+            // Set the clicked star and all previous stars to active
+            selectedRating = index + 1;
+            for (let i = 0; i <= index; i++) {
+                stars[i].classList.add('active');
+            }
+        });
+    });
+
+    // Submit Rating Button
+    const submitRatingBtn = document.getElementById('submitRatingBtn');
+    const ratingResult = document.getElementById('ratingResult');
+
+    submitRatingBtn.addEventListener('click', function () {
+        if (selectedRating > 0) {
+            ratingResult.textContent = `You rated this restaurant ${selectedRating} stars!`;
+        } else {
+            ratingResult.textContent = "Please select a rating before submitting.";
+        }
+    });
+
+</script>
+
 <style>
-
-    /* html,body{
-        background-color: var(--secondary-color); 
-    } */
-   .restaurant-list h1{
-    color:black;
-    margin-top: 50px;
+    .category-button {
+        background-color: #b6200c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 5px;
     }
 
-    #fl{
-        background-color :white
-    }
-    .navbar-brand {
-        font-size: 1.5em;
-        color: var(--primary-color);
-    }
+        .category-button:hover {
+            background-color: #b6200c;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
 
-    .navbar-right {
-        display: flex;
-        align-items: center;
-        align-self: end;
-    }
+        .category-button:active {
+            background-color: #b6200c;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(2px);
+        }
 
-    .navbar-nav {
-        display: flex;
-        align-items: center;
-        list-style: none;
-        padding-left: 0;
-    }
-
-    .navbar-nav li {
-        margin-left: 15px;
-    }
-
-    .form-control,
-    .btn-group,
-    .form-select {
-        margin: 0 10px;
-    }
-
-    .category-bar {
-        margin-top: 80px;
-        display: flex;
-        padding: 10px;
-        border-bottom: 1px solid #e5e5e5;
-        overflow-x: auto;
-
-    }
-
-    /*Search*/
     .search-section {
-    @*display:flex;*@
-    align-items: center;
-        margin-right: 10px;
-        margin-left: 10px;
-
-
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
     }
 
     .search-group {
-        display: flex;
-        line-height: 28px;
-        align-items: right;
-        margin-right: 10px;
-        margin-left: 10px;
-        width: 100%;
         position: relative;
+        width: 100%;
+        max-width: 500px;
     }
 
     .search-input {
         width: 100%;
-        height: 40px;
-        line-height: 28px;
-        /* padding: 0 1rem;
-        padding-left: 2.5rem; */
-        border: 2px solid transparent;
-        border-radius: 10px;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: 2px solid #3498db;
+        border-radius: 25px;
         outline: none;
-        background-color: var(--white);
-        color: var(--black);
-        transition: .3s ease;
-        padding: 0px 100px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .search-input::placeholder {
-        color: var(--primary-color);
-        font-weight: 400;
-    }
+        .search-input::placeholder {
+            color: #7f8c8d;
+            font-style: italic;
+        }
 
-    .search-input:focus,
-    search-input:hover {
-        outline: none;
-        border-color: var(--teirtary-color);
-        background-color: #fff;
-        box-shadow: 0 0 0 4px var(--primary-color) /10%;
-    }
+        /* Focus Effect */
+        .search-input:focus {
+            border-color: #2980b9;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
 
-    .search-icon {
+    .search-group::before {
+        content: '\f002';
+        font-family: 'FontAwesome';
         position: absolute;
-        left: 1rem;
-        fill: var(--primary-color);
-        width: 1rem;
-        height: 1rem;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c8d;
+        font-size: 16px;
     }
 
+    .rating-container {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
 
-    /* From Uiverse.io by Yaya12085 */
-    .radio-inputs {
+    .rating-input {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+    }
+
+    .form-control {
+        width: 80px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 5px;
+    }
+
+    .submit-rating {
+        margin-left: 5px;
+    }
+
+    /* Menu item card */
+    .food-card {
+        width: 350px;
+        height: 300px;
         position: relative;
+        overflow: hidden;
+    }
+
+    .food-card-fav {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.5rem;
+        z-index: 1;
+    }
+
+    .food-card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.2s;
+    }
+
+        .food-card-img:hover {
+            transform: scale(1.05);
+        }
+
+    .restaurant-cards {
         display: flex;
         flex-wrap: wrap;
-        border-radius: 10px;
-        background-color: var(--teirtary-color);
-        box-sizing: border-box;
-        box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
-        padding: 0.25rem;
-        width: 200px;
-        margin-right: 10px;
-        font-size: 14px;
-        font-weight: 400;
+        justify-content: center;
+        gap: 20px;
+    }
+    /*last for cars*/
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
     }
 
-    .radio-inputs .radio {
-        flex: 1 1 auto;
+    .card {
+        width: 300px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        margin: 20px auto;
+        background-color: white;
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+    }
+
+        .card:hover {
+            transform: translateY(-5px); /* Slightly lift the card */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Increase the shadow on hover */
+        }
+
+    .image-link {
+        display: block;
+        text-decoration: none;
+    }
+
+    .image-container {
+        width: 100%;
+    }
+
+    .restaurant-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        cursor: pointer;
+    }
+
+    .card-content {
+        padding: 15px;
+    }
+
+    .bi-heart, .bi-heart-fill {
+        font-size: 1.5rem;
+        color: red;
+        z-index: 2;
+        border-raduis: 14px;
+    }
+
+        .bi-heart:hover {
+            transform: scale(1.05); /* Slightly scale up the box */
+
+            color: orange
+        }
+
+        .bi-heart-fill :hover {
+            transform: scale(1.05); /* Slightly scale up the box */
+
+            color: orange
+        }
+    .restaurant-name {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+        color: #333;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+
+    .bi-heart {
+        font-size: 1.5rem;
+        color: var(--black);
+        z-index: 2;
+        border-raduis: 14px;
+    }
+
+        .bi-heart:hover {
+            transform: scale(1.05); /* Slightly scale up the box */
+
+            color: darkred;
+        }
+
+    .rating {
+        display: flex;
+        direction: rtl;
+    }
+
+    .star {
+        font-size: 24px;
+        color: gray;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+        .star:hover,
+        .star.active {
+            color: gold;
+        }
+
+    .submit-rating {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+        .submit-rating:hover {
+            background-color: #218838;
+        }
+
+    .rating-result {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #555;
         text-align: center;
     }
 
-    .radio-inputs .radio input {
-        display: none;
-    }
-
-    .radio-inputs .radio .name {
-        display: flex;
-        cursor: pointer;
-        align-items: center;
-        justify-content: center;
-        border-radius: 0.5rem;
-        border: none;
-        padding: .5rem 0;
-        color: var(--white);
-        transition: all .15s ease-in-out;
-    }
-
-    .radio-inputs .radio input:checked+.name {
-        background-color: var(--primary-color);
-        font-weight: 700;
-    }
-
-    .home-section-items {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 10px;
-    }
-
-    .home-section-title {
-        font-size: 1.5em;
-        font-weight: 700;
-        color: var(--black);
-    }
-    .home-section-top {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 10px 0 10px;
-    }
 </style>
-
-
-

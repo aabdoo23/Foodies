@@ -29,8 +29,9 @@
     </div>
 
     <div class="restaurant-cards">
-        @foreach (var restaurant in Model)
+        @{foreach (var restaurant in Model)
         {
+
                 <div class="card restaurant-card" data-cuisine-type="@restaurant.CuisineType">
     <a href="/Menu/Index?restaurantId=@restaurant.Id" class="image-link">
         <div class="image-container">
@@ -40,24 +41,26 @@
                     <div class="card-content">
                         <h2 class="restaurant-name">@restaurant.Name</h2>
                         <div class="actions">
-                        @* @{
-                            foreach(var r in @ViewBag?.fav?.FavouriteRestaurants ){
-                            if (r.Id == restaurant.Id)
-                        {
-                            <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
-                            <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
-                            break;
-                        }
-                        else
-                        {
-                            <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites(@restaurant.Id)"></i>
-                            <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
-                            break;
-                        }
+                        
+                            @if (@ViewBag?.fav?.FavouriteRestaurants.Count > 0 ){
+
+                                if (@ViewBag?.fav?.FavouriteRestaurants.Contains(restaurant))
+                                    {
+                                        <i class="bi bi-heart-fill" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
+                                    }
+                                else
+                                {
+
+                                    <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
+                                }
                             }
-                        } *@
-                            <button class="favorite-btn" id="favoriteBtn'@restaurant.Id'" onclick="addToFavourites(@restaurant.Id)">zzzzz</button>
-                            <div class="rating">
+
+                            else
+                            {
+
+                                <i class="bi bi-heart" id="fav-@restaurant.Id" onclick="addToFavourites('@restaurant.Id')"></i>
+                            }
+                                                    <div class="rating">
                                 <span class="star" data-value="5">&#9733;</span>
                                 <span class="star" data-value="4">&#9733;</span>
                                 <span class="star" data-value="3">&#9733;</span>
@@ -70,12 +73,48 @@
                     </div>
                 </div>
         }
+        }
     </div>
 
 </body>
 </html>
  
 <script>
+    function addToFavourites(resId) {
+        var button = document.getElementById("fav-" + resId);
+
+        if (button.classList.contains("bi-heart")) {
+            button.classList.remove("bi-heart");
+            button.classList.add("bi-heart-fill");
+
+            $.ajax({
+                url: '/menu/addToFav',
+                type: 'post',
+                data: { resId: resId },
+                success: function (response) {
+                    alert('Added to favorites');
+                },
+                error: function (err) {
+                    console.error('Error adding to favorites', err);
+                }
+            });
+        }
+        else {
+            button.classList.remove("bi-heart-fill");
+            button.classList.add("bi-heart");
+            $.ajax({
+                url: '/menu/removeFav',
+                type: 'post',
+                data: { resId: resId },
+                success: function (response) {
+                    alert('Removed from favorites');
+                },
+                error: function (err) {
+                    console.error('Error removing from favorites', err);
+                }
+            });
+        }
+    }
      document.querySelectorAll('.category-item button').forEach(item => {
         item.addEventListener('click', function(event) {
             event.preventDefault();
@@ -146,41 +185,7 @@
         });
     });
 
-    function addToFavourites(resId) {
-        var button = document.getElementById("favoriteBtn" + resId);
 
-        if (button.classList.contains("bi-heart")) {
-            button.classList.remove("bi-heart");
-            button.classList.add("bi-heart-fill");
-
-            $.ajax({
-                url: '/menu/addToFav', 
-                type: 'post', 
-                data: { resId: resId },
-                success: function(response) {
-                    alert('Added to favorites');
-                },
-                error: function(err) {
-                    console.error('Error adding to favorites', err);
-                }
-            });
-        }
-        else {
-            button.classList.remove("bi-heart-fill");
-            button.classList.add("bi-heart");
-            $.ajax({
-                url: '/menu/removeFav', 
-                type: 'post', 
-                data: { resId: resId },
-                success: function(response) {
-                    alert('Removed from favorites');
-                },
-                error: function(err) {
-                    console.error('Error removing from favorites', err);
-                }
-            });
-        }
-    }
     /*
     card js 
     */ 
@@ -349,10 +354,7 @@ submitRatingBtn.addEventListener('click', function() {
     gap: 20px;
 }
 /*last for cars*/
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-}
+
 
 .card {
     width: 300px;
@@ -403,19 +405,26 @@ body {
     align-items: center;
 }
 
-.favorite-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: gray;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
 
-.favorite-btn.active {
-    color: red;
-}
 
+    .bi-heart , .bi-heart-fill{
+        font-size: 1.5rem;
+        color: red;
+        z-index: 2;
+        border-raduis: 14px;
+    }
+
+        .bi-heart:hover{
+            transform: scale(1.05); /* Slightly scale up the box */
+
+            color: orange
+        }
+
+        .bi-heart-fill :hover {
+            transform: scale(1.05); /* Slightly scale up the box */
+        
+            color: orange
+        }
 .rating {
     display: flex;
     direction: rtl;

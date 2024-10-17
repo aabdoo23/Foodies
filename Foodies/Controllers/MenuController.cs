@@ -66,7 +66,8 @@ namespace Foodies.Controllers
                 res.FavouriteCustomers.Add(customer);
                 customer.FavouriteRestaurants.Add(res);
             }
-
+            await _customerRepository.Update(customer);
+            await _restaurantRepository.Update(res);
             return Content($"added to fav -{customer.Id}{res.Name}");
         }
         [HttpPost]
@@ -82,10 +83,10 @@ namespace Foodies.Controllers
             {
                 res.FavouriteCustomers.Remove(customer);
                 customer.FavouriteRestaurants.Remove(res);
-                return Content("weee");
             }
 
-
+            await _customerRepository.Update(customer);
+            await _restaurantRepository.Update(res);
             return Content($"rem fav -{customer.Id}{res.Name}");
         }
         public async Task<IActionResult> Favourite()
@@ -93,9 +94,8 @@ namespace Foodies.Controllers
             var userId = _userManager.GetUserId(User);
             Customer customer = await _customerRepository.GetByIdWithFavouriteRestaurants(userId);
 
-            ViewBag.fav = customer;
 
-            return View();
+            return View(customer.FavouriteRestaurants);
         }
         public async Task<IActionResult> Restaurant(string id)
         {
@@ -137,7 +137,7 @@ namespace Foodies.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRating([FromBody]z RatingViewModel model)
+        public async Task<IActionResult> AddRating([FromBody] RatingViewModel model)
         {
             if (ModelState.IsValid)
             {
