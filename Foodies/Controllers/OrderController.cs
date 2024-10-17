@@ -15,7 +15,7 @@ using System.Collections.Generic;
 public class OrderController : Controller
 {
     //private readonly FoodiesDbContext _context;
-    //static private int cnt = 0;
+    static private int cnt = 0;
     private List<MenuItem> myCart = new List<MenuItem>();
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IRestaurantRepository _restaurantRepository;
@@ -327,7 +327,6 @@ public class OrderController : Controller
     {
         CookieOptions options = new CookieOptions();
         options.Expires = DateTimeOffset.Now.AddDays(5);
-        int cnt = 1;
         //bool entered = false;
         //replace key with customer id?
         
