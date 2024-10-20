@@ -27,7 +27,7 @@
         </div>
         <div class="nav-links">
             <!-- Navigation Links -->
-            <a href="~/BranchManager/OrderList/@ViewBag.b">Orders</a> <!-- Use user ID in links if needed -->
+                <a href="~/BranchManager/OrderList?branchId=@ViewBag.b">Orders</a> <!-- Use user ID in links if needed -->
             <a href="~/BranchManager/Profile/">Profile</a>
             <a href="~/Master/Logout">Logout</a>
         </div>
@@ -168,6 +168,10 @@
                 background-color: var(--primary-color);
                 transform: translateY(-2px);
             }
+
+        html, body {
+            background-color: silver;
+        }
     </style>
 
 </body>

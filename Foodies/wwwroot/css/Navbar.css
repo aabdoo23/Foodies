@@ -34,18 +34,17 @@ html, body {
     top: 0;
     width: 100%;
     padding: 15px 0;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1), rgba(255, 255, 255, 1), rgba(128, 245, 224, 1));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)) !important;
     /* Gradient from transparent to a soft green */
-    backdrop-filter: blur(10px); /* Adds a nice glass effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Horizontal offset, vertical offset, blur radius, spread radius, shadow color */
 }
 
 
 .navbar a {
-    color: black;
+    color: white;
     text-decoration: none;
     margin: 0 40px;
     font-size: 16px;
-    font-family: Inter, apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Fira Sans", Roboto, Oxygen, Ubuntu, "Droid Sans", Arial, sans-serif;
 }
 
 .navbar a:hover {

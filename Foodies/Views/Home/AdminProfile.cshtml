@@ -9,6 +9,8 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/all.min.css" />
+        <link rel="stylesheet" href="~/css/History.css" />
+
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -105,12 +107,28 @@
             <form action="/Home/AddBranch/@Model.Resturant.Id" method="get">
           <button type="submit"  class="btn btn-primary w-100" style="background-color: #3e1ba6; border-color: #3e1ba6;">Add Branches</button>
                 </form>
+                @if (Model != null ){
                 @foreach (var i in @Model.Branch)
                 {
-                                    
+                    
                      <h4>@i.Address.City</h4>
-                                       
+                     <div class="order-card">
+                            <div class="order-details">
+                                <p>Date Created: @i.CreatedAt.ToString("MM/dd/yyyy")</p>
+                                <p>Street: @i.Address.Street</p>
+                               <p>Building: @i.Address.Building</p>
+
+                            </div>
+                            </div>
+            
+                       
                 }
+                }
+                else
+                {
+                   <p>No orders available.</p>
+                }
+            }
            `,
            'menu': `<div id="menu-container">
                     <div id="sidebar">
@@ -154,6 +172,7 @@
              <form action="/Home/AddMenuItem/@Model.Resturant.Id" method="get">
                  <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Add menu item</button>
                 </form>
+                <div class="scrollmenu">
             @foreach (var i in @Model.Resturant.MenuItems)
                 {
                             <div class="menu-item">
@@ -172,6 +191,7 @@
                             </div>
                 }
 
+            </div>
             </div>
 
                         <!-- Submenu content will update here -->
@@ -354,9 +374,12 @@ function updateActiveState(activeItem) {
 </html>
 
 <style>
+   
     .mt-5{
         margin-top:120px !important;
         background-color: white;
+                 overflow-y: auto;
+
 
     }
     .profile-img {
@@ -519,6 +542,7 @@ h5 {
   cursor: pointer;
 }
 .menu-details {
+
             margin-left: 15px;
             flex-grow: 1;
         }
@@ -560,6 +584,7 @@ h5 {
   background: #fff; /* Background color */
   border: 1px solid #ccc; /* Border for visibility */
   padding: 10px;
+
 }
 
 .restaurant-header {
