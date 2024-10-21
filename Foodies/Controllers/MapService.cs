@@ -25,7 +25,31 @@ public class MapService
         _httpClient = httpClient;
         _apiKey = "5c2a1476c0e97f202c537b7e0459338cb9792efca2e0b763809c278a810abe74";
     }
+    public async Task<JObject> GeetDistanceTime(double l1, double g1, double l2, double g2)
+    {
+        Hashtable ht = new Hashtable();
+        ht.Add("engine", "google_maps_directions");
+        ht.Add("start_coords", $"{l1}, {g1}");
+        ht.Add("end_coords", $"{l2}, {g2}");
 
+        GoogleSearch search = new GoogleSearch(ht, _apiKey);
+        JObject data = search.GetJson();
+        var directions = data["directions"];
+        if (directions != null && directions.HasValues)
+        {
+
+            var firstDirection = directions[0];
+
+            var distance = firstDirection["formatted_distance"]?.ToString();
+            var time = firstDirection["formatted_duration"]?.ToString();
+
+
+            // Return JSON object with distance and time as strings
+            return JObject.FromObject(new { distance = distance, time = time });
+
+        }
+        return null;
+    }
     public async Task<string> ResolveGoogleMapsLink(string shortUrl)
     {
         int maxRetries = 5;  // Maximum number of retries

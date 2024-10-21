@@ -19,9 +19,7 @@
             <label class="radio-label">
                 <input type="radio" name="delivery" value="delivery" id="delivery-option" checked> Delivery
             </label>
-            <label class="radio-label">
-                <input type="radio" name="delivery" value="pickup" id="pickup-option"> Pick up from restaurant
-            </label>
+            
         </div>
 
         <div class="map-container">
@@ -39,7 +37,7 @@
         <div class="delivery-info">
             <i class="fa-solid fa-car"></i>
             <p>
-                    Distance : @ViewBag.distanceArriving <br /> Arriving in approx. <strong>@ViewBag?.time </strong></p>
+                    Distance : @ViewBag?.distance <br /> Arriving in approx. <strong>@ViewBag?.time </strong></p>
         </div>
     </div>
 
