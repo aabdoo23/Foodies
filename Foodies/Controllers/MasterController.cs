@@ -53,13 +53,11 @@ namespace Foodies.Controllers
 
                 if (existingCustomer == null)
                 {
+                    string? imgUrl = await _imageUploader.UploadImageAsync(immg);
+                    cus.img = imgUrl;
                     var result = await _customerService.CreateCustomer(cus);
                             
-                    if (immg != null)
-                    {                                           
-                        string? imgUrl = await _imageUploader.UploadImageAsync(immg);
-                        cus.img = imgUrl;
-                    }                                                                
+                                                                                  
                                        
                     await _signInManager.SignInAsync(result.IdentityUser, isPersistent: false);
 
