@@ -1,4 +1,4 @@
-# FOODIES
+# FOODIES - .Net MVC Website
 ## Overview
 ### What is Foodies
 A Food ordering system designed to connect customers with restaurants.
