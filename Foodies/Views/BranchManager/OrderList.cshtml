@@ -47,12 +47,11 @@
                     @foreach (var order in Model)
                     {
                         <div class="order-item">
-                            <img src="/assets/images/orders/order_placeholder.png" alt="Order Icon" class="order-icon">
+                            <img src="~/images/logo.png" alt="Order Icon" class="order-icon" style="width: 500px; height: auto">
                             <div class="order-details">
                                 <h4>Order ID: @order.Id</h4>
-                                <p>Customer: @order.Customer?.FirstName @order.Customer?.LastName</p>
                                 <p>Date: @order.OrderDate.ToString("MM/dd/yyyy")</p>
-                                <p>Total: @order.TotalPrice.ToString("C")</p>
+                                <p>Total: @order.TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-EG"))</p>
                                 <p>Status: @order.State</p>
                             </div>
                             <div class="order-actions">

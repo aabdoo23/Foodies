@@ -43,8 +43,11 @@ namespace Foodies.Repositories
         public async Task<BranchManager> GetByIdWithBranchAndRestaurantIncluded(string id)
         {
             var branchManager = await _context.BranchManagers
+                .Include(x => x.IdentityUser)
                 .Include(x => x.Branch)
-                .ThenInclude(x => x.Restaurant)
+                    .ThenInclude(branch => branch.Restaurant) // Correctly includes Restaurant
+                .Include(x => x.Branch)
+                    .ThenInclude(branch => branch.Address) // Correctly includes Address
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new NotFoundException($"BranchManager with ID {id} not found");
             return branchManager;

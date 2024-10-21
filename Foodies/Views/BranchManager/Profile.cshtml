@@ -61,20 +61,23 @@
                 const content = {
                     'account-info': `
                         <h3>Account Info</h3>
+                        <h4 style="color: #d35269"><strong > @ViewBag?.add?.City Branch </strong > </h4>
+
                         <form method="post" action="/BranchManager/UpdateInfo/@Model.Id">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
+                               <p><strong>Email : </strong> @Model.IdentityUser.Email</p>
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
+                                <p><strong>Password : </strong> Senstive Data Ask your Restaurant Admin for it</p>
                             </div>
                             <div class="mb-3">
-                                <button type="submit" class="btn btn-primary w-100" style="background-color: #048A81; border-color: #048A81;">Save Changes</button>
                             </div>
                         </form>
                     `,
                     'branch-details': `
                         <h3>Branch Details</h3>
+                       <p><strong>Address: </strong>@ViewBag?.add?.Building, @ViewBag?.add?.Street </p>
+
                         <p><strong>Opening Hour:</strong> @Model.Branch.OpeningHour</p>
                         <p><strong>Closing Hour:</strong> @Model.Branch.ClosingHour</p>
                         <p><strong>Restaurant:</strong> @Model.Branch.Restaurant.Name</p>

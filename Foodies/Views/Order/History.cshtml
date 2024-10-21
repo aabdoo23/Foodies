@@ -12,21 +12,8 @@
 </head>
 
 <body>
-    <div class="header">
-        <div class="logo">
-            <img src="/assets/images/order_history/foodies_logo.png" alt="Foodies Logo">
-            <h2>Foodies</h2>
-        </div>
-        <div class="user-info">
-            <img src="/assets/images/order_history/user.png" alt="User Avatar">
-            <span>Me ▼</span>
-            <div class="cart">
-                <img src="/assets/images/order_history/cart_icon.png" alt="Cart">
-                <span>(0)</span>
-            </div>
-        </div>
-    </div>
-    <div class="main">
+    
+    <div class="main" style="margin-top: 40px">
         <h1>Order History</h1>
 
         <!-- Order Card 1 -->
@@ -36,7 +23,7 @@
             @foreach (var order in Model)
             {
             <div class="order-card">
-                    <img src="/assets/images/orders/order_placeholder.png" alt="Order Icon" class="order-icon">
+                    <img src="~/images/logo.png" alt="Order Icon" class="order-icon" style="width:500px; height:auto;">
                     <div class="order-details">
                         <p>Date: @order.OrderDate.ToString("MM/dd/yyyy")</p>
                         <p>Total: @order.TotalPrice.ToString("C")</p>
@@ -44,9 +31,7 @@
                     </div>
                     <div class="order-actions">
                     <div class="order-image">
-                        <img src="/assets/images/order_history/pizza.png" alt="Pizza">
                     </div>
-                      <button class="reorder-button" onclick="location.href='/order/checkout/@order.TotalPrice'">Reorder</button>
                     </div>
                 </div>
             }

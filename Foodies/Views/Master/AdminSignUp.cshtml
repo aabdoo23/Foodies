@@ -21,6 +21,7 @@
         <div class="signup-form">
             <h1>Sign Up</h1>
             <p>Register to manage your restaurant and connect with customers.</p>
+            <h2>Admin Info</h2>
 
             <form method="post" asp-action="SaveAdminAndResturant" asp-controller="Master" enctype="multipart/form-data">
                 <div class="form-row">
@@ -57,7 +58,11 @@
                         <label for="AdminPassword">Confirm Password</label>
                         <input type="password" name="ConfirmPassword" required>
                     </div>
+                                        </div>
+                <h2>Restaurant Info</h2>
 
+                    <div class="form-row">
+                    
                     <div class="input-group">
                         <label for="restaurant-name">Restaurant Name</label>
                         <input type="text" name="Name" required>
@@ -70,17 +75,11 @@
                         <input type="tel" name="Hotline" required>
                     </div>
 
-                    <div class="input-group">
-                        <label for="min-price">Minimum Price</label>
-                        <input type="number" name="MinPrice" value="0">
-                    </div>
+                   
 
 
                     <div class="form-row">
-                        <div class="input-group">
-                            <label for="max-price">Maximum Price</label>
-                            <input type="number" name="MaxPrice" required>
-                        </div>
+                        
                         <div class="input-group">
                             <label for="cusine-type">Cuisine Type</label>
                             <select class="input-group" name="CuisineType">
@@ -133,7 +132,7 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        margin-top: 90px;
+        margin-top: 190px;
     }
 
     .signup-form {
@@ -146,12 +145,17 @@
         margin: 0 auto; /* To ensure the form itself is centered */
     }
 
-        .signup-form h1 {
+        .signup-form h1 , h2{
             font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             color: #D35269;
             margin-bottom: 20px;
         }
 
+            .signup-form h2{
+                display: block; 
+                text-align: left; /* Ensure label text is aligned to the left */
+                margin-top:10px;
+        }
         .signup-form p {
             font-family: Arial, sans-serif;
             color: black;
@@ -177,9 +181,12 @@
     }
 
         .input-group label {
+            display: block; /* Make label a block element */
             margin-bottom: 5px;
             font-weight: bold;
+            padding: 0px 10px;
             color: #333;
+            text-align: left; /* Ensure label text is aligned to the left */
         }
 
         .input-group input {

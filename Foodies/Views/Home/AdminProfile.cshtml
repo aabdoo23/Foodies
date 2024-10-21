@@ -130,43 +130,8 @@
                 }
             }
            `,
-           'menu': `<div id="menu-container">
-                    <div id="sidebar">
-                        <div class="logo">
-                            <img src="pp.png" alt="Restaurant Logo">
-                        </div>
-                        <ul class="menu-sections">
-                            <li onclick="showSubMenu('appetizers')">Appetizers</li>
-                            <li onclick="showSubMenu('beef')">Beef Sandwich</li>
-                            <li onclick="showSubMenu('chicken')">Chicken Sandwich</li>
-                            <li onclick="showSubMenu('premium')">Premium Sandwich</li>
-                            <li onclick="showSubMenu('drink')">Drink</li>
-                        </ul>
-                    </div>
-                    <div id="content-area">
-                      <div class="restaurant-container">
-  @*  <div class="restaurant-header">
-        <h2>Heart Attack</h2>
-        <div class="rating">
-            <i class="fa-solid fa-star"></i>
-            <span>4.5</span>
-        </div>
-    </div>
-    <div class="restaurant-details">
-        <div class="detail-section">
-            <h5>Open:</h5>
-            <p>24 Hours</p>
-        </div>
-        <div class="detail-section">
-            <h5>Delivery time:</h5>
-            <p>45 minutes</p>
-        </div>
-        <div class="detail-section">
-            <h5>Delivered by:</h5>
-            <p>Foodies</p>
-        </div>
-    </div>
-</div>*@
+           'menu': `
+ 
  <div class="menu" class="restaurant-header">
                
              <form action="/Home/AddMenuItem/@Model.Resturant.Id" method="get">
@@ -181,7 +146,7 @@
                                     <h4>@i.Name</h4>
                                     <p>Price: @i.Price LE</p>
                                     <p>Description: @i.Description</p>
-                                              <td><a href="/Home/EditMenuItem/@i.Id" class="btn btn-secondary">Edite</a></td>
+                                              <td><a href="/Home/EditMenuItem/@i.Id" class="btn btn-secondary">Edit</a></td>
                                                   <td><a href="/Home/DeleteMenuItem/@i.Id" class="btn btn-secondary">Delete</a></td>
                                 </div>
                                 <div class="add-to-cart">
@@ -206,150 +171,7 @@
 
 function showSubMenu(item) {
     const submenuContent = {
-        'appetizers': `
-        <div class="appetizer-item">
-                <img src="~/Image/garlic.jpg" alt="Appetizer 1" class="appetizer-img">
-                <div class="item-details">
-                    <h4>Bruschetta</h4>
-                    <p>Price: $5</p>
-                    <button onclick="editItem('bruschetta')">Edit</button>
-                    <button onclick="deleteItem('bruschetta')">Delete</button>
-                </div>
-            </div>
-            <div class="appetizer-item">
-                <img src="garlic.jpg" alt="Appetizer 2" class="appetizer-img">
-                <div class="item-details">
-                    <h4>Stuffed Mushrooms</h4>
-                    <p>Price: $7</p>
-                    <button onclick="editItem('stuffed-mushrooms')">Edit</button>
-                    <button onclick="deleteItem('stuffed-mushrooms')">Delete</button>
-                </div>
-            </div>
-            <div class="appetizer-item">
-                <img src="garlic.jpg" alt="Appetizer 3" class="appetizer-img">
-                <div class="item-details">
-                    <h4>Garlic Bread</h4>
-                    <p>Price: $4</p>
-                    <button onclick="editItem('garlic-bread')">Edit</button>
-                    <button onclick="deleteItem('garlic-bread')">Delete</button>
-                </div>
-            </div>
-        `,
-        'beef': `
-<div class="appetizer-item">
-    <img src="beef.jpg" alt="Beef Burger" class="appetizer-img">
-    <div class="item-details">
-        <h4>Beef Burger</h4>
-        <p>Price: $12.99</p>
-        <button onclick="editItem('beef-burger')">Edit</button>
-        <button onclick="deleteItem('beef-burger')">Delete</button>
-    </div>
-</div>
-<div class="appetizer-item">
-    <img src="beef.jpg" alt="Beef Steak" class="appetizer-img">
-    <div class="item-details">
-        <h4>Beef Steak</h4>
-        <p>Price: $15.99</p>
-        <button onclick="editItem('beef-steak')">Edit</button>
-        <button onclick="deleteItem('beef-steak')">Delete</button>
-    </div>
-</div>
-<div class="appetizer-item">
-    <img src="beef.jpg" alt="Beef Tacos" class="appetizer-img">
-    <div class="item-details">
-        <h4>Beef Tacos</h4>
-        <p>Price: $9.99</p>
-        <button onclick="editItem('beef-tacos')">Edit</button>
-        <button onclick="deleteItem('beef-tacos')">Delete</button>
-    </div>
-</div>
-`,
-        'chicken': `
-        <div class="appetizer-item">
-    <img src="sandwich.jpg" alt="Chicken Sandwich Classic" class="appetizer-img">
-    <div class="item-details">
-        <h4>Chicken Sandwich Classic</h4>
-        <p>Price: $11.99</p>
-        <button onclick="editItem('chicken-sandwich-classic')">Edit</button>
-        <button onclick="deleteItem('chicken-sandwich-classic')">Delete</button>
-    </div>
-</div>
-<div class="appetizer-item">
-    <img src="sandwich.jpg" alt="Spicy Chicken Sandwich" class="appetizer-img">
-    <div class="item-details">
-        <h4>Spicy Chicken Sandwich</h4>
-        <p>Price: $13.99</p>
-        <button onclick="editItem('spicy-chicken-sandwich')">Edit</button>
-        <button onclick="deleteItem('spicy-chicken-sandwich')">Delete</button>
-    </div>
-</div>
-<div class="appetizer-item">
-    <img src="sandwich.jpg" alt="BBQ Chicken Sandwich" class="appetizer-img">
-    <div class="item-details">
-        <h4>BBQ Chicken Sandwich</h4>
-        <p>Price: $12.99</p>
-        <button onclick="editItem('bbq-chicken-sandwich')">Edit</button>
-        <button onclick="deleteItem('bbq-chicken-sandwich')">Delete</button>
-    </div>
-</div>
-
-        `,
-        'premium': `<div class="appetizer-item">
-    <img src="premium.jpg" alt="Gourmet Sandwich" class="appetizer-img">
-    <div class="item-details">
-        <h4>Gourmet Sandwich</h4>
-        <p>Price: $18.99</p>
-        <button onclick="editItem('gourmet-sandwich')">Edit</button>
-        <button onclick="deleteItem('gourmet-sandwich')">Delete</button>
-    </div>
-</div>
-<div class="appetizer-item">
-    <img src="premium.jpg" alt="Truffle Sandwich" class="appetizer-img">
-    <div class="item-details">
-        <h4>Truffle Sandwich</h4>
-        <p>Price: $22.99</p>
-        <button onclick="editItem('truffle-sandwich')">Edit</button>
-        <button onclick="deleteItem('truffle-sandwich')">Delete</button>
-    </div>
-</div>
-<div class="appetizer-item">
-    <img src="premium.jpg" alt="Lobster Roll" class="appetizer-img">
-    <div class="item-details">
-        <h4>Lobster Roll</h4>
-        <p>Price: $25.99</p>
-        <button onclick="editItem('lobster-roll')">Edit</button>
-        <button onclick="deleteItem('lobster-roll')">Delete</button>
-    </div>
-</div>
-`,
-        'drink': `<div class="appetizer-item">
-    <img src="drink.jpg" alt="Coke" class="appetizer-img">
-    <div class="item-details">
-        <h4>Coke</h4>
-        <p>Price: $2.99</p>
-        <button onclick="editItem('coke')">Edit</button>
-        <button onclick="deleteItem('coke')">Delete</button>
-    </div>
-</div>
-<div class="appetizer-item">
-    <img src="drink.jpg" alt="Lemonade" class="appetizer-img">
-    <div class="item-details">
-        <h4>Lemonade</h4>
-        <p>Price: $3.49</p>
-        <button onclick="editItem('lemonade')">Edit</button>
-        <button onclick="deleteItem('lemonade')">Delete</button>
-    </div>
-</div>
-<div class="appetizer-item">
-    <img src="drink.jpg" alt="Iced Tea" class="appetizer-img">
-    <div class="item-details">
-        <h4>Iced Tea</h4>
-        <p>Price: $3.29</p>
-        <button onclick="editItem('iced-tea')">Edit</button>
-        <button onclick="deleteItem('iced-tea')">Delete</button>
-    </div>
-</div>
-`
+        
     };
 
     // Update content area within the menu section

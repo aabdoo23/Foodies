@@ -39,28 +39,32 @@
         <div class="delivery-info">
             <i class="fa-solid fa-car"></i>
             <p>
-                    Distance : @ViewBag.distanceArriving <br /> Arriving in approx. <strong>@ViewBag.time </strong></p>
+                    Distance : @ViewBag.distanceArriving <br /> Arriving in approx. <strong>@ViewBag?.time </strong></p>
         </div>
     </div>
 
     <div class="right-section">
         <div class="points">
-            <label>Your total points: @ViewBag.fav.Points<input type="text" id="points" value="@ViewBag.fav.Points" readonly></label>
+            <label>Your total points: @ViewBag?.fav?.Points<input type="text" id="points" value="@ViewBag?.fav?.Points" readonly></label>
         </div>
 
        <div class="payment-section">
-    <label class="radio-label">
-        <input type="radio" name="payment" value="Card" id="cardPayment"> Card
-    </label>
+    
 
     @{
-       if (ViewBag.fav?.card == null)
+       if (ViewBag?.fav?.card == null)
             {
             <form action="/Home/UserView" method="post">
-                <button type="submit" class="btn-second" >Add Card First</button>
-                </form>
-            }
-            
+          <button type="submit" class="btn-second">Add Card First</button>
+                        </form>
+                    }
+        else
+        {
+            <label class="radio-label">
+                <input type="radio" name="payment" value="Card" id="cardPayment"> Card
+            </label>
+        }
+
         
     }
 
@@ -176,7 +180,10 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 24px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
+.btn-second{
+    margin: 10px 5px;
 
+}
 .header i {
     margin-right: 20px;
     font-size: 20px;

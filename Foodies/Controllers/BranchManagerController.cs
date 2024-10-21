@@ -11,6 +11,8 @@ namespace Foodies.Controllers
         private readonly ILogger<BranchManagerController> _logger;
         private readonly IOrderRepository _orderRepository;
         private readonly IBranchManagerRepository _branchManagerRepository;
+        private readonly IBranchRepository _branchRepository;
+
         private readonly UserManager<IdentityUser> _usermanager;
 
 
@@ -81,6 +83,8 @@ namespace Foodies.Controllers
         {
             var userid = _usermanager.GetUserId(User);
             var branchmanager = await _branchManagerRepository.GetByIdWithBranchAndRestaurantIncluded(userid);
+            ViewBag.add = branchmanager.Branch.Address;
+            
             return View(branchmanager);
         }
 
