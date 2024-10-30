@@ -44,8 +44,8 @@ Provide interface for branch mangers to handle customer orders
 
 
 
-## Banner
-![canva size template](https://github.com/user-attachments/assets/006b9a92-d45d-40fc-9dcb-4d322f6afc89)
+## Banner / MainPage
+![Screenshot (129)](https://github.com/user-attachments/assets/2bb2b8cf-4288-4cb6-97ec-094c88633e41)
 
 
 
